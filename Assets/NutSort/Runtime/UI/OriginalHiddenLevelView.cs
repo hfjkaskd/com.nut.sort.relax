@@ -24,6 +24,7 @@ namespace NutSort.UI
         private readonly List<GameObject> dots = new List<GameObject>();
         private Image blinking;
         private float blinkStart;
+        private Action<float> animationStep;
         public Image Progress => progress;
         public TextMeshProUGUI Round4 => round4;
         public TextMeshProUGUI Round5 => round5;
@@ -125,11 +126,17 @@ namespace NutSort.UI
                 else { left.gameObject.SetActive(true); right.gameObject.SetActive(true); }
                 var icon=dot.Find("Icon").GetComponent<Image>();
                 icon.color=Color.white;
-                if(i==info.SubRound-1) { blinking=icon; blinkStart=Time.time; }
+                if(i==info.SubRound-1)
+                {
+                    blinking=icon; blinkStart=Time.time;
+                    if(animationStep==null)animationStep=Advance;
+                    OriginalUIAnimationDriver.Register(this,animationStep);
+                }
                 icon.sprite=i<info.SubRound?passedDot:pendingDot;
             }
         }
-        private void Update() { UpdateBlink(); }
+        private void OnDestroy() { OriginalUIAnimationDriver.Unregister(this); }
+        public void Advance(float delta) { UpdateBlink(); }
         private void OnEnable() { UpdateBlink(); }
         private void UpdateBlink()
         {

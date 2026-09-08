@@ -9,11 +9,11 @@ namespace NutSort.UI
         [SerializeField] private Vector3 rotation;
         private Quaternion start;
         private float startedAt;
-        private void Awake() { start = target.localRotation; startedAt = Time.time; }
-        private void Update()
+        private void Awake() { start = target.localRotation; startedAt = Time.time; OriginalUIAnimationDriver.Register(this,Advance); }
+        private void OnDestroy() { OriginalUIAnimationDriver.Unregister(this); }
+        public void Advance(float delta)
         {
-            // Source tween continues while the view is hidden. The scaled clock
-            // preserves that phase without updating an inactive hierarchy.
+            // Preserve the source scaled-clock phase while updating hidden targets too.
             float t = Mathf.Repeat(Time.time - startedAt, duration) / duration;
             target.localRotation = start * Quaternion.Euler(rotation * t);
         }

@@ -89,9 +89,16 @@ namespace NutSort.UI
         {
             value.text = formatCoin(user.Coin);
             RefreshHint();
-            if(showTip)pulses.Add(new Pulse { Amount = addCoin });
+            if(showTip) { pulses.Add(new Pulse { Amount = addCoin }); Schedule(); }
         }
-        private void Update() { Advance(Time.deltaTime); }
+        private Action<float> animationStep;
+        private void Schedule()
+        {
+            if(animationStep==null)animationStep=Advance;
+            OriginalUIAnimationDriver.Register(this,animationStep);
+        }
+        private void OnDestroy() { OriginalUIAnimationDriver.Unregister(this); }
+
         public void Advance(float delta)
         {
             if(delta<0)throw new ArgumentOutOfRangeException(nameof(delta));
@@ -128,6 +135,7 @@ namespace NutSort.UI
                 target.localScale=Vector3.LerpUnclamped(pulse.Start,Vector3.one*settings.PulseScale,Mathf.Sin(t*Mathf.PI*.5f));
                 pulses[i]=pulse; i++;
             }
+            if(pulses.Count==0 && floats.Count==0)OriginalUIAnimationDriver.Unregister(this);
         }
         private void SpawnFloat(float addCoin)
         {

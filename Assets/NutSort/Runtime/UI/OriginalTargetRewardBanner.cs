@@ -63,6 +63,7 @@ namespace NutSort.UI
             Init();
             // Source Show does not kill an earlier invocation's tweens.
             motions.Add(new Motion { Kind = MotionKind.Entry, Duration = settings.EntryDuration, Completed = completed });
+            Schedule();
         }
 
         public void RefreshTip()
@@ -91,7 +92,14 @@ namespace NutSort.UI
             subTip.text = tables.Text.GetText(150, language, tables.GetShowLevel(user.Level), string.Format("{0}/{1}", level.Round, level.TotalRound));
         }
 
-        private void Update() { Advance(Time.deltaTime); }
+        private Action<float> animationStep;
+        private void Schedule()
+        {
+            if(animationStep==null)animationStep=Advance;
+            OriginalUIAnimationDriver.Register(this,animationStep);
+        }
+        private void OnDestroy() { OriginalUIAnimationDriver.Unregister(this); }
+
 
         public void Advance(float delta)
         {
@@ -149,6 +157,7 @@ namespace NutSort.UI
             for (int i = 0; i < motions.Count; i++)
                 if (motions[i].Kind != MotionKind.Finished) motions[alive++] = motions[i];
             if (alive < motions.Count) motions.RemoveRange(alive, motions.Count - alive);
+            if(motions.Count==0)OriginalUIAnimationDriver.Unregister(this);
         }
     }
 }

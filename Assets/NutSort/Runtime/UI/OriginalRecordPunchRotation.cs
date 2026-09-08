@@ -11,8 +11,8 @@ namespace NutSort.UI
         [SerializeField] private float duration;
         private Vector3 initial;
         private float elapsed;
-        private void Awake(){initial=target.localEulerAngles;}
-        private void Update(){Advance(Time.deltaTime);}
+        private void Awake(){initial=target.localEulerAngles;OriginalUIAnimationDriver.Register(this,Advance);}
+        private void OnDestroy(){OriginalUIAnimationDriver.Unregister(this);}
         public void Advance(float delta)
         {
             elapsed=Mathf.Repeat(elapsed+delta,duration*2f);
