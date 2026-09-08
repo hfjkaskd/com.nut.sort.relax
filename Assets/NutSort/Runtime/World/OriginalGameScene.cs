@@ -30,6 +30,19 @@ namespace NutSort.World
         public int ShowLevel => Tables.GetShowLevel(PlayerLevel);
         public bool InputBlocked { get; set; }
         public bool IsExchanging { get; set; }
+        private readonly OriginalFailureFlow failure = new OriginalFailureFlow();
+        public bool IsFail { get => failure.IsFail; set => failure.IsFail = value; }
+
+        public void Fail(Action<int> showPanel)
+        {
+            failure.Fail(session.FailPanelDelay, ScheduleDelay, () => showPanel(session.FailPanelId));
+        }
+
+        public void Revoke(Action<int> refreshButtonState, Action<int> showPanel)
+        {
+            level.Revoke(refreshButtonState, () => Fail(showPanel));
+        }
+
         public event Action<ScrewOperation, ScrewState> OperationApplied;
 
         // TimeLSSUtil.DelayCallback runs on the main LuoSiSort MonoBehaviour.

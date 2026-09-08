@@ -26,3 +26,5 @@ MonoBehaviour:
   StageStartSound: StageStart
   FirstStageSoundDelay: 1.5
   RestartStageSoundDelay: 0.5
+  FailPanelDelay: 3
+  FailPanelId: 10
