@@ -15,7 +15,7 @@ namespace NutSort.Validation
         {
             public OriginalUserLocalData User;public OriginalTables Tables;public bool Allowed;
             public readonly List<int> Panels=new List<int>();public readonly List<string> Tips=new List<string>();
-            public int Sounds,Closes,Saves,HiddenCount,Dequeues;public Action Queued;
+            public int Sounds,Closes,Saves,HiddenCount,Dequeues;public Action Queued;public Action CloseAction;public Action<int,object[]> PanelShown;public Action<float,Action> Delay;
             public bool CanClick=>Allowed;
             public bool OnlineTimeHint{get;set;}
             public bool Progress2Guide{get;set;}
@@ -23,12 +23,12 @@ namespace NutSort.Validation
             public string Country=>"US";
             public void SetGold(float value,bool refresh,bool showHint){Check(refresh&&showHint,"Native gold flags");User.Gold=value;}
             public void Save()=>Saves++;
-            public void ShowPanel(int id,object[] args)=>Panels.Add(id);
+            public void ShowPanel(int id,object[] args){Panels.Add(id);PanelShown?.Invoke(id,args);}
             public void ShowTip(string text)=>Tips.Add(text);
             public void PlaySound(string sound){Check(sound=="Click","Native click audio");Sounds++;}
-            public void Closed()=>Closes++;
+            public void Closed(){Closes++;CloseAction?.Invoke();}
             public void Hidden()=>HiddenCount++;
-            public void Schedule(float delay,Action action){Check(delay==2.5f,"Native queue delay");Queued=action;}
+            public void Schedule(float delay,Action action){Check(delay==2.5f,"Native queue delay");Queued=action;Delay?.Invoke(delay,action);}
             public void NextPanel()=>Dequeues++;
             public void InitializePlayerInfo(OriginalPlayerInfo player,int level)
             {player.Init(level,User,Tables,"en",()=>false,()=>"",()=>0,()=>0,v=>"",(p,l)=>throw new Exception("No PMD in fixture"));}
