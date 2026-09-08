@@ -105,6 +105,7 @@ namespace NutSort.Validation
                 OriginalInitializationWaitValidation.Validate();
                 OriginalInitializationContinuationValidation.Validate();
                 OriginalInitializationFlowValidation.Validate();
+                OriginalEveryDayGiftValidation.Validate();
                 OriginalTeachingFlowValidation.Validate();
                 OriginalNewbieGuideValidation.Validate();
                 OriginalNewbieMaskPlacementValidation.Validate();

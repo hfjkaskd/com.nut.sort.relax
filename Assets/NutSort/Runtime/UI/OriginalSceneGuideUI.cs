@@ -10,7 +10,7 @@ namespace NutSort.UI
         void ShowPanel(int id);
         void ShowTargetPanel(int id,int level);
         void ShowUnlockPanel(int id,int index,bool showBanner);
-        void DailyGift();
+        bool HasPanel { get; }
     }
     public interface IOriginalGuideRequests
     {
@@ -46,7 +46,7 @@ namespace NutSort.UI
         public void RequestCoinGoldInfo(bool showMask)=>requests.CoinGoldInfo(showMask);
         public void RequestEntryGoldInfo(bool showMask)=>requests.EntryGoldInfo(showMask);
         public void NewGameplayUnlock(bool showBanner)=>game.NewGameplayUnlock(showBanner,panels.ShowUnlockPanel);
-        public void DailyGift()=>panels.DailyGift();
+        public void DailyGift()=>game.ShowEveryDayGift(()=>panels.HasPanel,panels.ShowPanel);
         public void RefreshMain()=>main().Refresh();
         public void ShowTargetBanner(Action completed)=>main().TargetReward.Show(completed);
     }

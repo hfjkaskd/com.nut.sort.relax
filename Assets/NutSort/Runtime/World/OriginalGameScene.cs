@@ -80,6 +80,14 @@ namespace NutSort.World
         {
             StartCoroutine(OriginalInitializationWait.Run(mainPanel,session.MainPanelReadyDelay,continuation));
         }
+        public void ShowEveryDayGift(Func<bool> hasPanel,Action<int> showPanel)
+        {
+            new OriginalEveryDayGiftFlow(()=>User,hasPanel,ScheduleUntil,showPanel,SaveUserData).Show();
+        }
+        public void ScheduleUntil(Func<bool> predicate,Action callback)
+        {
+            StartCoroutine(OriginalUntilCallback.Run(predicate,callback));
+        }
         public void ScheduleDelay(float seconds,Action callback)
         {
             StartCoroutine(DelayCallback(seconds,callback));
