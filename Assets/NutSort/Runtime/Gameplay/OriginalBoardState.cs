@@ -162,7 +162,7 @@ namespace NutSort.Gameplay
     public sealed class OriginalBoardState
     {
         public readonly string LevelId;
-        public readonly ScrewState[] Screws;
+        public ScrewState[] Screws { get; private set; }
         public bool IsSkipLevel;
 
         public OriginalBoardState(LevelData data, OriginalLayoutSettings layout, bool addLockedScrew = false)
@@ -193,6 +193,19 @@ namespace NutSort.Gameplay
             // Source LevelInfo has no serialized level identifier.
             LevelId = null;
             Screws = screws;
+        }
+
+        public ScrewState AppendNullScrew(Func<bool> singleTile)
+        {
+            if(Screws.Length==0)throw new InvalidOperationException("Sequence contains no elements");
+            ScrewState last=Screws[Screws.Length-1];
+            int capacity=singleTile()?1:4;
+            var slots=new NutSlot[Math.Max(0,last.Capacity)];
+            for(int i=0;i<slots.Length;i++)slots[i]=new NutSlot(new Vector3Int(0,i,0));
+            var added=new ScrewState(last.Id,unchecked(last.Index+1),capacity,slots,Array.Empty<ScrewMaskState>());
+            var expanded=new ScrewState[Screws.Length+1];Array.Copy(Screws,expanded,Screws.Length);
+            expanded[expanded.Length-1]=added;Screws=expanded;
+            return added;
         }
 
         public bool IsSuccess

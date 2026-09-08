@@ -69,6 +69,12 @@ namespace NutSort.World
             failure.Fail(session.FailPanelDelay, ScheduleDelay, () => showPanel(session.FailPanelId));
         }
 
+        public void AddNullScrew(Func<bool> singleTile,Action refreshBottom)
+        {
+            level.AddNullScrew(singleTile,()=>ResizeCameras(Screen.width,Screen.height));
+            refreshBottom();
+        }
+
         public void BindExchange(OriginalItemManager items,Action<int> showPanel)
         {
             level.BindExchange(target=>level.Exchange(target,items.AddTool,()=>Fail(showPanel)));

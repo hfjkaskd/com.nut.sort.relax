@@ -49,6 +49,32 @@ namespace NutSort.World
                 positions.Add(position);
             }
         }
+        // AddScrewPos 0xA06038: last row with minimum child count wins ties.
+        // Existing position/nut objects stay alive; only the selected row recenters.
+        public Transform Append(OriginalBoardState board,OriginalLayoutSettings layout,OriginalScrewSettings settings)
+        {
+            var rows=new List<int>();var counts=new List<int>();
+            int rowExtent=1;
+            for(int i=0;i<positions.Count;i++)
+            {
+                int row=board.Screws[i].Coordinate.x;rowExtent=Mathf.Max(rowExtent,row+1);
+                int index=rows.IndexOf(row);
+                if(index<0){rows.Add(row);counts.Add(1);}else counts[index]++;
+            }
+            int selected=-1,minimum=int.MaxValue;
+            for(int i=0;i<rows.Count;i++)if(counts[i]<=minimum){selected=rows[i];minimum=counts[i];}
+            var coordinate=new Vector2Int(selected,minimum);
+            board.Screws[board.Screws.Length-1].Coordinate=coordinate;
+            Transform added=pool.Rent(settings.ScrewPositionPath,transform).transform;
+            added.localRotation=Quaternion.identity;added.localScale=Vector3.one;
+            positions.Add(added);
+            for(int i=0;i<positions.Count;i++)
+                if(board.Screws[i].Coordinate.x==selected)
+                    positions[i].localPosition=layout.Position(rowExtent,minimum+1,board.Screws[i].Coordinate);
+            MaxColumnCount=minimum+1;
+            return added;
+        }
+
         public Transform GetPosition(int index) => positions[index];
         public void Clear()
         {

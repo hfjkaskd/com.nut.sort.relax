@@ -177,6 +177,21 @@ namespace NutSort.World
             return false;
         }
 
+        // LevelInfo.AddNullScrew 0x9FA0A4 initializes after row layout and camera refresh.
+        public OriginalScrewView AddNullScrew(Func<bool> singleTile,Action fixCameras)
+        {
+            var state=Board.AppendNullScrew(singleTile);
+            Transform position=ScenePosGroup.Append(Board,layout,settings);
+            fixCameras();
+            var expanded=new OriginalScrewView[screws.Length+1];Array.Copy(screws,expanded,screws.Length);screws=expanded;
+            var instance=pool.Rent(settings.PrefabPath,position);
+            instance.transform.localPosition=Vector3.zero;instance.transform.localRotation=Quaternion.identity;
+            var view=instance.GetComponent<OriginalScrewView>();screws[screws.Length-1]=view;
+            view.Bind(state,pool,world,settings,lssab);
+            UnlockRequested?.Invoke(view);
+            return view;
+        }
+
         // IsCanAddTile 0xA07E48 always returns true. Manager AddTile
         // (0x9FE6B0) stops after the first eligible entry, including full rods.
         public void AddTile(Func<bool> singleTile)
