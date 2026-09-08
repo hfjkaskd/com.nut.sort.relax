@@ -1,0 +1,149 @@
+using System;
+using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
+using NutSort.Content;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+namespace NutSort.UI
+{
+    public interface IOriginalWithdrawalServices
+    {
+        bool CanClick { get; }
+        bool OnlineTimeHint { get; set; }
+        bool Progress2Guide { set; }
+        string MainGoldHint { get; }
+        string Country { get; }
+        void SetGold(float value,bool refresh,bool showHint);
+        void Save();
+        void ShowPanel(int id,object[] arguments);
+        void ShowTip(string text);
+        void PlaySound(string sound);
+        void Closed();
+        void Hidden();
+        void Schedule(float delay,Action action);
+        void NextPanel();
+        void InitializePlayerInfo(OriginalPlayerInfo player,int level);
+    }
+    public sealed class OriginalWithdrawalPanel:MonoBehaviour,IOriginalWithdrawalHeaderUI,
+        IOriginalWithdrawalProgressUI,IOriginalWithdrawalRefreshHost,IOriginalWithdrawalClaimUI
+    {
+        [SerializeField] private Button Close,TXBtn;
+        [SerializeField] private TMP_Text TXText,GoldCount,Title,Tip,ProgressValue,ProgressTipValue,Level1Title,Level2Title;
+        [SerializeField] private Transform PlayerInfoPos;
+        [SerializeField] private Image Progress,backdrop;
+        [SerializeField] private RectTransform ProgressTip,main;
+        [SerializeField] private GameObject Level1,Level2;
+        [SerializeField] private OriginalGoldImage goldImage;
+        [SerializeField] private OriginalWithdrawalGoldTween goldTween;
+        [SerializeField] private OriginalPlayerInfo playerInfoPrefab;
+        [SerializeField] private OriginalPanelSettings settings;
+        [SerializeField] private OriginalReplayPanel.Label[] labels;
+        [SerializeField] private float queueDelay;
+        public static bool IsPlayGoldTween;
+        private OriginalUserLocalData user;
+        private OriginalTables tables;
+        private string language;
+        private IOriginalWithdrawalServices services;
+        private object[] arguments;
+        private OriginalWithdrawalPanelFlow lifecycle;
+        private OriginalWithdrawalPendingGold pending;
+        private OriginalWithdrawalEarlyProgress progress;
+        private OriginalWithdrawalRefreshFlow refresh;
+        private OriginalWithdrawalClaimFlow claims;
+        private float elapsed;
+        private bool opening;
+        private struct CloseTrack { public float Elapsed;public Vector3 Start;public bool Started; }
+        private readonly List<CloseTrack> closes=new List<CloseTrack>();
+        public Button WithdrawalButton=>TXBtn;
+        public Button CloseButton=>Close;
+        public TMP_Text GoldLabel=>GoldCount;
+        public TMP_Text ClaimLabel=>TXText;
+        public TMP_Text ProgressLabel=>ProgressValue;
+        public TMP_Text TipLabel=>Tip;
+        public RectTransform Main=>main;
+        public Transform PlayerParent=>PlayerInfoPos;
+        public OriginalWithdrawalGoldTween GoldTween=>goldTween;
+        public bool IsDoneTask=>progress.IsDoneTask;
+        public void Bind(OriginalUserLocalData user,OriginalTables tables,string language,Func<float,string> format,IOriginalWithdrawalServices services)
+        {
+            this.user=user;this.tables=tables;this.language=language;this.services=services;
+            goldImage.Bind(()=>services.Country);
+            lifecycle=new OriginalWithdrawalPanelFlow(user,()=>services.OnlineTimeHint,b=>services.OnlineTimeHint=b,
+                ()=>pending.IsShowTargetHint,id=>services.ShowPanel(id,Array.Empty<object>()),ClosePanel);
+            var header=new OriginalWithdrawalHeader(user,()=>tables.GetShowLevel(user.Level),format,this);
+            pending=new OriginalWithdrawalPendingGold(user,()=>IsPlayGoldTween,services.SetGold,services.Save,goldTween.Play,format,value=>GoldCount.text=value,goldTween.Duration);
+            progress=new OriginalWithdrawalEarlyProgress(()=>tables.GetShowLevel(user.Level),this,settings);
+            var stages=new OriginalRewardProgress(user,tables,format);
+            refresh=new OriginalWithdrawalRefreshFlow(user,lifecycle,header,pending,progress,stages,this,format,StartLevelShow,()=>tables.LastLevel.ShowLevel);
+            claims=new OriginalWithdrawalClaimFlow(user,stages,this);
+        }
+        public void Init(object[] value)
+        {
+            arguments=value;
+            lifecycle.Init(value,()=>
+            {
+                main.localScale=Vector3.zero;elapsed=0;opening=true;
+                backdrop.color=new Color(0,0,0,settings.BackdropAlpha);
+                foreach(var label in labels)label.Text.text=Text(label.Id);
+            },()=>{TXBtn.onClick.RemoveAllListeners();TXBtn.onClick.AddListener(ClickWithdrawal);},
+              ()=>{Close.onClick.RemoveAllListeners();Close.onClick.AddListener(ClickClose);});
+        }
+        public void Refresh()=>refresh.Refresh(arguments);
+        public void GetCallback()=>claims.Run(lifecycle.Level,arguments,progress.IsDoneTask,pending.IsShowTargetHint);
+        private void ClickWithdrawal(){if(!services.CanClick)return;GetCallback();services.PlaySound(settings.ClickSound);}
+        private void ClickClose(){if(!services.CanClick)return;lifecycle.CloseCallback();services.PlaySound(settings.ClickSound);}
+        public void ClosePanel(){if(this==null)return;closes.Add(new CloseTrack());}
+        public void Hide(){services.Hidden();services.Schedule(queueDelay,services.NextPanel);}
+        private void Awake()=>OriginalUIAnimationDriver.Register(this,Advance);
+        private void OnDestroy()=>OriginalUIAnimationDriver.Unregister(this);
+        public void Advance(float delta)
+        {
+            if(opening)
+            {
+                elapsed+=delta;main.localScale=Vector3.one*settings.PanelOpenCurve.Evaluate(Mathf.Clamp01(elapsed/settings.PanelDurationTime));
+                if(elapsed>=settings.PanelDurationTime){opening=false;lifecycle.TweenEnd();}
+            }
+            for(int i=0;i<closes.Count;)
+            {
+                var track=closes[i];if(!track.Started){track.Started=true;track.Start=main.localScale;}
+                track.Elapsed+=delta;float t=Mathf.Clamp01(track.Elapsed/settings.CloseDuration);
+                main.localScale=Vector3.LerpUnclamped(track.Start,Vector3.zero,t*t*((settings.BackOvershoot+1)*t-settings.BackOvershoot));
+                if(t>=1){closes.RemoveAt(i);services.Closed();}else{closes[i]=track;i++;}
+            }
+        }
+        public float Fill{get=>Progress.fillAmount;set=>Progress.fillAmount=value;}
+        public void SetTip(int id,params object[] args)=>Tip.text=tables.Text.GetText(id,language,args);
+        void IOriginalWithdrawalRefreshHost.SetTip(int id)=>SetTip(id);
+        public void SetProgress(string value)=>ProgressValue.text=value;
+        public void SetProgressTip(int id,params object[] args)=>ProgressTipValue.text=tables.Text.GetText(id,language,args);
+        public void SetMarkerX(float x){var p=ProgressTip.anchoredPosition;p.x=x;ProgressTip.anchoredPosition=p;}
+        public void SetLevelTitle(int slot,int id,int value)=>(slot==1?Level1Title:Level2Title).text=tables.Text.GetText(id,language,value);
+        public void SetGold(string value)=>GoldCount.text=value;
+        public void SetTitle(int id,int value)=>Title.text=tables.Text.GetText(id,language,value);
+        public string MainGoldHint=>services.MainGoldHint;
+        public bool PlayGoldTween{get=>IsPlayGoldTween;set=>IsPlayGoldTween=value;}
+        public void SetRawTip(string value)=>Tip.text=value;
+        public void SetClaimText(int id)=>TXText.text=Text(id);
+        public void InitializePlayerInfo(int level){var player=Instantiate(playerInfoPrefab,PlayerInfoPos,false);services.InitializePlayerInfo(player,level);}
+        public bool OnlineTimeHint{get=>services.OnlineTimeHint;set=>services.OnlineTimeHint=value;}
+        public bool Progress2Guide{set=>services.Progress2Guide=value;}
+        string IOriginalWithdrawalClaimUI.Tip=>Tip.text;
+        public string Text(int id)=>tables.Text.GetText(id,language);
+        public void ShowPanel(int id,object[] args)=>services.ShowPanel(id,args);
+        public void ShowTip(int id)=>services.ShowTip(Text(id));
+        public void ShowTip(string text)=>services.ShowTip(text);
+        void IOriginalWithdrawalClaimUI.Close()=>ClosePanel();
+        private int StartLevelShow()
+        {
+            var list=(JArray)Field(user.GoldRewardTargetS2CData,"bear_list");
+            int level=(int?)Field((JObject)list[2],"StartLevel")??0;
+            return tables.GetLevelInfo(level,user.Level).ShowLevel;
+        }
+        private static JToken Field(JObject row,string name)
+        {
+            if(row==null)throw new NullReferenceException(name);
+            JToken value=null;foreach(var p in row.Properties())if(string.Equals(p.Name,name,StringComparison.OrdinalIgnoreCase))value=p.Value;return value;
+        }
+    }
+}
