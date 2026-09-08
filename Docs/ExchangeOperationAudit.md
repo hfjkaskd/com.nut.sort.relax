@@ -1,0 +1,15 @@
+# Exchange operation
+
+Native ScrewInfo.Exchange (0xA08A18) rotates the occupied prefix of one screw. With occupied count N and top visible same-color group size K, output source indices are N-K..N-1, then 0..N-K-1. This is not random shuffling or exchanging two screws. Empty tail slots remain in place. The source first collects references, then replaces each NutInfo slot and invokes Refresh(index) before processing the next.
+
+NutInfo.Refresh (0xA04334) assigns a new position with y=index and zero x/z, clears readiness, reparents to the corresponding screw tile with world position preserved, sets local position zero, and refreshes the existing nut. It does not create a movement tween or kill ongoing animations. The reconstruction now supports this exception to ordinary fixed-slot transfers: exchange reorders NutSlot references and refreshes their coordinates. Existing normal transfer behavior remains unchanged.
+
+After reordering, source GetTopSameNutInfos(true) selects the new top group and UnlockHidden (0xA048AC) changes hidden type 2 to normal type 1 and refreshes its view. Then ItemMgr.AddLssItem(type=3,count=-1,refresh=true) saves the changed inventory and board before refreshing Bottom. IsCannotMove runs afterward and can invoke Fail. Exchange creates no normal move history or move-count increment and returns false through ScrewInfo.Operator. Native SDK vibration/analytics are excluded. No SetExchangeState call occurs here: the mode does not automatically exit.
+
+OriginalGameScene.BindExchange connects the existing operation request to the level implementation, actual OriginalItemManager and scene failure scheduler. The default startup still must provide this binding and the full main-panel context; no automatic or fake SDK grant was added.
+
+Regression uses actual prefabs with an explicit mixed/hidden fixture to check slot identity/order, coordinates, real tile parenting/local zero, hidden cover release, item save/refresh before deadlock and retained mutations on consumption failure. The first test expectation incorrectly assumed a legal move remained; the fixture now explicitly uses an unmatched second screw and verifies the real deadlock callback after save/refresh. Runtime deadlock behavior was not changed.
+
+The Play fixture additionally binds the actual scene item manager, selects an eligible screw through the world-camera ray, and checks inventory, actual Bottom text, and the existing serialized board/user save envelope. It explicitly supplies test data and initialization readiness for this operation-focused test; it is not a full production startup or visual-parity claim.
+
+Verification: `Library/unity-exchange-operation-final.log` contains 92 full-regression PASS markers. `Library/unity-exchange-operation-play.log` contains NUT_EXCHANGE_STATE_PLAY_PASS with actual ray dispatch, scene save and Bottom refresh. Both final logs have no compiler-error or exception markers. Validation preferences restored and backup absent. Native disassembly remains local.

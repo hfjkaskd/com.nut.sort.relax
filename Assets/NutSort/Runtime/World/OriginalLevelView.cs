@@ -152,11 +152,41 @@ namespace NutSort.World
                 foreach (NutSlot slot in batch.Source.Slots)
                     if (slot.Nut != null) nuts[slot.Nut].RefreshVisual();
             }
+            if(result.Kind==ScrewOperationKind.ExchangeRequested)exchangeRequested?.Invoke(target);
             // Level.Update remembers the clicked target on every true return,
             // including an invalid destination that just reverted the source.
             if (result.OriginalReturnValue) selected = target;
             OperationApplied?.Invoke(result, target);
             return result;
+        }
+
+        private Action<ScrewState> exchangeRequested;
+        public void BindExchange(Action<ScrewState> exchange) { exchangeRequested=exchange; }
+
+        // ScrewInfo.Exchange 0xA08A18 rotates the occupied prefix by the top
+        // visible same-color group. It reorders slot objects, unlike normal transfers.
+        public void Exchange(ScrewState target,Action<int,float,bool> applyItem,Action fail)
+        {
+            int count=0;
+            foreach(var slot in target.Slots)if(slot.Nut!=null)count++;
+            var top=new List<NutSlot>();target.GetTopSame(top);
+            var reordered=new NutSlot[count];
+            for(int i=0;i<count;i++)reordered[i]=target.Slots[i<top.Count?count+i-top.Count:i-top.Count];
+            for(int i=0;i<count;i++)
+            {
+                target.Slots[i]=reordered[i];
+                var slot=target.Slots[i];slot.RefreshPosition(i);
+                nuts[slot.Nut].RefreshPosition(slot,screws[target.Index].GetTile(i).transform);
+            }
+            target.GetTopSame(top);
+            foreach(var slot in top)
+            {
+                if(slot.Nut.Type!=NutType.Hidden)continue;
+                slot.Nut.Type=NutType.Normal;nuts[slot.Nut].RefreshVisual();
+            }
+            applyItem(3,-1,true);
+            if(IsCannotMove())fail();
+            // Original SDK vibration/analytics excluded; no automatic mode exit.
         }
 
         // SetExchangeState applies ScrewInfo.SetScrewState(!isExchanging) in list order.

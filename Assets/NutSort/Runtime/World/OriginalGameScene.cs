@@ -69,6 +69,11 @@ namespace NutSort.World
             failure.Fail(session.FailPanelDelay, ScheduleDelay, () => showPanel(session.FailPanelId));
         }
 
+        public void BindExchange(OriginalItemManager items,Action<int> showPanel)
+        {
+            level.BindExchange(target=>level.Exchange(target,items.AddTool,()=>Fail(showPanel)));
+        }
+
         public void Revoke(Action<int> refreshButtonState, Action<int> showPanel)
         {
             level.Revoke(refreshButtonState, () => Fail(showPanel));

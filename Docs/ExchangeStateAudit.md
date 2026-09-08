@@ -8,6 +8,6 @@ ScrewInfo.SetScrewState (0xA08930) checks each screw root's activeSelf before an
 
 The regression uses actual level/nut/screw prefabs for uniform versus mixed rods, activeSelf behavior under an inactive parent, top-nut reversion and landing callback. The Play fixture invokes the real tool and mask Buttons, verifies scene camera/background/rod visibility, delayed cancellation, later entry followed by the retained older callback, and unchanged inventory. Its full-main UI data and unrelated actions are explicitly isolated fixtures; no exchange transfer or successful reward is simulated.
 
-Remaining: default startup still uses the partial main panel. Full main-panel binding, actual exchange transfer/consumption and complete lifecycle parity remain pending. Native evidence is local only.
+Remaining: default startup still uses the partial main panel. Full main-panel binding and complete lifecycle parity remain pending. Exchange rotation/consumption is implemented in the follow-up ExchangeOperationAudit.md, with default startup binding still pending. Native evidence is local only.
 
 Verification: `Library/unity-exchange-state-validation.log` has 91 full-regression PASS markers. `Library/unity-exchange-state-play.log` has NUT_EXCHANGE_STATE_PLAY_PASS. Neither final log has compiler-error or exception markers. Validation preferences restored and backup absent. These checks prove the state/visibility sequence, not full exchange gameplay or whole-game visual parity.

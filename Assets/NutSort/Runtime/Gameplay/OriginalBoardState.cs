@@ -19,10 +19,12 @@ namespace NutSort.Gameplay
     // coordinate: NutInfo.Move (0xA0458C) and GetNullNutInfo (0xA04744).
     public sealed class NutSlot
     {
-        public readonly Vector3Int Coordinate;
+        public Vector3Int Coordinate { get; private set; }
         public NutState Nut;
         public bool IsReady;
         public NutSlot(Vector3Int coordinate) { Coordinate = coordinate; }
+        // Exchange reorders NutInfo objects and replaces their NutPos (x/z default zero).
+        public void RefreshPosition(int index) { Coordinate=new Vector3Int(0,index,0);IsReady=false; }
     }
 
     public sealed class ScrewMaskState

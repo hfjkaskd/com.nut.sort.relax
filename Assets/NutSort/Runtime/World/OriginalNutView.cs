@@ -29,6 +29,16 @@ namespace NutSort.World
             RefreshVisual();
         }
 
+        // NutInfo.Refresh 0xA04334: reparent with world position preserved,
+        // then write local zero and refresh visuals; no new movement tween.
+        public void RefreshPosition(NutSlot value,Transform tile)
+        {
+            slot=value;
+            transform.SetParent(tile);
+            transform.localPosition=Vector3.zero;
+            RefreshVisual();
+        }
+
         // Nut.Refresh (0xA02704): keep the colored mesh/material intact and rent
         // the original hidden prefab as a child. Revealing returns that child.
         public void RefreshVisual()
