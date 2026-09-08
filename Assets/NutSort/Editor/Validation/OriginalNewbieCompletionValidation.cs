@@ -43,7 +43,7 @@ namespace NutSort.Validation
                 if(instance!=null)UnityEngine.Object.DestroyImmediate(instance);
                 OriginalNewbieGuideView.CallbackAction=previous;
             }
-            Debug.Log("NUT_NEWBIE_COMPLETION_VALIDATION_PASS case-one register-close-panel order, live level argument, global callback lifetime, payload identity, immediate null return and replacement/failure semantics; target panel implementation pending.");
+            Debug.Log("NUT_NEWBIE_COMPLETION_VALIDATION_PASS case-one register-close-panel order, live level argument, global callback lifetime, payload identity, immediate null return and replacement/failure semantics; target panel and return flow validated separately; production binding pending.");
         }
         private static void Check(bool value,string message){if(!value)throw new InvalidOperationException(message);}
     }

@@ -53,6 +53,20 @@ namespace NutSort.UI
             showPanel(35,unchecked(user.Level-1));
         }
 
+        // Case-one completion 0x9E38E4 ignores its payload. Keep the request's
+        // existing response handler outside the view; no fabricated success.
+        public void ShowTargetCompletion(OriginalUserLocalData user,Action<bool> requestGoldInfo,
+            Action save,Action<int,int> showPanel)
+        {
+            ShowTargetCompletion(user,parameter=>
+            {
+                requestGoldInfo(false);
+                user.GuideIndex=unchecked(user.GuideIndex+1);
+                save();
+                Close();
+            },showPanel);
+        }
+
         // ShowGuide case 0 (0x9E28E4), click closure 0x9E3FB0.
         // The supplied operation is SuccessPanel.MoreGetCallback (virtual slot 12).
         public void ShowSuccessGuide(OriginalUserLocalData user,Button moreGetButton,Action moreGet,
