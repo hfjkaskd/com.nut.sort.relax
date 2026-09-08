@@ -24,7 +24,9 @@ namespace NutSort.Validation
         private static OriginalWithdrawalPanelHost withdrawal;
         private static OriginalWithdrawalLoadingHost loading;
         private static OriginalWithdrawalUserInfoHost userInfo;
-        private static int confirmations,userInfoHides;
+        private static int confirmations,userInfoHides,goldGets,confirmationHides;
+        private static OriginalWithdrawalConfirmationHost confirmation;
+        private static bool previousHint;
         private static int loadingHides;
         private static bool loadingCaptured;
         private static OriginalWithdrawalPanelValidation.Services withdrawalServices;
@@ -36,7 +38,7 @@ namespace NutSort.Validation
         private static Action<object> previousCallback;
         private sealed class Panels:IOriginalGuidePanels
         {
-            public bool HasPanel=>success.IsOpen||guide.IsOpen||target.IsOpen||(withdrawal!=null&&withdrawal.IsOpen)||(loading!=null&&loading.IsOpen)||(userInfo!=null&&userInfo.IsOpen);
+            public bool HasPanel=>success.IsOpen||guide.IsOpen||target.IsOpen||(withdrawal!=null&&withdrawal.IsOpen)||(loading!=null&&loading.IsOpen)||(userInfo!=null&&userInfo.IsOpen)||(confirmation!=null&&confirmation.IsOpen);
             public OriginalGuideSuccessBinding GetSuccessGuideTarget()=>success.GetSuccessGuideTarget();
             public OriginalGuideButtonBinding GetWithdrawal()=>withdrawal.GetWithdrawalGuideTarget();
             public void ShowPanel(int id){if(id==36){loading.Show();return;}Check(id==7,"Guide panel dispatch");guide.Show();}
@@ -53,7 +55,7 @@ namespace NutSort.Validation
             public void CoinGoldInfo(bool showMask){throw new InvalidOperationException("Unexpected coin request");}
             public void EntryGoldInfo(bool showMask){throw new InvalidOperationException("Unexpected entry request");}
         }
-        static OriginalSuccessGuideHostPlayValidation(){if(SessionState.GetBool(Key,false)){timeout=EditorApplication.timeSinceStartup+60;EditorApplication.update+=Tick;}}
+        static OriginalSuccessGuideHostPlayValidation(){if(SessionState.GetBool(Key,false)){timeout=EditorApplication.timeSinceStartup+180;EditorApplication.update+=Tick;}}
         public static void Run(){PlayModeWindow.SetCustomRenderingResolution(480,1040,"Withdrawal loading validation");OriginalPreferenceFixture.Begin();EditorSceneManager.OpenScene("Assets/Scenes/LuoSiSortGame.unity");SessionState.SetBool(Key,true);EditorApplication.EnterPlaymode();}
         private static void Tick()
         {
@@ -66,7 +68,7 @@ namespace NutSort.Validation
                     game=UnityEngine.Object.FindObjectOfType<OriginalGameScene>();if(game==null||game.Level==null||game.IsRestarting||game.InputBlocked)return;
                     Transform parent=null;foreach(var canvas in UnityEngine.Object.FindObjectsOfType<Canvas>())if(canvas.name=="UICanvas")parent=canvas.transform;
                     Check(parent!=null,"Actual UI canvas");game.User.Level=2;game.User.GuideIndex=77;
-                    previousCallback=OriginalNewbieGuideView.CallbackAction;
+                    previousCallback=OriginalNewbieGuideView.CallbackAction;previousHint=OriginalWithdrawalConfirmationFlow.IsHintGoldGet;OriginalWithdrawalConfirmationFlow.IsHintGoldGet=false;
                     targetRequest=new OriginalGuideTargetRequest(game.User,(showMask,cb)=>{Check(!showMask,"Original unmasked request");targetResponse=cb;},
                         (id,level)=>{Check(id==18&&level==game.User.Level-1,"Live-level withdrawal panel dispatch");withdrawalPanels++;withdrawal.Show(new object[]{level});});
                     var panels=new Panels();mask=new OriginalCountedMask(v=>masked=v,game.ScheduleDelay);
@@ -87,8 +89,12 @@ namespace NutSort.Validation
                     game.User.UserLssInfo=null;
                     userInfo=new OriginalWithdrawalUserInfoHost(parent,"Prefabs/Panels/TXUserInfoPanel",game.User,game.Tables,"en",()=>"US",()=>"1",()=>true,s=>audio.PlaySound(s),
                         id=>throw new InvalidOperationException("Unexpected account input error"),
-                        (id,args)=>{Check(id==21&&(int)args[0]==1,"Actual form confirmation retains captured withdrawal level");confirmations++;},
-                        ()=>game.SaveUserData(),value=>OriginalNewbieGuideView.CallbackActionInvoke(value),()=>{},()=>userInfoHides++,game.ScheduleDelay,()=>{});
+                        (id,args)=>{Check(id==21&&(int)args[0]==1,"Actual form confirmation retains captured withdrawal level");confirmations++;confirmation.Show(args);},
+                        ()=>game.SaveUserData(),value=>OriginalNewbieGuideView.CallbackActionInvoke(value),()=>OriginalWithdrawalConfirmationFlow.IsHintGoldGet=false,()=>userInfoHides++,game.ScheduleDelay,()=>{});
+                    confirmation=new OriginalWithdrawalConfirmationHost(parent,"Prefabs/Panels/TXUserInfoSurePanel",game.User,game.Tables,"en",()=>"US",()=>"1",()=>true,s=>audio.PlaySound(s),
+                        (id,args)=>{Check(id==20&&(int)args[0]==1&&confirmation.IsOpen,"Reenter opens form before closing confirmation");userInfo.Show(args);},
+                        (level,hasArgs)=>{Check(level==1&&hasArgs&&confirmation.Panel.Closing,"GoldGet boundary follows actual close initiation");goldGets++;},
+                        value=>OriginalNewbieGuideView.CallbackActionInvoke(value),()=>confirmationHides++,game.ScheduleDelay,()=>{});
                     game.User.Level1Gold=5;
                     target=new OriginalGuideTargetPanelHost(parent,"Prefabs/Panels/TXGuideTargetCompletePanel",game.User,game.Tables,"en",()=>true,s=>audio.PlaySound(s),()=>"US",value=>new OriginalGoldFormatter(()=>"en-US").Format(value),
                         (banner,first)=>{Check(banner&&!first&&game.User.IsCompleteRecordGuide&&target.Panel.Closing&&game.User.GuideIndex==1,"Native initialization arguments and pre-callback order");initializations++;},
@@ -169,7 +175,27 @@ namespace NutSort.Validation
                 if(phase==9)
                 {
                     Check(!userInfo.IsOpen&&userInfoHides==1&&confirmations==1,"Actual account form completes animated registry close");
-                    Debug.Log("NUT_SUCCESS_GUIDE_HOST_PLAY_PASS real SuccessPanel -> guide -> target response -> TXPanel -> withdrawal guide -> loading -> real registered account form -> actual TMP input/PayPal Button -> confirmation dispatch and persisted record; production initialization/transport and confirmation panel remain fixtures/boundaries.");Finish(0);return;
+                    Check(confirmation.IsOpen&&confirmation.Panel.TipLabel.text=="Fixture User\nfixture@example.test","Real confirmation displays submitted account");
+                    ScreenCapture.CaptureScreenshot("Library/ValidationCaptures/withdrawal-confirmation-current.png");start=Time.time;phase=10;return;
+                }
+                if(phase==10)
+                {
+                    confirmation.Panel.ReenterButton.onClick.Invoke();Check(userInfo.IsOpen&&confirmation.Panel.Closing,"Actual reenter Button opens original form");start=Time.time;phase=11;return;
+                }
+                if(phase==11)
+                {
+                    Check(!confirmation.IsOpen&&confirmationHides==1&&userInfo.Panel.Email=="fixture@example.test","Reentered form restores saved account after confirmation close");
+                    userInfo.Panel.GetButton.onClick.Invoke();Check(confirmations==2&&confirmation.IsOpen,"Resubmission creates a fresh actual confirmation");start=Time.time;phase=12;return;
+                }
+                if(phase==12)
+                {
+                    Check(!userInfo.IsOpen&&userInfoHides==2&&confirmation.IsOpen,"Reentered form finishes closing");
+                    confirmation.Panel.ConfirmButton.onClick.Invoke();Check(goldGets==1&&confirmation.IsOpen&&confirmation.Panel.Closing,"Actual confirmation invokes GoldGet boundary before removal");start=Time.time;phase=13;return;
+                }
+                if(phase==13)
+                {
+                    Check(!confirmation.IsOpen&&confirmationHides==2&&goldGets==1&&OriginalNewbieGuideView.CallbackAction!=null,"Confirmation closes without fabricating withdrawal completion");
+                    Debug.Log("NUT_SUCCESS_GUIDE_HOST_PLAY_PASS actual success/guide/loading/account form -> real confirmation -> reenter saved form -> resubmit -> actual Confirm Button -> GoldGet boundary and animated registry removal; no payment result, production initialization/transport remain fixtures.");Finish(0);return;
                 }
                 Check(!withdrawal.IsOpen&&withdrawalServices.Closes==1&&withdrawalServices.HiddenCount==1,"Animated close hides and removes real registry entry");
                 game.User.GuideIndex=77;withdrawal.Show(new object[]{1});Check(withdrawal.IsOpen&&withdrawal.Panel.PlayerParent.childCount==1,"Reopen creates a fresh original panel");withdrawal.Hide();
@@ -182,6 +208,6 @@ namespace NutSort.Validation
             catch(Exception error){Debug.LogException(error);Finish(1);}
         }
         private static void Check(bool value,string message){if(!value)throw new InvalidOperationException(message);}
-        private static void Finish(int code){OriginalNewbieGuideView.CallbackAction=previousCallback;OriginalWithdrawalPanel.IsPlayGoldTween=false;OriginalPreferenceFixture.Restore();SessionState.SetBool(Key,false);EditorApplication.update-=Tick;EditorApplication.Exit(code);}
+        private static void Finish(int code){OriginalWithdrawalConfirmationFlow.IsHintGoldGet=previousHint;OriginalNewbieGuideView.CallbackAction=previousCallback;OriginalWithdrawalPanel.IsPlayGoldTween=false;OriginalPreferenceFixture.Restore();SessionState.SetBool(Key,false);EditorApplication.update-=Tick;EditorApplication.Exit(code);}
     }
 }
