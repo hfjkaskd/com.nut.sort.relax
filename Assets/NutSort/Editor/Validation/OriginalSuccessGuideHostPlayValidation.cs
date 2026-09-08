@@ -22,6 +22,9 @@ namespace NutSort.Validation
         private static Action<JObject> targetResponse;
         private static int withdrawalPanels;
         private static OriginalWithdrawalPanelHost withdrawal;
+        private static OriginalWithdrawalLoadingHost loading;
+        private static int loadingHides;
+        private static bool loadingCaptured;
         private static OriginalWithdrawalPanelValidation.Services withdrawalServices;
         private static OriginalGameScene game;
         private static OriginalSuccessPanelHost success;
@@ -31,10 +34,10 @@ namespace NutSort.Validation
         private static Action<object> previousCallback;
         private sealed class Panels:IOriginalGuidePanels
         {
-            public bool HasPanel=>success.IsOpen||guide.IsOpen||target.IsOpen||(withdrawal!=null&&withdrawal.IsOpen);
+            public bool HasPanel=>success.IsOpen||guide.IsOpen||target.IsOpen||(withdrawal!=null&&withdrawal.IsOpen)||(loading!=null&&loading.IsOpen);
             public OriginalGuideSuccessBinding GetSuccessGuideTarget()=>success.GetSuccessGuideTarget();
             public OriginalGuideButtonBinding GetWithdrawal()=>withdrawal.GetWithdrawalGuideTarget();
-            public void ShowPanel(int id){Check(id==7,"Guide panel dispatch");guide.Show();}
+            public void ShowPanel(int id){if(id==36){loading.Show();return;}Check(id==7,"Guide panel dispatch");guide.Show();}
             public void ShowTargetPanel(int id,int level){Check(id==35&&level==1&&!guide.IsOpen,"Reopened guide advances to target completion after close");targets++;target.Show(level);}
             public void ShowUnlockPanel(int id,int index,bool banner){throw new InvalidOperationException("Unexpected unlock branch");}
         }
@@ -49,7 +52,7 @@ namespace NutSort.Validation
             public void EntryGoldInfo(bool showMask){throw new InvalidOperationException("Unexpected entry request");}
         }
         static OriginalSuccessGuideHostPlayValidation(){if(SessionState.GetBool(Key,false)){timeout=EditorApplication.timeSinceStartup+60;EditorApplication.update+=Tick;}}
-        public static void Run(){OriginalPreferenceFixture.Begin();EditorSceneManager.OpenScene("Assets/Scenes/LuoSiSortGame.unity");SessionState.SetBool(Key,true);EditorApplication.EnterPlaymode();}
+        public static void Run(){PlayModeWindow.SetCustomRenderingResolution(480,1040,"Withdrawal loading validation");OriginalPreferenceFixture.Begin();EditorSceneManager.OpenScene("Assets/Scenes/LuoSiSortGame.unity");SessionState.SetBool(Key,true);EditorApplication.EnterPlaymode();}
         private static void Tick()
         {
             if(!EditorApplication.isPlaying)return;
@@ -78,6 +81,7 @@ namespace NutSort.Validation
                             PanelShown=(id,args)=>{if(id==7)panels.ShowPanel(id);}};
                         return withdrawalServices;
                     });
+                    loading=new OriginalWithdrawalLoadingHost(parent,"Prefabs/Panels/TXGuideLoadingPanel",game.Tables,"en",()=>withdrawal.Panel,()=>loadingHides++,game.ScheduleDelay,()=>{});
                     game.User.Level1Gold=5;
                     target=new OriginalGuideTargetPanelHost(parent,"Prefabs/Panels/TXGuideTargetCompletePanel",game.User,game.Tables,"en",()=>true,s=>audio.PlaySound(s),()=>"US",value=>new OriginalGoldFormatter(()=>"en-US").Format(value),
                         (banner,first)=>{Check(banner&&!first&&game.User.IsCompleteRecordGuide&&target.Panel.Closing&&game.User.GuideIndex==1,"Native initialization arguments and pre-callback order");initializations++;},
@@ -131,7 +135,24 @@ namespace NutSort.Validation
                     Check(guide.IsOpen&&game.User.GuideIndex==2&&withdrawal.IsOpen,"Real TXPanel opening enters actual withdrawal guide");
                     var binding=withdrawal.GetWithdrawalGuideTarget();
                     Check(binding.Button==withdrawal.Panel.WithdrawalButton&&guide.Panel.ContinueButton.image.rectTransform.sizeDelta==binding.Button.image.rectTransform.sizeDelta,"Guide uses real withdrawal control dimensions");
-                    guide.Hide();OriginalNewbieGuideView.CallbackAction=null;
+                    guide.Panel.ContinueButton.onClick.Invoke();
+                    Check(!guide.IsOpen&&loading.IsOpen&&game.User.GuideIndex==3&&OriginalNewbieGuideView.CallbackAction!=null,"Actual withdrawal guide saves progress and opens loading without claiming");
+                    var saved=OriginalUserDataJson.Read(PlayerPrefs.GetString(OriginalUserStore.Key),Resources.Load<OriginalUserDefaults>("Configuration/OriginalUserDefaults"));
+                    Check(saved.GuideIndex==3&&!withdrawalServices.Panels.Contains(20),"Guide progression saved before loading completion");
+                    start=Time.time;phase=8;return;
+                }
+                if(phase==8)
+                {
+                    if(!loadingCaptured)
+                    {
+                        Check(loading.IsOpen&&loading.Panel.Fill>0&&loading.Panel.Fill<1,"Current loading panel visible during native progress");
+                        System.IO.Directory.CreateDirectory("Library/ValidationCaptures");
+                        ScreenCapture.CaptureScreenshot("Library/ValidationCaptures/withdrawal-loading-current.png");loadingCaptured=true;
+                    }
+                    if(Time.time-start<5.3f)return;
+                    Check(!loading.IsOpen&&loadingHides==1&&!withdrawal.IsOpen&&withdrawalServices.Panels.Contains(20)&&withdrawalServices.Closes==1,"Loading completion calls real TXPanel claim, routes 20 and closes both panels");
+                    OriginalNewbieGuideView.CallbackAction=null;game.User.GuideIndex=77;withdrawal.Show(new object[]{1});
+
                     int before=withdrawal.Panel.PlayerParent.childCount;withdrawal.Refresh();Check(withdrawal.Panel.PlayerParent.childCount==before+1,"Host refresh calls actual panel and appends PlayerInfo");
                     var first=withdrawal.Panel;Check(withdrawal.Show(Array.Empty<object>())==null&&ReferenceEquals(first,withdrawal.Panel),"Duplicate registration keeps original panel");
                     withdrawalServices.OnlineTimeHint=true;withdrawal.Panel.CloseButton.onClick.Invoke();
@@ -140,7 +161,7 @@ namespace NutSort.Validation
                 }
                 Check(!withdrawal.IsOpen&&withdrawalServices.Closes==1&&withdrawalServices.HiddenCount==1,"Animated close hides and removes real registry entry");
                 game.User.GuideIndex=77;withdrawal.Show(new object[]{1});Check(withdrawal.IsOpen&&withdrawal.Panel.PlayerParent.childCount==1,"Reopen creates a fresh original panel");withdrawal.Hide();
-                Debug.Log("NUT_SUCCESS_GUIDE_HOST_PLAY_PASS real SuccessPanel -> guide -> target completion -> saved progression -> held target response -> registered TXPanel -> native opening -> actual withdrawal guide target; real refresh/duplicate/animated close/reopen ownership; initialization and transport/services remain explicit fixtures.");Finish(0);
+                Debug.Log("NUT_SUCCESS_GUIDE_HOST_PLAY_PASS real SuccessPanel -> guide -> target completion -> saved progression -> held target response -> registered TXPanel -> native opening -> actual withdrawal guide click/save -> two-stage loading -> real withdrawal claim route 20; real refresh/duplicate/animated close/reopen ownership; initialization and transport/services remain explicit fixtures.");Finish(0);
             }
             catch(Exception error){Debug.LogException(error);Finish(1);}
         }
