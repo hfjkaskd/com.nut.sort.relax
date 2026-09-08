@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using NutSort.Content;
 using NutSort.Gameplay;
 using UnityEngine;
@@ -18,8 +19,12 @@ namespace NutSort.World
         private OriginalLevelView level;
         private OriginalLevelRepository repository;
         private OriginalLevelSelector selector;
-        private bool pendingBoard, resetBoard, longEntry;
-        private float rebuildElapsed;
+        private struct PendingInitialization
+        {
+            public bool Reset, LongEntry;
+            public float Elapsed;
+        }
+        private readonly List<PendingInitialization> pendingInitializations = new List<PendingInitialization>();
         public bool ModalInputBlocked { get; set; }
         public bool IsRestarting { get; private set; }
         private int viewportWidth, viewportHeight;
@@ -80,7 +85,7 @@ namespace NutSort.World
 
         public void RestartLevel()
         {
-            if (IsRestarting) return;
+            // ReplayCallback calls InitLevel directly, even during reconstruction.
             BeginInitialization(true, false);
         }
 
@@ -103,7 +108,7 @@ namespace NutSort.World
             if (reset) { user.PassLevelTime = 0; user.Init(); }
             level.Clear();
             IsExchanging = false;
-            pendingBoard = true; resetBoard = reset; longEntry = useLongEntry; rebuildElapsed = 0f;
+            pendingInitializations.Add(new PendingInitialization { Reset = reset, LongEntry = useLongEntry });
         }
 
         // Same scaled-time state machine in Editor and on device. Explicit time
@@ -112,15 +117,33 @@ namespace NutSort.World
         {
             if (deltaTime < 0f) throw new ArgumentOutOfRangeException(nameof(deltaTime));
             if (!IsRestarting || level == null) return;
-            if (!pendingBoard)
+            if (pendingInitializations.Count == 0)
             {
                 if (level.AreNutsInitialized) IsRestarting = false;
                 return;
             }
-            rebuildElapsed += deltaTime;
-            if (rebuildElapsed < session.RestartDelay) return;
-            pendingBoard = false;
-            if (resetBoard) BindFreshBoard();
+            // Each InitLevel callback captures its own flags and delay. A later
+            // invocation does not cancel an earlier scheduled reconstruction.
+            int count = pendingInitializations.Count;
+            for (int i = 0; i < count; i++)
+            {
+                var pending = pendingInitializations[i];
+                pending.Elapsed += deltaTime;
+                pendingInitializations[i] = pending;
+            }
+            int index = 0;
+            for (int i = 0; i < count; i++)
+            {
+                var pending = pendingInitializations[index];
+                if (pending.Elapsed < session.RestartDelay) { index++; continue; }
+                pendingInitializations.RemoveAt(index);
+                RebuildBoard(pending.Reset, pending.LongEntry);
+            }
+        }
+
+        private void RebuildBoard(bool resetBoard, bool longEntry)
+        {
+            if (resetBoard) BindFreshBoard(longEntry);
             else
             {
                 OriginalBoardSnapshot snapshot = OriginalBoardSnapshotJson.Read(audioPlayer.UserState.Data.LevelInfo);
@@ -135,7 +158,7 @@ namespace NutSort.World
                 BeginInitialization(true, longEntry);
         }
 
-        private void BindFreshBoard()
+        private void BindFreshBoard(bool longEntry)
         {
             var user = audioPlayer.UserState.Data;
             var progress = new LevelProgressState
@@ -212,6 +235,7 @@ namespace NutSort.World
 
         private void OnDestroy()
         {
+            pendingInitializations.Clear();
             if (level == null) return;
             effects.Clear();
             audioPlayer.Unbind();

@@ -49,7 +49,7 @@ namespace NutSort.Validation
                 game.AdvanceInitialization(.2f);
                 game.IsFail=true;game.RestartAfterFailure(()=>closes++);
                 Check(user.LevelSeed==3 && !game.IsFail && closes==3,"Repeated action while rebuilding is not suppressed");
-                game.AdvanceInitialization(.11f);Check(game.Level.Board==null,"Repeated initialization restarts its delay");
+                game.AdvanceInitialization(.11f);Check(game.Level.Board!=null,"Earlier failure restart keeps its delayed callback");
                 user.LevelSeed=int.MaxValue;bool caught=false;
                 try { game.RestartAfterFailure(()=>{throw new InvalidOperationException("fixture close");}); }
                 catch(InvalidOperationException) {caught=true;}

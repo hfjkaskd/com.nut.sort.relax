@@ -1,5 +1,7 @@
 # Failure restart action
 
+Historical checkpoint. The replay guard and repeated-request timer assumptions below are superseded by ReplayRestartAudit.md: normal replay also calls initialization without a restart guard, and earlier delayed reconstructions remain scheduled. Full FailPanel restoration is documented separately in FailurePanelViewAudit.md.
+
 OriginalGameScene.RestartAfterFailure restores the non-SDK action sequence in FailPanel.RestartCallback (0x9D6BE4): unchecked increment of user LevelSeed (offset 0x34), clear manager IsFail, initialize a reset level with the short entry path, then invoke panel close. It uses BeginInitialization directly; the ordinary replay method's IsRestarting guard is not inserted into this source action. It does not save or advance user Level. The eventual complete panel lifecycle still needs the original banner/InitDone presentation wiring.
 
 The new validation opens the actual LuoSiSortGame scene with isolated preferences, initializes a real level, invokes the action, and checks the state at the close boundary. It verifies per-level resets, absent immediate save, the 0.3-second board rebuild and 0.5-second nut initialization, unchanged player level with incremented seed, and repeated invocation while rebuilding restarting the delay. Integer overflow and a throwing close callback retain preceding mutations. Test preferences are restored.
