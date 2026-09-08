@@ -30,7 +30,18 @@ namespace NutSort.Validation
             reads=0;var live=new OriginalWithdrawalEarlyProgress(()=>++reads==1?99:3,view,settings);live.Refresh(2,9,Array.Empty<object>());Check(view.Progress=="2/5"&&reads==2,"Ordinary path re-reads current show level");
             bool failed=false;view.Trace.Clear();try{flow.Refresh(1,1,null);}catch(NullReferenceException){failed=true;}
             Check(failed&&string.Join(",",view.Trace)=="tip:22","Null input failure occurs after initial tip before progress");
-            Debug.Log("NUT_WITHDRAWAL_EARLY_PROGRESS_VALIDATION_PASS original stage-one count, stage-two four/five cap, repeated live read, unclamped labels/Image fill, marker, completion threshold and retained done state; remaining stages/full view pending.");
+            view.Trace.Clear();reads=0;
+            var third=new OriginalWithdrawalEarlyProgress(()=>++reads==1?99:7,view,settings);
+            third.RefreshThird(Array.Empty<object>(),()=>throw new Exception("Unused settlement table"),()=>10);
+            Check(view.Progress=="6/10"&&view.Value==.6f&&reads==2&&!third.IsDoneTask,"Third-stage ordinary entry uses second live show-level read");
+            view.Trace.Clear();third.RefreshThird(new object[]{null},()=>8,()=>throw new Exception("Unused last level"));
+            Check(view.Progress=="8/8"&&view.X==400&&third.IsDoneTask&&reads==2,"Third-stage settlement uses configured start-level display only");
+            Check(string.Join(",",view.Trace)=="fill,progress,marker,tip:159,progressTip:23,tip:159","Settlement sets success tip before shared completion sets it again");
+            shown=100;view.Trace.Clear();flow.RefreshThird(Array.Empty<object>(),()=>0,()=>10);
+            Check(view.Progress=="9/10"&&view.Value==.9f,"Ordinary third-stage entry retains one incomplete level at maximum");
+            view.Trace.Clear();failed=false;try{third.RefreshThird(null,()=>8,()=>10);}catch(NullReferenceException){failed=true;}
+            Check(failed&&view.Trace.Count==0,"Third-stage input failure precedes any display or table access");
+            Debug.Log("NUT_WITHDRAWAL_EARLY_PROGRESS_VALIDATION_PASS original stage-one count, stage-two four/five cap, repeated live read, unclamped labels/Image fill, marker, completion threshold and retained done state; third-stage ordinary/settlement table and read ordering; later stages/full view pending.");
         }
         private static void Check(bool value,string message){if(!value)throw new InvalidOperationException(message);}
     }

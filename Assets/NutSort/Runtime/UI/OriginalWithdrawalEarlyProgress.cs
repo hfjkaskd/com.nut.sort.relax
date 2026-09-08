@@ -38,7 +38,33 @@ namespace NutSort.UI
             ui.Fill=(float)count/total;
             ui.SetProgress(string.Format("{0}/{1}",count,total));
             ui.SetProgressTip(25,string.Format("{0}",unchecked(total-count)));
-            ui.SetMarkerX(Mathf.Clamp01(ui.Fill)*settings.WithdrawalProgressTravel+settings.WithdrawalProgressOffset);
+            MoveMarker();
+            Complete();
+        }
+        public void RefreshThird(object[] arguments,Func<int> startLevelShow,Func<int> lastLevelShow)
+        {
+            if(arguments.Length!=0)
+            {
+                int total=startLevelShow();
+                ui.Fill=(float)total/total;
+                ui.SetProgress(string.Format("{0}/{1}",total,total));
+                MoveMarker();ui.SetTip(159);
+            }
+            else
+            {
+                int total=lastLevelShow();ui.SetTip(22,total);
+                showLevel();
+                int count=Math.Min(unchecked(showLevel()-1),unchecked(total-1));
+                ui.Fill=(float)count/total;
+                ui.SetProgress(string.Format("{0}/{1}",count,total));
+                ui.SetProgressTip(25,string.Format("{0}",unchecked(total-count)));
+                MoveMarker();
+            }
+            Complete();
+        }
+        private void MoveMarker()=>ui.SetMarkerX(Mathf.Clamp01(ui.Fill)*settings.WithdrawalProgressTravel+settings.WithdrawalProgressOffset);
+        private void Complete()
+        {
             if(ui.Fill<settings.WithdrawalCompleteThreshold)return;
             IsDoneTask=true;ui.SetProgressTip(23);ui.SetTip(159);
         }
