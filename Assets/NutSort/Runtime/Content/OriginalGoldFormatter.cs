@@ -14,6 +14,25 @@ namespace NutSort.Content
             this.currentCountryLanguage = currentCountryLanguage ?? throw new ArgumentNullException(nameof(currentCountryLanguage));
         }
 
+        // CoinFormat and GoldLSSFormat share the original UILSSUtil culture cache.
+        public string FormatCoin(double coin)
+        {
+            try
+            {
+                if (culture == null) culture = new CultureInfo(currentCountryLanguage());
+                string country = currentCountryLanguage();
+                if (country == "ja-JP" || country == "id-ID" || country == "ur-PK")
+                    coin = unchecked((int)coin);
+                string result = coin.ToString("F2", culture);
+                return result.EndsWith(".00") || result.EndsWith(",00") || result.EndsWith(" 00")
+                    ? result.Substring(0, result.Length - 3) : result;
+            }
+            catch (Exception error)
+            {
+                Debug.LogError(error);
+                return coin.ToString("F2");
+            }
+        }
         // UILSSUtil.GoldLSSFormat: explicit country arguments reset the shared
         // formatter's culture; changing the default country alone does not.
         public string Format(float gold, string countryLanguageCode = "")

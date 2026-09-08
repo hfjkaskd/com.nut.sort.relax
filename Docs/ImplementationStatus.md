@@ -108,3 +108,6 @@
 日志必须出现 `NUT_CONTENT_VALIDATION_PASS`，且无编译错误或验证异常；不要仅依据启动 Unity 的 PowerShell 退出码判断，因为 Unity.exe 可提前返回进程启动结果。
 
 期望清单由原加密数据在独立 PowerShell/.NET 解密后生成，Unity 验证实际 Resources 加载路径。测试代码仅在 Editor 验证程序集；游戏加载器没有 Editor 专用分支。
+
+- 已按当前 ARM64 调用补齐金币独立阶段规则：使用 bear_zs_list、LoginDayCoin 和实际关卡大于 4 的展示条件，保留门槛 float 比较与文案 double 差额计算的区别、原文案编号及未钳制差值。数量格式补齐 F2、三地区整数截断，并与现金格式共用同一格式器实例的文化缓存。完整服务端 JSON 保持原样；没有伪造奖励数据或新增 SDK 行为。金币 Prefab/动画/点击分支及生产 MainPanelTop 尚待恢复，详见 Docs/CoinProgressAudit.md。
+- 本轮 29 组完整 Unity 回归通过，覆盖金币独立阶段、精度边界、零换算率和现金/金币文化缓存联动；测试存档已恢复。此次未变更视觉资源，不作新的画面一致性结论。
