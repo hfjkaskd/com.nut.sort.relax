@@ -15,6 +15,6 @@ The maximum provider corresponds to ServerConfigData.LSSLSMAC at 0x60, and the m
 
 Validation covers lazy reads, inclusive limit, crossing the limit by four, unlock success, both add branches, configuration changes during unlock, unchecked overflow and exception mutation. It also instantiates the complete main prefab and invokes its actual standard AddScrew Button, verifying the common gate and panel-then-audio entry path.
 
-Remaining: LevelInfo.Unlock, AddTile and AddNullScrew world implementations must be restored and bound to this flow, along with actual configuration/panel context in default startup. Observed callback tests do not prove that a new world screw or tile exists. Full lifecycle and visual parity are still incomplete. Native evidence remains local.
+Follow-up: AddTile world behavior is restored (see AddTileAudit.md). LevelInfo.Unlock and AddNullScrew world implementations remain to be restored, and the completed operations must be bound to this flow, along with actual configuration/panel context in default startup. Observed callback tests do not prove that a new world screw or tile exists. Full lifecycle and visual parity are still incomplete. Native evidence remains local.
 
 Verification: `Library/unity-add-screw-flow-validation.log` contains 93 full-regression PASS markers including NUT_ADD_SCREW_FLOW_VALIDATION_PASS, with no compiler-error or exception markers. Validation preferences were restored and the backup is absent. No separate Play-mode world-addition success is claimed.

@@ -52,7 +52,7 @@ namespace NutSort.Gameplay
         public Vector2Int Coordinate;
         public bool IsLocked;
         public bool IsCanOperator = true;
-        public int Capacity { get; }
+        public int Capacity { get; private set; }
         public bool IsColorMask => Masks.Length > 0 && Masks[0].Type == ScrewType.Mask && Masks[0].Object.IsShow;
         public bool IsHidden => Masks.Length > 0 && Masks[0].Type == ScrewType.Hidden && Masks[0].IsShow;
         public bool IsDontMove => Masks.Length > 0 && Masks[0].Type == ScrewType.DontMove;
@@ -113,6 +113,8 @@ namespace NutSort.Gameplay
                 return true;
             }
         }
+
+        public void AddTile(bool singleTile) { Capacity=singleTile?unchecked(Capacity+1):4; }
 
         // IsNutColorSame 0xA07E50 skips empty slots from index one onward.
         public bool IsNutColorSame

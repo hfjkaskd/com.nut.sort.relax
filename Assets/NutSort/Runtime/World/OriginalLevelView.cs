@@ -160,6 +160,14 @@ namespace NutSort.World
             return result;
         }
 
+        // IsCanAddTile 0xA07E48 always returns true. Manager AddTile
+        // (0x9FE6B0) stops after the first eligible entry, including full rods.
+        public void AddTile(Func<bool> singleTile)
+        {
+            if(Board.Screws.Length==0)return;
+            screws[0].AddTile(singleTile());
+        }
+
         private Action<ScrewState> exchangeRequested;
         public void BindExchange(Action<ScrewState> exchange) { exchangeRequested=exchange; }
 

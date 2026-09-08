@@ -94,6 +94,7 @@ namespace NutSort.Validation
                 OriginalExchangeScrewValidation.Validate(repository);
                 OriginalExchangeOperationValidation.Validate(repository);
                 OriginalAddScrewFlowValidation.Validate();
+                OriginalAddTileValidation.Validate(repository);
                 OriginalEffectsValidation.Validate();
                 OriginalAudioValidation.Validate();
                 OriginalUserValidation.Validate();

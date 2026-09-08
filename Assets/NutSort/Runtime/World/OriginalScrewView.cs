@@ -61,6 +61,14 @@ namespace NutSort.World
             RefreshType(lssab);
         }
 
+        // ScrewInfo.AddTile 0xA08888 changes capacity then calls Screw.Refresh.
+        // NutInfo slots, selection and cap completion are not rebuilt here.
+        public void AddTile(bool lssab)
+        {
+            State.AddTile(lssab);
+            Refresh(lssab);
+        }
+
         public void RefreshType(bool lssab)
         {
             if (State.Masks.Length == 0) ScrewTypeObj.Configure(null, State, settings, lssab);
