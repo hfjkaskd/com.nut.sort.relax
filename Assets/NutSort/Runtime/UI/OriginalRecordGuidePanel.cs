@@ -65,7 +65,7 @@ namespace NutSort.UI
             if(closing)return;
             closing=true;bodyOpening=false;closeElapsed=0;closeStart=main.localScale;
         }
-        private void Update(){Advance(Time.deltaTime);}
+        private void Awake(){OriginalUIAnimationDriver.Register(this,Advance);}
         public void Advance(float delta)
         {
             if(!initialized)return;
@@ -98,6 +98,6 @@ namespace NutSort.UI
                 bodyOpening=elapsed<panels.PanelDurationTime;
             }
         }
-        private void OnDestroy(){if(ownedMaterial!=null)Destroy(ownedMaterial);}
+        private void OnDestroy(){OriginalUIAnimationDriver.Unregister(this);if(ownedMaterial!=null)Destroy(ownedMaterial);}
     }
 }

@@ -85,17 +85,20 @@ namespace NutSort.Validation
                     },()=>{closed=true;UnityEngine.Object.Destroy(panel.gameObject);game.ModalInputBlocked=false;},()=>{});
                     Check(panel.StartContainer.localScale==Vector3.zero,"Start parent is initially zero scale");
                     Check(panel.CurrencyParticles.sharedMaterial.GetTexture("_MainTex")==Resources.Load<Texture2D>("Atlas/Golds/US1"),"Current US texture applied to actual particle material");
+                    panel.enabled=false;
                     phase=1;deadline=now+.8;return;
                 }
                 if(now<deadline)return;
                 if(phase==1)
                 {
                     Check(panel.Main.localScale==Vector3.one && panel.StartContainer.localScale.sqrMagnitude<.000001f,"Panel opened while Start still hidden");
+                    panel.gameObject.SetActive(false);
                     phase=2;deadline=now+2;return;
                 }
                 if(phase==2)
                 {
                     Check(Vector3.Distance(panel.StartContainer.localScale,Vector3.one)<.00001f,"Start OutBack reaches one after its delay");
+                    panel.gameObject.SetActive(true);panel.enabled=true;
                     string path=System.IO.Path.GetFullPath(System.IO.Path.Combine(Application.dataPath,"../Library/ValidationCaptures/record-guide.png"));
                     Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));ScreenCapture.CaptureScreenshot(path);Debug.Log("NUT_RECORD_GUIDE_CAPTURE "+path);
                     phase=3;deadline=now+.2;return;
@@ -111,10 +114,11 @@ namespace NutSort.Validation
                     ExecuteEvents.Execute(button.gameObject,data,ExecuteEvents.pointerClickHandler);
                     Check(started && panel.Closing && !closed,"Button runs completion callback before delayed close finishes");
                     Check(PlayerPrefs.GetString(OriginalUserStore.Key)==before,"Record callback adds no save point");
+                    panel.gameObject.SetActive(false);
                     phase=4;deadline=now+.4;return;
                 }
                 Check(closed && panel==null && !game.ModalInputBlocked,"Native close completes and releases isolated validation host");
-                Debug.Log("NUT_RECORD_GUIDE_PLAY_VALIDATION_PASS real canvas render, delayed Start scale, country particle texture, native Button raycast/dispatch, close callback order and no added save; full startup lifecycle still pending.");Finish(0);
+                Debug.Log("NUT_RECORD_GUIDE_PLAY_VALIDATION_PASS real canvas render, disabled component entry, hidden delayed Start and close, country particle texture, native Button raycast/dispatch, close callback order and no added save; full startup lifecycle still pending.");Finish(0);
             }
             catch(Exception error){Debug.LogException(error);Finish(1);}
         }
