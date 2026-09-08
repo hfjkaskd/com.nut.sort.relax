@@ -100,15 +100,22 @@ namespace NutSort.Validation
                                 Check(showBanner && !firstInit,"Actual restart uses native default banner and non-first flags");
                                 user.ComeOnGold=comeOnGold;
                                 Check(host.TryShow(game,showBanner) && host.IsOpen,"Actual initialization continuation opens scene-selected panel through host");
+                                game.IsInitDone=true;
                                 initializations++;
                             }));
                     game.RestartLevel();
                     Check(!host.IsOpen && initializations==index,"Restart does not synchronously complete initialization");
+                    Check(!game.IsInitDone && user.PassLevelTime==0,"Actual restart resets and pauses the native elapsed clock");
                     phase=5;deadline=now+3.5;return;
                 }
                 if(phase==5)
                 {
-                    if(!host.IsOpen){Check(now<deadline,"Actual restart continuation reaches unlock panel");return;}
+                    if(!host.IsOpen)
+                    {
+                        Check(now<deadline,"Actual restart continuation reaches unlock panel");
+                        Check(!game.IsInitDone && user.PassLevelTime==0,"Board readiness alone cannot advance the clock while awaiting initialization");
+                        return;
+                    }
                     Check(initializations==index+1,"One continuation per actual restart");
                     panel=host.Panel;
                     for(int i=0;i<4;i++)Check(panel.Icons[i].activeSelf==(i==index),"Actual icon visibility");
@@ -117,6 +124,7 @@ namespace NutSort.Validation
                 if(now<deadline)return;
                 if(phase==1)
                 {
+                    Check(game.IsInitDone && user.PassLevelTime>.1f,"Actual Update accumulates scaled time after initialization, including while the unlock modal is open");
                     string path=System.IO.Path.GetFullPath("Library/ValidationCaptures/unlock-"+index+".png");Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));ScreenCapture.CaptureScreenshot(path);
                     phase=2;deadline=now+.3;return;
                 }

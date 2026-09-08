@@ -51,6 +51,8 @@ namespace NutSort.World
         public int ShowLevel => Tables.GetShowLevel(PlayerLevel);
         public bool InputBlocked { get; set; }
         public bool IsExchanging { get; set; }
+        public bool IsInitDone { get; set; }
+        public bool IsSucceed { get; set; }
         private readonly OriginalFailureFlow failure = new OriginalFailureFlow();
         public bool IsFail { get => failure.IsFail; set => failure.IsFail = value; }
 
@@ -128,6 +130,8 @@ namespace NutSort.World
 
         private void BeginInitialization(bool reset, bool useLongEntry)
         {
+            IsInitDone = false;
+            IsSucceed = false;
             IsRestarting = true;
             var user = audioPlayer.UserState.Data;
             user.LuckyScrewDoneCount = 0;
@@ -240,8 +244,16 @@ namespace NutSort.World
             level.FixCameras(GameCamera, TopGameCamera, width, height);
         }
 
+        // LuoSiSortMgr.Update 0x9FB8F4 gates only on IsInitDone. Modal state,
+        // failure/success and visual readiness do not stop an initialized clock.
+        public void AdvanceElapsedTime(float deltaTime)
+        {
+            if (IsInitDone) audioPlayer.UserState.Data.PassLevelTime += deltaTime;
+        }
+
         private void Update()
         {
+            AdvanceElapsedTime(Time.deltaTime);
             AdvanceInitialization(Time.deltaTime);
             if (level == null || IsRestarting) return;
             if (viewportWidth != Screen.width || viewportHeight != Screen.height) ResizeCameras(Screen.width, Screen.height);
