@@ -11,3 +11,5 @@ The icon's CircleImageMaterial uses UI/CircleImage, whose exported body was a du
 Remaining: PMDBullet launcher/pool/movement, actual main-owner coroutine binding, production Top lifecycle and original-device visual comparison. The view's injected scheduling test is not proof of an integrated coroutine or complete player flow. SDK behavior is unchanged.
 
 Current Unity graphics capture passed (unity-marquee-item-capture.log): Library/ValidationCaptures/marquee-item.png was visually inspected for text, background and circular PayPal icon, with no missing/magenta material. Width is 1002.05 for the deterministic validation text. This editor rendering fixture is not live Play timing or original-device parity evidence.
+
+Follow-up: the standalone PMDBullet launcher/pool/movement is implemented; see MarqueeLauncherAudit.md. Production main-owner coroutine and Top binding remain pending.

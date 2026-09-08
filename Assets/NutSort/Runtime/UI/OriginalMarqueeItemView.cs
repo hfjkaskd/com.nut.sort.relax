@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace NutSort.UI
 {
-    public sealed class OriginalMarqueeItemView : MonoBehaviour
+    public sealed partial class OriginalMarqueeItemView : MonoBehaviour
     {
         [SerializeField] private Image headImage;
         [SerializeField] private TextMeshProUGUI tip;
