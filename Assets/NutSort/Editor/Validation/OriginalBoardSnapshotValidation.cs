@@ -28,7 +28,7 @@ namespace NutSort.Validation
             var restored = snapshot.Restore(layout);
             Check(restored.LevelId == null && restored.Screws[0].Capacity == 7 && restored.Screws[0].Slots.Length == 2,
                 "Capacity is independent of slot count; no invented level identifier");
-            Check(restored.Screws[0].Coordinate == layout.Coordinate(1,0), "Source runtime initialization replaces saved screw coordinate");
+            Check(restored.Screws[0].Coordinate == new Vector2Int(99,-2), "Restore retains serialized coordinate; visual binding handles valid original layouts");
             Check(restored.Screws[0].Slots[0].Coordinate == new Vector3Int(2,0,3), "Fixed nut position is preserved");
             Check(restored.Screws[0].Slots[0].Nut.Type == NutType.Hidden && !restored.Screws[0].Slots[0].Nut.V &&
                 restored.Screws[0].Slots[1].Nut == null && restored.Screws[0].IsLocked, "Hidden nut, V, empty slot and lock restored");
@@ -65,6 +65,7 @@ namespace NutSort.Validation
                 foreach (string seed in entry.Seeds) { RoundTrip(repository.LoadBoard(true, seed), layout, history); boards++; }
             Check(boards > 0, "Repository seeds validated");
             ValidateView(repository);
+            ValidateSavedLayout(repository,layout);
             Debug.Log("NUT_BOARD_SNAPSHOT_VALIDATION_PASS source field envelope, nulls/defaults, masks/locks, numeric enums, runtime exclusions, seed round trips=" + boards + "; native prefab restore and compact operation history; automatic startup/save routing remains pending.");
         }
 
@@ -76,6 +77,40 @@ namespace NutSort.Validation
             var restored = snapshot.Restore(layout);
             EqualJson(json, OriginalBoardSnapshotJson.Write(OriginalBoardSnapshot.Capture(restored, snapshot.OperatorInfos)),
                 "Every source board preserves its serialized state");
+        }
+
+        private static void ValidateSavedLayout(OriginalLevelRepository repository, OriginalLayoutSettings layout)
+        {
+            var first = new OriginalBoardState(repository.LoadBoard(false,"4b56d_1_1-1"),layout);
+            var template = OriginalBoardSnapshotJson.Write(OriginalBoardSnapshot.Capture(first,new List<OriginalMoveRecord>()));
+            var snapshot = new OriginalBoardSnapshot();
+            // Saved six-column row deliberately differs from fresh six-rod 3+3.
+            for(int i=0;i<6;i++)
+            {
+                var screw=OriginalBoardSnapshotJson.Read(template).ScrewInfos[0];
+                screw.Index=i;screw.Coordinate=new SavedCoordinate{x=0,y=i};
+                snapshot.ScrewInfos.Add(screw);
+            }
+            var holder=new GameObject("Saved layout validation");
+            OriginalLevelView view=null;
+            try
+            {
+                var pool=holder.AddComponent<OriginalPrefabPool>();
+                view=pool.Rent("Game/Level",holder.transform).GetComponent<OriginalLevelView>();
+                view.BindSaved(snapshot,pool,false,true);
+                Check(view.Board.Screws[5].Coordinate==new Vector2Int(0,5),"Existing saved row retained across fresh-layout threshold");
+                Check((view.GetScrew(5).transform.localToWorldMatrix.MultiplyPoint3x4(Vector3.zero)-layout.Position(1,6,new Vector2Int(0,5))).sqrMagnitude<.000001f,
+                    "Saved row uses original six-column spacing and centering");
+                var camera=holder.AddComponent<Camera>();view.FixCameras(camera,camera,480,854);
+                Check(Mathf.Abs(camera.orthographicSize-layout.CameraSize(480,854,6))<.00001f,"Camera uses saved maximum column count");
+                snapshot.ScrewInfos[2].Coordinate=null;
+                view.BindSaved(snapshot,pool,false,true);
+                for(int i=0;i<6;i++)Check(view.Board.Screws[i].Coordinate==layout.Coordinate(6,i),"One missing coordinate rebuilds every row/column");
+                Check((view.GetScrew(5).transform.position-layout.Position(6,5)).sqrMagnitude<.000001f,"Missing-coordinate path applies fresh positions");
+                view.FixCameras(camera,camera,480,854);
+                Check(Mathf.Abs(camera.orthographicSize-layout.CameraSize(480,854,3))<.00001f,"Fresh layout restores camera column count");
+            }
+            finally{if(view!=null)view.Clear();UnityEngine.Object.DestroyImmediate(holder);}
         }
 
         private static void ValidateView(OriginalLevelRepository repository)

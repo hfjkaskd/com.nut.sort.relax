@@ -53,6 +53,9 @@ namespace NutSort.Gameplay
             if (layout == null) throw new ArgumentNullException(nameof(layout));
             if (ScrewInfos == null || OperatorInfos == null) throw new InvalidDataException("Original saved board lists are null.");
             var screws = new ScrewState[ScrewInfos.Count];
+            bool resetCoordinates = false;
+            for (int i = 0; i < ScrewInfos.Count; i++)
+                if (ScrewInfos[i] != null && ScrewInfos[i].Coordinate == null) resetCoordinates = true;
             for (int i = 0; i < screws.Length; i++)
             {
                 SavedScrew saved = ScrewInfos[i];
@@ -83,9 +86,11 @@ namespace NutSort.Gameplay
                 screws[i] = new ScrewState(saved.Id, saved.Index, saved.NutMaxCount, slots, masks)
                 {
                     IsLocked = saved.IsLocked,
-                    // ScrewInfo.Init(null, isFirstInit) replaces the saved coordinate
-                    // with ScenePosGroup.GetScrewPos(Index)'s coordinate (0xA08208).
-                    Coordinate = layout.Coordinate(screws.Length, saved.Index)
+                    // ScenePosGroup.Init(false) first creates positions from saved
+                    // row/column values. Any missing coordinate resets the WHOLE
+                    // layout; ScrewInfo.Init then copies those position coordinates.
+                    Coordinate = resetCoordinates ? layout.Coordinate(screws.Length, saved.Index) :
+                        new Vector2Int(saved.Coordinate.x, saved.Coordinate.y)
                 };
             }
             return new OriginalBoardState(screws);

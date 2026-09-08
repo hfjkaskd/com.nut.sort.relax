@@ -64,7 +64,7 @@ namespace NutSort.World
             operation.SelectionSoundRequested += ForwardSelectionSound;
             operation.MoveSoundRequested += ForwardMoveSound;
             operation.MoveAttempted += ForwardMoveAttempt;
-            ScenePosGroup.Bind(pool, layout, settings, Board.Screws.Length);
+            ScenePosGroup.Bind(pool, layout, settings, Board);
             screws = new OriginalScrewView[Board.Screws.Length];
             for (int i = 0; i < screws.Length; i++)
             {
@@ -111,7 +111,7 @@ namespace NutSort.World
 
         public void FixCameras(Camera gameCamera, Camera topGameCamera, int width, int height)
         {
-            float size = layout.CameraSize(width, height, layout.MaxColumnCount(Board.Screws.Length));
+            float size = layout.CameraSize(width, height, ScenePosGroup.MaxColumnCount);
             gameCamera.orthographicSize = topGameCamera.orthographicSize = size;
         }
 

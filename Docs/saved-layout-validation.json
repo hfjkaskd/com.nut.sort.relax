@@ -1,0 +1,18 @@
+{
+  "problem": "Snapshot restoration incorrectly recomputed every screw coordinate from total count and could move saved added screws into different rows",
+  "sourceChain": ["Level.SetScenePosGroup 0x9F9110", "ScenePosGroup.Init 0xA05440", "ScenePosGroup.AddScrewPos 0xA059F0", "ScenePosGroup.ResetScrewPos 0xA05D2C", "ScrewInfo.Init 0xA08208"],
+  "behavior": [
+    "Resume layout derives rows and maximum columns from saved coordinates",
+    "Each row centers positions according to actual occupancy",
+    "Any missing coordinate selects the original whole-layout reset branch",
+    "Camera size uses the restored position group's maximum column count",
+    "Normal new boards still use original configured row thresholds and spacing"
+  ],
+  "validation": {
+    "fullRegressionGroups": 19,
+    "cases": ["Six-column saved row retained across normal six-rod row threshold", "Actual prefab coordinates and saved-column camera size", "Single missing coordinate resets all six rod coordinates and camera column count", "1482 seed-reference round trips", "Actual Play startup, input, transfer, cap completion, effects and cleanup passed; latest first-board capture inspected"],
+    "logs": ["unity-saved-layout-validation.log", "unity-saved-layout-scene-play.log"]
+  },
+  "limits": ["Startup automatic resume remains pending", "Sparse/duplicate/corrupt coordinate visual behavior is not claimed identical", "Full source-device visual comparison remains pending"],
+  "sdk": "Unchanged"
+}

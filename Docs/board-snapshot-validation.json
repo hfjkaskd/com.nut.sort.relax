@@ -13,7 +13,7 @@
   "implementation": {
     "serializer": "Explicit typed streaming JSON with official Unity Newtonsoft package; no reflection or enum-name dependence",
     "snapshot": "Only ScrewInfos and OperatorInfos at root; separate capacity and slot count; nullable source reference fields and constructor defaults",
-    "runtime": "Existing native prefab pool, original entry delays, layout-recomputed screw coordinates, fixed nut positions and fresh transient gates",
+    "runtime": "Existing native prefab pool and entry delays; preserve saved screw row/column layout, recalculate the entire layout only if any coordinate is missing; fixed nut positions and fresh transient gates",
     "history": "FromScrewIndex, ToScrewIndex and actual transferred NutCount; no animation-object retention",
     "callFrequency": "Snapshot work is explicit and allocates proportional to board size; no Update/LateUpdate serialization or disk writes introduced"
   },
