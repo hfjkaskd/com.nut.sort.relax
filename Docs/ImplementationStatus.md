@@ -141,3 +141,5 @@
 - 已恢复 PlayerGoldGetHint 普通推送/自身收益两套名称和金额文案，保留当前关卡读取、95/96/97/152 号推送文案、94 号自身称呼及自身传入金额，不混用弹幕文本。41 组回归通过，原配置保持不变，测试存档恢复。其图标、预制体、展示动画与完整 Top 接入仍待完成；SDK 未改动。详见 Docs/PlayerGoldHintTextAudit.md。
 
 - 已恢复收益提示渠道元数据查询、UserLssInfo.GetType 存档索引和原图标路径，区分普通推送缺图保留旧图与通用随机/自身收益直接赋值的行为。42 组回归通过，测试存档恢复。收益提示预制体/动画及正式 Top 仍待接入，SDK 未改动。详见 Docs/HintIconsAudit.md。
+
+- 已恢复 PlayerGoldGetHint 原六对象预制体、背景/字体/礼花及三条展示入口，接入已核对的 UTC 调度、文案和渠道图标；普通/自身收益 3 秒停留后 OutQuad 退出，回调展示使用 Y 轴 OutBack 入场、0.5 秒停留和线性退出。43 组完整回归及真实 Play 验证通过，最新画面已检查，测试存档恢复。正式 Top/provider 接线、完整生命周期与地区 AB/GM 仍待完成；SDK 未改动。详见 Docs/PlayerGoldHintViewAudit.md。
