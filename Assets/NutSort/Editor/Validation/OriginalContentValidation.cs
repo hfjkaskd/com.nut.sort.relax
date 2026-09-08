@@ -123,6 +123,7 @@ namespace NutSort.Validation
                 OriginalFailurePanelDataValidation.Validate();
                 OriginalFailureSparkleValidation.Validate();
                 OriginalPunchPathValidation.Validate();
+                OriginalPunchRotationValidation.Validate();
                 OriginalPlayerGoldHintScheduleValidation.Validate();
                 OriginalPlayerGoldHintTextValidation.Validate();
                 OriginalHintIconsValidation.Validate();
