@@ -1,6 +1,8 @@
 using System;
 using NutSort.Gameplay;
 using NutSort.World;
+using NutSort.UI;
+using System.IO;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -14,6 +16,7 @@ namespace NutSort.Validation
         private static OriginalGameScene game;
         private static int phase;
         private static double deadline, timeout;
+        private static bool loadingCaptured;
         static OriginalScenePlayValidation()
         {
             if(SessionState.GetBool(ActiveKey,false)){timeout=EditorApplication.timeSinceStartup+60;EditorApplication.update+=Tick;}
@@ -21,6 +24,7 @@ namespace NutSort.Validation
         public static void Run()
         {
             EditorSceneManager.OpenScene("Assets/Scenes/LuoSiSortGame.unity");
+            PlayModeWindow.SetCustomRenderingResolution(480,854,"Nut Sort portrait validation");
             SessionState.SetBool(ActiveKey,true);
             EditorApplication.EnterPlaymode();
         }
@@ -42,6 +46,16 @@ namespace NutSort.Validation
             try
             {
                 if(EditorApplication.timeSinceStartup>timeout)throw new Exception("Play mode scene validation timeout.");
+                if(!loadingCaptured)
+                {
+                    var flow=UnityEngine.Object.FindObjectOfType<OriginalStartupFlow>();
+                    if(flow!=null && flow.Loading.IsVisible && flow.Loading.Value>=.25f)
+                    {
+                        string path=Path.GetFullPath(Path.Combine(Application.dataPath,"../Library/ValidationCaptures/loading-frame.png"));
+                        Directory.CreateDirectory(Path.GetDirectoryName(path));ScreenCapture.CaptureScreenshot(path);
+                        loadingCaptured=true;Debug.Log("NUT_LOADING_CAPTURE "+path);
+                    }
+                }
                 if(game==null)game=UnityEngine.Object.FindObjectOfType<OriginalGameScene>();
                 if(game==null||game.Level==null||!game.Level.AreNutsInitialized)return;
                 if(phase==0){phase=1;deadline=EditorApplication.timeSinceStartup+2;return;}

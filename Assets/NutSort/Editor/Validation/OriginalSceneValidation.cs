@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using NutSort.Gameplay;
 using NutSort.World;
+using NutSort.UI;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -16,13 +17,18 @@ namespace NutSort.Validation
         {
             var scene = EditorSceneManager.OpenScene("Assets/Scenes/LuoSiSortGame.unity");
             OriginalGameScene game = null;
+            OriginalStartupFlow startup = null;
             foreach (GameObject root in scene.GetRootGameObjects())
             {
                 if (root.TryGetComponent(out OriginalGameScene candidate)) game = candidate;
+                if (root.TryGetComponent(out OriginalStartupFlow flow)) startup = flow;
                 foreach (Transform child in root.GetComponentsInChildren<Transform>(true))
                     Check(GameObjectUtility.GetMonoBehavioursWithMissingScriptCount(child.gameObject)==0,"Missing scene script: "+child.name);
             }
             Check(game != null,"Native startup component exists in source scene");
+            Check(startup != null,"Source UI startup root exists");
+            OriginalLoadingValidation.Validate(startup.Loading);
+            game.gameObject.SetActive(true);
             Check(Mathf.Abs(RenderSettings.ambientIntensity-5f)<.0001f,"Original ambient intensity");
             Check(LightmapSettings.lightmaps.Length==0,"Source has no baked lightmap textures");
             game.Initialize();

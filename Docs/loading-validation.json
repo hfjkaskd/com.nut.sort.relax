@@ -1,0 +1,24 @@
+{
+  "unity": "2022.3.62f3",
+  "result": "pass",
+  "regressionGroups": 12,
+  "checks": [
+    "Original scene loading hierarchy, image assets, canvas scaling, font and outlines",
+    "Rate 0.5 and cap 0.9",
+    "Half-second OutQuad completion plus 0.2-second hold",
+    "750-unit moving marker",
+    "Original F0 percentage rounding with cached strings",
+    "Next-frame GameScene activation after completion signal",
+    "Input blocked until loading closes",
+    "Actual Play-mode loading capture and subsequent first-board completion"
+  ],
+  "officialResources": "TextMeshPro 3.0.6 Essential Resources",
+  "capture": "Library/ValidationCaptures/loading-frame.png",
+  "limitations": [
+    "Local startup only; original user/server initialization and full main UI still pending",
+    "Region/AB/GM and later lifecycle branches still pending",
+    "Concurrent overlapping close requests need full lifecycle call-chain review",
+    "No complete source-versus-target visual fidelity claim"
+  ],
+  "rawEvidence": "Retained locally, not exported to repository"
+}
