@@ -1,0 +1,31 @@
+{
+  "unity": "2022.3.62f3",
+  "result": "pass",
+  "regressionGroups": 11,
+  "playMode": "Automatic Start and runtime Update verified",
+  "checks": [
+    "Source scene camera stack, lighting, background and lighting data",
+    "Scene starts selected first board from explicit configuration",
+    "Camera ray picks actual gameplay colliders",
+    "Selection, transfer and completion gate under real frame updates",
+    "Unified mouse/single-touch release path implemented",
+    "Latest Play mode before/after GPU renders inspected"
+  ],
+  "migration": [
+    "Background legacy Unlit/Texture to official URP/Unlit with original texture, UV and white multiplier; desktop depth prepass fixed",
+    "Official pipeline asset schema 9 to 11",
+    "Source Portrait orientation restored"
+  ],
+  "captures": [
+    "Library/ValidationCaptures/play-first-board.png",
+    "Library/ValidationCaptures/play-first-board-complete.png"
+  ],
+  "limitations": [
+    "Core first board only; full UI, rewards, guides, saves and lifecycle branches pending",
+    "Explicit session flags are not completed region/AB initialization or GM",
+    "Three source skeletal effects still require native assets",
+    "No Android/iOS build validation yet",
+    "No full source-versus-target visual fidelity claim"
+  ],
+  "rawEvidence": "Not published; retained locally"
+}

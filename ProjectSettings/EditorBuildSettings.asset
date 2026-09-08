@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/LuoSiSortGame.unity
+    guid: 4d67760db7f111f4eb7a09c8918bfae0
   m_configObjects: {}

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1b5f5893b9544c3be562513ef86d9c0, type: 3}
+  m_Name: OriginalSceneSession
+  m_EditorClassIdentifier:
+  LevelPrefabPath: Game/Level
+  Level: 1
+  Seed: 0
+  LongEntryDelay: 1
+  LSS260820: 0
+  LSSSHSLV: 1
+  LSSAB: 1
+  RaycastDistance: Infinity
+  GameplayLayers:
+    serializedVersion: 2
+    m_Bits: 4294967291
