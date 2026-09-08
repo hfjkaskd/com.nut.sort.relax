@@ -11,6 +11,7 @@ namespace NutSort.Content
         public int DailyLevels { get; private set; }
         public int RealLevel { get; private set; }
         public int Stage2RealLevel { get; private set; }
+        public int Stage2StartShowLevel { get; private set; }
         public int LoginDays { get; private set; }
         public int UserLevel { get; private set; }
 
@@ -27,6 +28,7 @@ namespace NutSort.Content
                 DailyLevels = Integer(document, "cal_cfg"),
                 RealLevel = Integer(row, "RealLevel"),
                 Stage2RealLevel = Integer(row, "Stage2RealLevel"),
+                Stage2StartShowLevel = Integer(row, "Stage2StartShowLevel"),
                 LoginDays = Integer(row, "caliper_logs"),
                 UserLevel = Integer(row, "caliper_rank")
             };
