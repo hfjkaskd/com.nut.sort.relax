@@ -21,6 +21,13 @@ namespace NutSort.UI
             Level=arguments.Length>0?(int)arguments[0]:user.Level;
             bindWithdrawal();bindClose();
         }
+        // TXPanel.Refresh shared tail: initialize a newly instantiated PlayerInfo first.
+        public void FinishRefresh(Action<int> initializePlayerInfo,Action<bool> setPlayGoldTween,Action<int> setTip)
+        {
+            initializePlayerInfo(Level);
+            setPlayGoldTween(false);
+            if(user.IsGuideGold)setTip(159);
+        }
         public void TweenEnd()
         {
             int index=user.GuideIndex;
