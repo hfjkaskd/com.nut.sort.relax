@@ -239,11 +239,12 @@ namespace NutSort.World
             OperationApplied?.Invoke(result, target);
         }
 
-        private void SaveCurrentBoard()
+        private void SaveCurrentBoard()=>SaveUserData();
+        public void SaveUserData()
         {
             var store = audioPlayer.UserState.Store;
             if (store.Data != null)
-                store.SaveData(true, OriginalBoardSnapshotJson.Write(level.CaptureSnapshot()));
+                store.SaveData(level!=null,level==null?null:OriginalBoardSnapshotJson.Write(level.CaptureSnapshot()));
         }
 
         public void ResizeCameras(int width, int height)

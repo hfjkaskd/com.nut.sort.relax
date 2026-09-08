@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using NutSort.Gameplay;
+using NutSort.Content;
 using NutSort.UI;
 using NutSort.World;
 using UnityEditor;
@@ -47,9 +48,12 @@ namespace NutSort.Validation
                 }
                 if(flags.Count<4)return;
                 Check(string.Join(",",flags)=="00,01,10,11","Concurrent scene coroutines retain each invocation's banner/first flags");
+                game.User.GuideIndex=19;game.SaveUserData();
+                var saved=OriginalUserDataJson.Read(PlayerPrefs.GetString(OriginalUserStore.Key),Resources.Load<OriginalUserDefaults>("Configuration/OriginalUserDefaults"));
+                Check(saved.GuideIndex==19 && !string.IsNullOrEmpty(saved.LevelInfo) && saved.LevelInfo==game.User.LevelInfo,"Scene guide save persists live user and actual board snapshot");
                 game.User.PassLevelTime=31;game.InitLevel(false,false,false);
                 Check(game.User.PassLevelTime==31 && !game.IsInitDone && game.IsRestarting,"Nonreset entry preserves elapsed time before deferred reconstruction");
-                Debug.Log("NUT_INIT_LEVEL_ENTRY_PLAY_PASS actual scene InitLevel entry, four independent captured flag pairs, delayed continuation and immediate reset/nonreset behavior; SDK boundary unchanged.");Finish(0);
+                Debug.Log("NUT_INIT_LEVEL_ENTRY_PLAY_PASS actual scene InitLevel entry, four independent captured flag pairs, delayed continuation and immediate reset/nonreset behavior plus actual user/board save; SDK boundary unchanged.");Finish(0);
             }
             catch(Exception error){Debug.LogException(error);Finish(1);}
         }

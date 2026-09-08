@@ -47,6 +47,13 @@ namespace NutSort.Validation
                 panel.PlayerHint.Push();long deadline=panel.PlayerHint.LastShowTime;panel.TargetReward.transform.localPosition=new Vector3(12,34,0);panel.ExchangeMask.gameObject.SetActive(true);
                 user.RevokeCount=9;user.Gold=27;panel.Refresh();Check(panel.Bottom.GetOtherItem(2).Display.Value.text=="9" && panel.Top.Gold.Value.text.Contains("27"),"Parent refresh updates both regions");
                 Check(panel.PlayerHint.LastShowTime==deadline && panel.TargetReward.transform.localPosition==new Vector3(12,34,0) && panel.ExchangeMask.gameObject.activeSelf,"Refresh does not reset overlays or schedules");
+                // Exercise actual main-panel bindings, without substituting fake refresh callbacks.
+                var guideUI=new OriginalSceneGuideUI(null,()=>panel,null,null,null);
+                Check(guideUI.GoldTarget==panel.Top.Gold.GetComponent<RectTransform>() && guideUI.CoinTarget==panel.Top.Coin.GetComponent<RectTransform>(),"Guide targets use component RectTransforms, not icon/click-child geometry");
+                user.Gold=41;guideUI.RefreshGold();Check(panel.Top.Gold.Value.text.Contains("41"),"Guide gold refresh updates the actual TMP value");
+                user.Coin=57;guideUI.RefreshCoin();Check(panel.Top.Coin.Value.text.Contains("57"),"Guide coin refresh updates the actual TMP value");
+                user.Gold=63;user.RevokeCount=4;guideUI.RefreshMain();
+                Check(panel.Top.Gold.Value.text.Contains("63") && panel.Bottom.GetOtherItem(2).Display.Value.text=="4","Guide main refresh reaches both top and bottom");
                 Debug.Log("NUT_MAIN_PANEL_VALIDATION_PASS full original composition, shared hint identity, hidden label localization, parent Init/Refresh and exchange mask cancellation without scaling or duplicate callbacks.");
             }
             finally { UnityEngine.Object.DestroyImmediate(instance); }
