@@ -159,6 +159,16 @@ namespace NutSort.World
             return result;
         }
 
+        public int MoveHistoryCount => operation.MoveHistory.Count;
+
+        // LuoSiSortMgr.Revoke acts on live history, then checks the resulting
+        // board even when a record rejects. Item cost/save belong to ItemMgr.
+        public void Revoke(Action<int> refreshButtonState, Action fail)
+        {
+            new OriginalRevokeFlow(() => operation.MoveHistory, RevokeRecord,
+                refreshButtonState, IsCannotMove, fail).Revoke();
+        }
+
         // Record operation only; history removal, failure dispatch and tool cost
         // remain owned by their respective manager flows.
         public bool RevokeRecord(OriginalMoveRecord record)
