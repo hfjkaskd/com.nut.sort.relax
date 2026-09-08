@@ -18,6 +18,7 @@ namespace NutSort.UI
         [SerializeField] private OriginalHollowMaskGraphic hollowMask;
         [SerializeField] private string emptyMarkerPath,filledMarkerPath;
         [SerializeField] private float maskRevealDelay;
+        [SerializeField] private float successGuideMaskDuration,successGuideReopenDelay;
         private Action<float,Action> scheduleMask;
         private OriginalTables tables;
         private string language;
@@ -48,6 +49,26 @@ namespace NutSort.UI
             CallbackAction=completed;
             Close();
             showPanel(35,unchecked(user.Level-1));
+        }
+
+        // ShowGuide case 0 (0x9E28E4), click closure 0x9E3FB0.
+        // The supplied operation is SuccessPanel.MoreGetCallback (virtual slot 12).
+        public void ShowSuccessGuide(OriginalUserLocalData user,Button moreGetButton,Action moreGet,
+            Action<bool,float,string> setMask,Action<float,Action> schedule,Action<int> showPanel)
+        {
+            Hand.gameObject.SetActive(true);
+            Button.gameObject.SetActive(true);
+            Pos.position=moreGetButton.transform.position;
+            Button.image.rectTransform.sizeDelta=moreGetButton.image.rectTransform.sizeDelta;
+            SetTip(-1,0);
+            ClickAction=()=>
+            {
+                moreGet();
+                user.GuideIndex=unchecked(user.GuideIndex+1);
+                Close();
+                setMask(true,successGuideMaskDuration,string.Empty);
+                schedule(successGuideReopenDelay,()=>showPanel(7));
+            };
         }
 
         public bool IsOpen { get; private set; }

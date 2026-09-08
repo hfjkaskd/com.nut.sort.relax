@@ -566,6 +566,8 @@ MonoBehaviour:
   emptyMarkerPath: Atlas/NewbieGuidePanel/dian
   filledMarkerPath: Atlas/NewbieGuidePanel/dian1
   maskRevealDelay: 0.2
+  successGuideMaskDuration: 1.5
+  successGuideReopenDelay: 0.5
 --- !u!224 &224946936116752871
 RectTransform:
   m_ObjectHideFlags: 0
