@@ -1,0 +1,23 @@
+{
+  "unity": "2022.3.62f3",
+  "result": "pass",
+  "validator": "OriginalScrewValidation",
+  "regressionGroups": 9,
+  "checks": [
+    "Original screw prefab without missing scripts, meshes or sprite references",
+    "Root scale 1.4",
+    "Fixed collider and cap geometry",
+    "ReadyPos and InitPos reference the same source node; final local y 1.94",
+    "Pool reuse and short-screw tip hint",
+    "Completed cap visibility",
+    "LSSAB short/full lock branches",
+    "Original mask object color and cover visibility"
+  ],
+  "limitations": [
+    "Three source skeletal effects still require native conversion; source targets remain and requests are exposed",
+    "Whole-screw completion animation and particle fidelity pending",
+    "Main playable scene is not connected",
+    "No full visual fidelity claim"
+  ],
+  "rawEvidence": "Retained in local reverse-engineering directory"
+}
