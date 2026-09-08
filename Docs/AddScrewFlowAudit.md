@@ -18,3 +18,5 @@ Validation covers lazy reads, inclusive limit, crossing the limit by four, unloc
 World implementations are restored in AddTileAudit.md, UnlockScrewAudit.md and AddNullScrewAudit.md. Explicit Play fixtures compose unlock/new-rod paths with the scene, original effects and real inventory/save operations. Default startup still needs real configuration/panel context and completed tool-flow composition. Full lifecycle and visual parity remain incomplete; native evidence stays local.
 
 The initial flow verification had 93 PASS markers; the current full regression has 96 including the world additions. Observed callback tests alone are not treated as evidence that a world rod exists.
+
+Scene composition: SceneToolsAudit.md documents the shared runtime binding from locked screw world clicks and complete bottom Buttons to the actual manager/world/item flow, including its Play verification. Default startup context is still pending.

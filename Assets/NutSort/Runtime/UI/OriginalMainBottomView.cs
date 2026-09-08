@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using NutSort.Content;
+using NutSort.World;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,6 +31,18 @@ namespace NutSort.UI
                 item.Bind(user,historyCount,addScrew,revoke,applyItem,setExchangeState,openToolPanel,showTip,tryClick,playClick);
             }
         }
+        // Compose the source manager operations once for both UI and world clicks.
+        public void BindScene(OriginalGameScene game,OriginalItemManager items,Func<int> maximum,Func<bool> singleTile,
+            Action<bool,float> setExchangeState,Action<int,int> openToolPanel,Action<int> showTip,
+            Func<bool> tryClick,Action playClick,Action<int> openPanel)
+        {
+            game.BindAddScrew(maximum,singleTile,items,Refresh,openToolPanel,showTip);
+            game.BindExchange(items,openPanel);
+            Bind(game.User,()=>game.Level!=null,()=>game.Level.MoveHistoryCount,game.AddScrew,
+                ()=>game.Revoke(RefreshOtherItemButtonState,openPanel),items.AddTool,setExchangeState,
+                openToolPanel,showTip,tryClick,playClick,openPanel);
+        }
+
         public void Init()
         {
             setting.transition=Selectable.Transition.ColorTint;

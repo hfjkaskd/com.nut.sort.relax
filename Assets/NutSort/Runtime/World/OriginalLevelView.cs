@@ -154,6 +154,7 @@ namespace NutSort.World
                     if (slot.Nut != null) nuts[slot.Nut].RefreshVisual();
             }
             if(result.Kind==ScrewOperationKind.ExchangeRequested)exchangeRequested?.Invoke(target);
+            if(result.Kind==ScrewOperationKind.AddScrewRequested)addScrewRequested?.Invoke();
             // Level.Update remembers the clicked target on every true return,
             // including an invalid destination that just reverted the source.
             if (result.OriginalReturnValue) selected = target;
@@ -199,6 +200,9 @@ namespace NutSort.World
             if(Board.Screws.Length==0)return;
             screws[0].AddTile(singleTile());
         }
+
+        private Action addScrewRequested;
+        public void BindAddScrew(Action addScrew) { addScrewRequested=addScrew ?? throw new ArgumentNullException(nameof(addScrew)); }
 
         private Action<ScrewState> exchangeRequested;
         public void BindExchange(Action<ScrewState> exchange) { exchangeRequested=exchange; }

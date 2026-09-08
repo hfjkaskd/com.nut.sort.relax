@@ -98,6 +98,7 @@ namespace NutSort.Validation
                 OriginalUnlockScrewValidation.Validate(repository);
                 OriginalAddNullScrewValidation.Validate(repository);
                 OriginalSceneRowsValidation.Validate(repository);
+                OriginalLockedScrewDispatchValidation.Validate(repository);
                 OriginalEffectsValidation.Validate();
                 OriginalAudioValidation.Validate();
                 OriginalUserValidation.Validate();

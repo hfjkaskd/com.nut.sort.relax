@@ -69,6 +69,16 @@ namespace NutSort.World
             failure.Fail(session.FailPanelDelay, ScheduleDelay, () => showPanel(session.FailPanelId));
         }
 
+        private OriginalAddScrewFlow addScrewFlow;
+        public void BindAddScrew(Func<int> maximum,Func<bool> singleTile,OriginalItemManager items,
+            Action refreshBottom,Action<int,int> showToolPanel,Action<int> showTip)
+        {
+            addScrewFlow=new OriginalAddScrewFlow(User,maximum,singleTile,()=>level.Unlock(singleTile),
+                ()=>level.AddTile(singleTile),()=>AddNullScrew(singleTile,refreshBottom),items.AddTool,showToolPanel,showTip);
+            level.BindAddScrew(AddScrew);
+        }
+        public void AddScrew() => addScrewFlow.Run();
+
         public void AddNullScrew(Func<bool> singleTile,Action refreshBottom)
         {
             level.AddNullScrew(singleTile,()=>ResizeCameras(Screen.width,Screen.height));

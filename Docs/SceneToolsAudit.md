@@ -1,0 +1,13 @@
+# Scene tool composition and locked-screw dispatch
+
+Local ScrewInfo.Operator 0xA09430, specifically 0xA0960C-0xA09634, calls manager AddScrew synchronously when the clicked screw is locked outside exchange mode. It then returns false. It does not use the OtherItem UI click gate/audio path. Color-mask, hidden, done and exchange/locked guards precede the request.
+
+OriginalLevelView now dispatches AddScrewRequested before selection/result observation, retaining false OriginalReturnValue and the absence of a common move save. Binding survives board Clear/Bind and is replaced rather than accumulated when rebound. Manager exceptions propagate before operation observers.
+
+OriginalGameScene.BindAddScrew composes the existing live maximum/mode providers with actual Unlock, AddTile, AddNullScrew and item manager operations. Both world dispatch and public AddScrew call the same manager flow. OriginalMainBottomView.BindScene binds standard prefab Buttons to that flow, real revoke/history, exchange, inventory and panel consumers. No production configuration defaults, acquisition grants or SDK success were added.
+
+Verification scope includes a synchronous dispatch regression fixture and a full-scene Play fixture. The Play fixture supplies explicit configuration/top-view data and releases IsInitDone only as a named isolated input fixture; it does not claim production startup completion. It exercises the actual world camera ray and the complete original bottom Button through unlock, expansion, new rod and zero-stock panel request, with real inventory, display refresh, effects and board/user save.
+
+Remaining: default startup still creates the partial main prefab and does not yet supply complete panel/configuration/initialization contexts. BindScene is the runtime composition point ready for that context, not evidence that the default lifecycle is now usable. Acquisition-panel callback verification is not a claim that the missing actual panel was displayed. Existing application-exit pool reparenting warnings remain. Raw native evidence stays local; SDK handling is unchanged.
+
+Results: Library/unity-scene-tools-final.log has 98 PASS markers including NUT_LOCKED_SCREW_DISPATCH_VALIDATION_PASS and terminal NUT_CONTENT_VALIDATION_PASS. Library/unity-scene-tools-play.log has NUT_SCENE_TOOLS_PLAY_PASS. Both final logs have no compiler-error or exception markers. Initial test compilation used an incorrect enum label and was corrected to the existing Ignored value. Preferences were restored and their backup is absent. Application-exit pool warnings are tracked separately and remain unresolved.
