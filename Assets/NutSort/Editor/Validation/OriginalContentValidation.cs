@@ -112,6 +112,7 @@ namespace NutSort.Validation
                 OriginalMainTopViewValidation.Validate();
                 OriginalToolItemDisplayValidation.Validate();
                 OriginalToolItemControllerValidation.Validate();
+                OriginalMainBottomValidation.Validate();
                 OriginalPlayerGoldHintScheduleValidation.Validate();
                 OriginalPlayerGoldHintTextValidation.Validate();
                 OriginalHintIconsValidation.Validate();
