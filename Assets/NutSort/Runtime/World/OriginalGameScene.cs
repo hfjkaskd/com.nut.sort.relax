@@ -53,6 +53,7 @@ namespace NutSort.World
             audioPlayer.Bind(level);
             audioPlayer.PlaySound(session.StageStartSound, session.LongEntryDelay ? session.FirstStageSoundDelay : session.RestartStageSoundDelay);
             level.OperationApplied += ForwardOperation;
+            level.MoveAttempted += CountMoveAttempt;
             ResizeCameras(Screen.width, Screen.height);
         }
 
@@ -80,7 +81,25 @@ namespace NutSort.World
             IsRestarting = false;
         }
 
-        private void ForwardOperation(ScrewOperation result, ScrewState target) { OperationApplied?.Invoke(result, target); }
+        private void CountMoveAttempt()
+        {
+            // Source increments the user's cumulative count before validating
+            // destination color/capacity (ScrewInfo.Operator, 0xA09718).
+            audioPlayer.UserState.Data.ScrewMoveCount++;
+        }
+
+        private void ForwardOperation(ScrewOperation result, ScrewState target)
+        {
+            if (result.SaveRequested)
+            {
+                // Original common save point follows the immediate data transfer
+                // or invalid-destination revert, before movement animations finish.
+                var store = audioPlayer.UserState.Store;
+                if (store.Data != null)
+                    store.SaveData(true, OriginalBoardSnapshotJson.Write(level.CaptureSnapshot()));
+            }
+            OperationApplied?.Invoke(result, target);
+        }
 
         public void ResizeCameras(int width, int height)
         {
@@ -120,6 +139,7 @@ namespace NutSort.World
             effects.Clear();
             audioPlayer.Unbind();
             level.OperationApplied -= ForwardOperation;
+            level.MoveAttempted -= CountMoveAttempt;
             level.Clear();
             level = null;
         }

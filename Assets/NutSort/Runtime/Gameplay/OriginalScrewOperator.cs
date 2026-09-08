@@ -83,6 +83,7 @@ namespace NutSort.Gameplay
         private readonly List<NutSlot> sourceGroup = new List<NutSlot>();
         public readonly List<OriginalMoveRecord> MoveHistory = new List<OriginalMoveRecord>();
         public int ScrewMoveCount;
+        public event Action MoveAttempted;
         public event Action SelectionSoundRequested;
         public event Action<int> MoveSoundRequested;
 
@@ -111,6 +112,7 @@ namespace NutSort.Gameplay
 
             // The original counts attempts, including full/mismatched targets.
             ScrewMoveCount++;
+            MoveAttempted?.Invoke();
             source.GetTopSame(sourceGroup);
             if (sourceGroup.Count == 0) throw new InvalidOperationException("Selected screw has no nut.");
             if (target.IsFull || (targetGroup.Count > 0 && targetGroup[0].Nut.Color != sourceGroup[0].Nut.Color))

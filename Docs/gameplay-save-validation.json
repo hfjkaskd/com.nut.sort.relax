@@ -1,0 +1,39 @@
+{
+  "scope": "Live original operation save points and cumulative user attempts; startup resume remains pending",
+  "sourceRvas": {
+    "attemptIncrement": "0xA09718..0xA09720",
+    "commonOperationSave": "0xA09920",
+    "userEnvelopeSave": "0x9B3108",
+    "replayReset": "0x9E8174"
+  },
+  "implementation": [
+    "Attempt event updates the shared user's ScrewMoveCount before target color/capacity validation",
+    "Original SaveRequested branches write actual current board snapshot into the LevelInfo JSON string",
+    "Whole UserLocalData envelope uses original PlayerPrefs key and Save flush",
+    "No serialization on animation updates or selection-only operations",
+    "Scene owns subscriptions once; level rebuild preserves cumulative user count"
+  ],
+  "validation": {
+    "fullRegressionPassGroups": 19,
+    "actualPlayMode": true,
+    "cases": [
+      "Select/cancel leaves original preferences and attempt count unchanged",
+      "Mismatched destination persists count 40 to 41, unchanged occupied slots and no new history",
+      "Successful transfer persists count 42 and moved slots before animation gate release",
+      "Nested LevelInfo token remains a string and other user settings survive whole-envelope save",
+      "Animation frames do not duplicate operation writes",
+      "Replay retains cumulative count; next transfer persists 43 with one fresh history record",
+      "Real PlayerPrefs reread through a new store verifies serialization and persistence",
+      "Validation backup restores prior preference and is removed after completion"
+    ],
+    "logs": ["unity-gameplay-save-validation.log", "unity-gameplay-save-play.log"]
+  },
+  "pending": [
+    "Startup save selection and completed/empty saved-board reset branch",
+    "Persisted player level/seed binding and source fresh-level locked screw insertion",
+    "Other original lifecycle save points and tools/undo/reward branches",
+    "Original-device saved data and whole-game lifecycle comparison",
+    "Region AB/GM, US default and full current visual comparison"
+  ],
+  "sdk": "Existing treatment unchanged; no SDK implementation added"
+}

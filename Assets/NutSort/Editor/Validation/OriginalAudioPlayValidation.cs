@@ -22,6 +22,7 @@ namespace NutSort.Validation
         }
         public static void Run()
         {
+            OriginalPreferenceFixture.Begin();
             EditorSceneManager.OpenScene("Assets/Scenes/LuoSiSortGame.unity");
             SessionState.SetBool(Key, true); EditorApplication.EnterPlaymode();
         }
@@ -94,7 +95,7 @@ namespace NutSort.Validation
         private static void Check(bool condition, string message) { if (!condition) throw new Exception(message); }
         private static void Finish(int code)
         {
-            Time.timeScale = 1; SessionState.SetBool(Key, false); EditorApplication.update -= Tick; EditorApplication.Exit(code);
+            Time.timeScale = 1; SessionState.SetBool(Key, false); EditorApplication.update -= Tick; OriginalPreferenceFixture.Restore();EditorApplication.Exit(code);
         }
     }
 }

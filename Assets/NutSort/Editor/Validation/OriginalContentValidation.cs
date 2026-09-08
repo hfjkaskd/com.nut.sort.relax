@@ -27,6 +27,7 @@ namespace NutSort.Validation
         {
             try
             {
+                OriginalPreferenceFixture.Begin();
                 var settings = Resources.Load<OriginalContentSettings>("Configuration/OriginalContent");
                 Require(settings != null, "Serialized original content settings must load.");
                 var repository = new OriginalLevelRepository(settings);
@@ -97,11 +98,13 @@ namespace NutSort.Validation
                 OriginalReplayValidation.Validate();
                 OriginalSceneValidation.Validate();
                 Debug.Log("NUT_CONTENT_VALIDATION_PASS resources=1476 boards=1474 primary=219 loop=80; original first board and seed references verified.");
+                OriginalPreferenceFixture.Restore();
                 EditorApplication.Exit(0);
             }
             catch (Exception error)
             {
                 Debug.LogException(error);
+                OriginalPreferenceFixture.Restore();
                 EditorApplication.Exit(1);
             }
         }

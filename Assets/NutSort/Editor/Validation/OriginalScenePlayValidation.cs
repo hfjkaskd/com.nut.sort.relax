@@ -27,6 +27,7 @@ namespace NutSort.Validation
         }
         public static void Run()
         {
+            OriginalPreferenceFixture.Begin();
             EditorSceneManager.OpenScene("Assets/Scenes/LuoSiSortGame.unity");
             PlayModeWindow.SetCustomRenderingResolution(480,854,"Nut Sort portrait validation");
             SessionState.SetBool(ActiveKey,true);
@@ -139,7 +140,7 @@ namespace NutSort.Validation
         }
         private static void Finish(int code)
         {
-            SessionState.SetBool(ActiveKey,false);EditorApplication.update-=Tick;EditorApplication.Exit(code);
+            SessionState.SetBool(ActiveKey,false);EditorApplication.update-=Tick;OriginalPreferenceFixture.Restore();EditorApplication.Exit(code);
         }
     }
 }

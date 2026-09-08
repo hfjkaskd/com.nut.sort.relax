@@ -29,6 +29,7 @@ namespace NutSort.World
         public event Action Clearing;
         public event Action SelectionSoundRequested;
         public event Action<int> MoveSoundRequested;
+        public event Action MoveAttempted;
 
         public void Bind(LevelData data, OriginalPrefabPool prefabPool, bool useLongEntryDelay, bool useLssab)
         {
@@ -62,6 +63,7 @@ namespace NutSort.World
             operation = new OriginalScrewOperator();
             operation.SelectionSoundRequested += ForwardSelectionSound;
             operation.MoveSoundRequested += ForwardMoveSound;
+            operation.MoveAttempted += ForwardMoveAttempt;
             ScenePosGroup.Bind(pool, layout, settings, Board.Screws.Length);
             screws = new OriginalScrewView[Board.Screws.Length];
             for (int i = 0; i < screws.Length; i++)
@@ -80,6 +82,7 @@ namespace NutSort.World
         private void Update() { AdvanceInitialization(Time.deltaTime); }
         private void ForwardSelectionSound() { SelectionSoundRequested?.Invoke(); }
         private void ForwardMoveSound(int count) { MoveSoundRequested?.Invoke(count); }
+        private void ForwardMoveAttempt() { MoveAttempted?.Invoke(); }
 
         public void AdvanceInitialization(float deltaTime)
         {

@@ -26,6 +26,7 @@ namespace NutSort.Validation
         }
         public static void Run()
         {
+            OriginalPreferenceFixture.Begin();
             EditorSceneManager.OpenScene("Assets/Scenes/LuoSiSortGame.unity");
             PlayModeWindow.SetCustomRenderingResolution(480,854,"Nut Sort replay validation");
             SessionState.SetBool(Key,true);EditorApplication.EnterPlaymode();
@@ -113,6 +114,6 @@ namespace NutSort.Validation
             catch(Exception error){Debug.LogException(error);Finish(1);}
         }
         private static void Check(bool value,string message){if(!value)throw new Exception(message);}
-        private static void Finish(int code){SessionState.SetBool(Key,false);EditorApplication.update-=Tick;EditorApplication.Exit(code);}
+        private static void Finish(int code){SessionState.SetBool(Key,false);EditorApplication.update-=Tick;OriginalPreferenceFixture.Restore();EditorApplication.Exit(code);}
     }
 }

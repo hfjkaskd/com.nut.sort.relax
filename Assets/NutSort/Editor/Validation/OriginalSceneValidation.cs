@@ -88,8 +88,8 @@ namespace NutSort.Validation
         }
         public static void RunGpu()
         {
-            try{Validate(true);EditorApplication.Exit(0);}
-            catch(Exception exception){Debug.LogException(exception);EditorApplication.Exit(1);}
+            try{OriginalPreferenceFixture.Begin();Validate(true);OriginalPreferenceFixture.Restore();EditorApplication.Exit(0);}
+            catch(Exception exception){Debug.LogException(exception);OriginalPreferenceFixture.Restore();EditorApplication.Exit(1);}
         }
         private static void Check(bool value,string message){if(!value)throw new InvalidDataException(message);}
     }
