@@ -57,6 +57,7 @@ namespace NutSort.Validation
                     Check(game.PlayerLevel==3 && game.Level.Board.Screws.Length==3 && user.LevelId==123,"Actual Start restores saved board instead of selecting a fresh one");
                     Check(user.PassLevelTime==12.5f&&user.CurrentLevelAddScrewCount==2&&user.LuckyScrewDoneCount==0,"Actual resume reset scope");
                     Check(UnityEngine.Object.FindObjectOfType<OriginalStartupFlow>().MainLevel.Group.gameObject.activeSelf,"Saved player progress drives visible main-level badge");
+                    game.IsInitDone=true; // Explicit board-resume fixture, not production initialization.
                     Check(Click(1).Kind==ScrewOperationKind.Ready&&Click(2).Kind==ScrewOperationKind.Moved,"Actual camera-ray transfer on resumed board");
                     Check(!game.Level.Board.IsSuccess,"Saved continuation fixture remains unfinished");
                     persisted=PlayerPrefs.GetString(OriginalUserStore.Key);
@@ -74,6 +75,7 @@ namespace NutSort.Validation
                     Check(user.LevelId==123&&user.ScrewMoveCount==41,"Fresh user session reloads persisted identity/count");
                     Check(game.Level.Board.Screws[1].IsNull&&game.Level.Board.Screws[2].Slots[0].Nut!=null,"Scene reload restores moved slots");
                     Check(game.Level.CaptureSnapshot().OperatorInfos.Count==1,"Scene reload restores prior history");
+                    game.IsInitDone=true; // Explicit post-reload fixture readiness.
                     Check(Click(2).Kind==ScrewOperationKind.Ready&&Click(0).Kind==ScrewOperationKind.Moved,"Continue from reloaded position to completion");
                     Check(game.Level.Board.IsSuccess&&user.ScrewMoveCount==42,"Continued original board completes with cumulative attempts");
                     phase=3;deadline=now+.9;return;

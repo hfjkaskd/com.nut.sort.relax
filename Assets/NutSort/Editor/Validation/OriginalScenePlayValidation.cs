@@ -90,6 +90,10 @@ namespace NutSort.Validation
                         if(renderer.name=="BG")Debug.Log("NUT_BG_DIAGNOSTIC shader="+renderer.sharedMaterial.shader.name+" supported="+renderer.sharedMaterial.shader.isSupported+" bounds="+renderer.bounds+" texture="+renderer.sharedMaterial.mainTexture);
                     OriginalSceneValidation.Capture(game.WorldCamera,"play-first-board.png");
                     Vector2 point=game.WorldCamera.WorldToScreenPoint(game.Level.GetScrew(1).Bounds.bounds.center);
+                    game.IsInitDone=false;game.IsCanOperatorScrew=true;
+                    if(game.TryOperateAtScreenPoint(point).Kind!=ScrewOperationKind.Ignored)throw new Exception("Uninitialized Play input was not blocked.");
+                    // This isolated board/effect fixture explicitly supplies ready state.
+                    game.IsInitDone=true;game.IsCanOperatorScrew=false;
                     if(game.TryOperateAtScreenPoint(point).Kind!=ScrewOperationKind.Ready)throw new Exception("Play mode source ray failed.");
                     phase=2;deadline=EditorApplication.timeSinceStartup+.3;
                 }

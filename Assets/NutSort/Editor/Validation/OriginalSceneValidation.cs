@@ -51,7 +51,10 @@ namespace NutSort.Validation
             if(capture) Capture(game.WorldCamera,"scene-first-board.png");
             Vector3 sourcePoint=level.GetScrew(1).Bounds.bounds.center;
             Vector2 sourceScreen=game.WorldCamera.WorldToScreenPoint(sourcePoint);
-            game.IsCanOperatorScrew=true;game.InputBlocked=true;
+            game.IsInitDone=false;game.IsCanOperatorScrew=true;
+            Check(game.TryOperateAtScreenPoint(sourceScreen).Kind==ScrewOperationKind.Ignored,"Ready board and teaching cannot bypass InitDone");
+            // Explicit ready-state fixture; production readiness is owned by initialization flow.
+            game.IsInitDone=true;game.InputBlocked=true;
             Check(game.TryOperateAtScreenPoint(sourceScreen).Kind==ScrewOperationKind.Ignored,"Teaching does not bypass startup input blocking");
             game.InputBlocked=false;game.IsCanOperatorScrew=false;game.ModalInputBlocked=true;
             Check(game.TryOperateAtScreenPoint(sourceScreen).Kind==ScrewOperationKind.Ignored,"Modal blocks ordinary screw operation");

@@ -6,7 +6,7 @@ OriginalGameScene now exposes this flag and applies it specifically to ModalInpu
 
 The scene regression exercises real screen-point physics rays: startup block remains effective even with the teaching flag, modal blocks with the flag false, teaching permits selection through the modal, and the following move completes the source first board. This checks observable input behavior rather than only a boolean predicate.
 
-Important remaining mismatch: native Level.Update also requires IsInitDone. The current local startup still lacks the complete initialization/panel chain, and this round does not establish that readiness gate's full native wiring. No synthetic initialization success was added. Full production lifecycle parity remains incomplete.
+Follow-up: the IsInitDone input gate is now restored; see InitializationInputGateAudit.md. Production startup still lacks the complete initialization/panel chain and does not reach readiness. Teaching cannot bypass this gate. No synthetic initialization success was added. Full production lifecycle parity remains incomplete.
 
 The full regression log Library/unity-teaching-input-validation.log includes an AndroidDeploymentTargetsExtension process-exited exception during editor platform loading. Its inspected stack is device discovery, not game code. Native evidence remains local.
 

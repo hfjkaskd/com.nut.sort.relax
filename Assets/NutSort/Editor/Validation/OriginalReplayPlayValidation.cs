@@ -76,6 +76,7 @@ namespace NutSort.Validation
                     case 1:
                         Check(replay.Panel.Main.localScale==Vector3.one,"Original opening curve completes");
                         var point=game.WorldCamera.WorldToScreenPoint(game.Level.GetScrew(0).Bounds.bounds.center);
+                        game.IsInitDone=true; // Isolate modal blocking from initialization readiness.
                         Check(!game.TryOperateAtScreenPoint(point).OriginalReturnValue,"Modal prevents gameplay click-through");
                         string path=Path.GetFullPath(Path.Combine(Application.dataPath,"../Library/ValidationCaptures/replay-panel.png"));
                         Directory.CreateDirectory(Path.GetDirectoryName(path));ScreenCapture.CaptureScreenshot(path);Debug.Log("NUT_REPLAY_CAPTURE "+path);

@@ -280,7 +280,7 @@ namespace NutSort.World
 
         public ScrewOperation TryOperateAtScreenPoint(Vector2 position)
         {
-            if (InputBlocked || (ModalInputBlocked && !IsCanOperatorScrew) || IsRestarting || level == null || !level.AreNutsInitialized) return default;
+            if (InputBlocked || (ModalInputBlocked && !IsCanOperatorScrew) || !IsInitDone || IsRestarting || level == null || !level.AreNutsInitialized) return default;
             Ray ray = GameCamera.ScreenPointToRay(position);
             // These are 3D gameplay objects, not UI controls. UI panels use
             // standard Buttons and set InputBlocked through their lifecycle.
