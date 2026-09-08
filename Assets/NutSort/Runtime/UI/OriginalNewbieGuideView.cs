@@ -139,6 +139,32 @@ namespace NutSort.UI
             };
         }
 
+        // Shared cases 11/13/15 (0x9E24AC), click 0x9E4750 and completion 0x9E3D98.
+        public void ShowWithdrawalStageGuide(OriginalUserLocalData user,RectTransform target,Action goldGet,
+            Action save,Action dailyGift,Action refreshMainAfterTween,Action<Action> showTargetBanner)
+        {
+            Hand.gameObject.SetActive(true);
+            Button.gameObject.SetActive(true);
+            Pos.position=target.position;
+            Button.image.rectTransform.sizeDelta=target.sizeDelta;
+            SetTip(-1,0);
+            ClickAction=()=>
+            {
+                goldGet();
+                user.GuideIndex=19;
+                Close();
+                save();
+            };
+            CallbackAction=parameter=>
+            {
+                dailyGift();
+                refreshMainAfterTween();
+                if(ShowBanner)showTargetBanner(CompleteWithdrawalBanner);
+            };
+        }
+        // The source banner completion callback 0x9E4D98 is empty, but non-null.
+        private static void CompleteWithdrawalBanner() { }
+
         public void BindGuide(OriginalUserLocalData user,Func<bool> skipTeaching,IOriginalGuideBranches branches)
         {
             teachingFlow=new OriginalTeachingFlow(user,this,skipTeaching);
