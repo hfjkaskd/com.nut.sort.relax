@@ -81,7 +81,7 @@ namespace NutSort.Gameplay
     {
         private readonly List<NutSlot> targetGroup = new List<NutSlot>();
         private readonly List<NutSlot> sourceGroup = new List<NutSlot>();
-        public readonly List<NutMoveBatch> MoveHistory = new List<NutMoveBatch>();
+        public readonly List<OriginalMoveRecord> MoveHistory = new List<OriginalMoveRecord>();
         public int ScrewMoveCount;
         public event Action SelectionSoundRequested;
         public event Action<int> MoveSoundRequested;
@@ -124,7 +124,7 @@ namespace NutSort.Gameplay
             int count = Math.Min(room, sourceGroup.Count);
             MoveSoundRequested?.Invoke(count);
             var batch = new NutMoveBatch(source, target, count);
-            MoveHistory.Add(batch);
+            MoveHistory.Add(new OriginalMoveRecord { FromScrewIndex = source.Index, ToScrewIndex = target.Index, NutCount = count });
             target.IsCanOperator = false;
             for (int i = 0; i < count; i++)
             {

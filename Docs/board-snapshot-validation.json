@@ -1,0 +1,44 @@
+{
+  "scope": "Original board snapshot contract and native prefab restoration, not complete automatic save/resume",
+  "sourceEvidence": {
+    "serializedTypes": ["LevelInfo", "ScrewInfo", "NutInfo", "NutData", "NutPos", "Coordinate", "ScrewTypeData", "ScrewTypeDataObj", "OperatorInfo"],
+    "levelConstructor": "0x9FB79C",
+    "screwConstructor": "0xA08128",
+    "screwRuntimeInitialization": "0xA08208",
+    "operationRecord": "0xA048F0",
+    "operationRecordInsertion": "0xA09A3C..0xA09A6C",
+    "maskConstructors": ["0xA0B50C", "0xA0B51C"],
+    "localEvidenceOnly": true
+  },
+  "implementation": {
+    "serializer": "Explicit typed streaming JSON with official Unity Newtonsoft package; no reflection or enum-name dependence",
+    "snapshot": "Only ScrewInfos and OperatorInfos at root; separate capacity and slot count; nullable source reference fields and constructor defaults",
+    "runtime": "Existing native prefab pool, original entry delays, layout-recomputed screw coordinates, fixed nut positions and fresh transient gates",
+    "history": "FromScrewIndex, ToScrewIndex and actual transferred NutCount; no animation-object retention",
+    "callFrequency": "Snapshot work is explicit and allocates proportional to board size; no Update/LateUpdate serialization or disk writes introduced"
+  },
+  "validated": {
+    "fullRegressionPassGroups": 19,
+    "uniqueOriginalBoardPayloads": 1474,
+    "seedReferenceRoundTrips": 1482,
+    "coverage": [
+      "Independent authored original-field fixture and all seed-reference round trips",
+      "Null slots and reference fields, omitted constructor defaults and visibility defaults",
+      "Case-varied duplicate property order and comments",
+      "Numeric enums, hidden nut/V, independent mask/object visibility and lock",
+      "Malformed JSON, invalid shape, numeric null/overflow and trailing content rejected",
+      "Source runtime exclusions and no invented level identifier",
+      "Prefab restore after selection and during transfer, delayed initialization, winning move and completed cap",
+      "History retained on restore and cleared on fresh replay; snapshots own copied state",
+      "Real Play-mode replay regression: standard Button input, cancel preserves selection, delayed rebuild, effect cleanup and repeated modal use"
+    ]
+  },
+  "logs": ["unity-snapshot-validation.log", "unity-snapshot-replay-play.log"],
+  "pending": [
+    "Startup save selection, original completed/empty-board reset and user progress binding",
+    "Automatic gameplay SaveData calls and persisted attempt counter integration",
+    "Actual source-device save compatibility and corrupted-data corner semantics",
+    "Undo/tools and remaining lifecycle branches",
+    "Full region/AB/GM US default and current visual/device comparisons"
+  ]
+}

@@ -50,7 +50,7 @@ namespace NutSort.Gameplay
         public Vector2Int Coordinate;
         public bool IsLocked;
         public bool IsCanOperator = true;
-        public int Capacity => Slots.Length;
+        public int Capacity { get; }
         public bool IsColorMask => Masks.Length > 0 && Masks[0].Type == ScrewType.Mask && Masks[0].Object.IsShow;
         public bool IsHidden => Masks.Length > 0 && Masks[0].Type == ScrewType.Hidden && Masks[0].IsShow;
         public bool IsDontMove => Masks.Length > 0 && Masks[0].Type == ScrewType.DontMove;
@@ -60,6 +60,7 @@ namespace NutSort.Gameplay
             if (data == null || data.C == null) throw new ArgumentException("Original screw cells missing.");
             Id = data.Id;
             Index = index;
+            Capacity = data.C.Length;
             Slots = new NutSlot[data.C.Length];
             for (int i = 0; i < Slots.Length; i++)
             {
@@ -79,6 +80,11 @@ namespace NutSort.Gameplay
                     state.Object = new MaskObjectState { Id = mask.Obj.Id, TA = mask.Obj.TA, Color = mask.Obj.CI };
                 Masks[i] = state;
             }
+        }
+
+        internal ScrewState(int id, int index, int capacity, NutSlot[] slots, ScrewMaskState[] masks)
+        {
+            Id = id; Index = index; Capacity = capacity; Slots = slots; Masks = masks;
         }
 
         public bool IsNull
@@ -154,6 +160,13 @@ namespace NutSort.Gameplay
                 Screws[i] = new ScrewState(data.B[i], i);
                 Screws[i].Coordinate = layout.Coordinate(Screws.Length, i);
             }
+        }
+
+        internal OriginalBoardState(ScrewState[] screws)
+        {
+            // Source LevelInfo has no serialized level identifier.
+            LevelId = null;
+            Screws = screws;
         }
 
         public bool IsSuccess

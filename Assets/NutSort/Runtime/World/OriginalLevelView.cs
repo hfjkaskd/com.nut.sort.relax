@@ -32,10 +32,32 @@ namespace NutSort.World
 
         public void Bind(LevelData data, OriginalPrefabPool prefabPool, bool useLongEntryDelay, bool useLssab)
         {
+            BindBoard(new OriginalBoardState(data, layout), prefabPool, useLongEntryDelay, useLssab);
+        }
+
+        public void BindSaved(OriginalBoardSnapshot snapshot, OriginalPrefabPool prefabPool, bool useLongEntryDelay, bool useLssab)
+        {
+            if (snapshot == null) throw new ArgumentNullException(nameof(snapshot));
+            BindBoard(snapshot.Restore(layout), prefabPool, useLongEntryDelay, useLssab);
+            for (int i = 0; i < snapshot.OperatorInfos.Count; i++)
+            {
+                OriginalMoveRecord move = snapshot.OperatorInfos[i];
+                operation.MoveHistory.Add(move == null ? null : new OriginalMoveRecord
+                { FromScrewIndex = move.FromScrewIndex, ToScrewIndex = move.ToScrewIndex, NutCount = move.NutCount });
+            }
+        }
+
+        public OriginalBoardSnapshot CaptureSnapshot()
+        {
+            return Board == null ? null : OriginalBoardSnapshot.Capture(Board, operation.MoveHistory);
+        }
+
+        private void BindBoard(OriginalBoardState board, OriginalPrefabPool prefabPool, bool useLongEntryDelay, bool useLssab)
+        {
             Clear();
             if (layout == null || world == null || settings == null || ScenePosGroup == null || prefabPool == null)
                 throw new InvalidOperationException("Original level prefab configuration is incomplete.");
-            Board = new OriginalBoardState(data, layout);
+            Board = board;
             pool = prefabPool; lssab = useLssab;
             operation = new OriginalScrewOperator();
             operation.SelectionSoundRequested += ForwardSelectionSound;
