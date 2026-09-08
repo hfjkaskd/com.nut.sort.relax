@@ -14,6 +14,7 @@ namespace NutSort.UI
         [SerializeField] private GameObject clickMask;
         public OriginalReplayController Replay { get; private set; }
         public OriginalMainLevelView MainLevel { get; private set; }
+        public OriginalTargetRewardBanner TargetReward { get; private set; }
         public OriginalLoadingView Loading => loading;
 
         private IEnumerator Start()
@@ -32,6 +33,8 @@ namespace NutSort.UI
             game.Initialize();
             var mainPrefab = Resources.Load<GameObject>(mainLevelSettings.PrefabPath);
             MainLevel = Instantiate(mainPrefab, panelCanvas, false).GetComponent<OriginalMainLevelView>();
+            TargetReward = MainLevel.GetComponentInChildren<OriginalTargetRewardBanner>(true);
+            TargetReward.Init();
             Replay = MainLevel.GetComponent<OriginalReplayController>();
             Replay.Bind(game, audioPlayer, panelCanvas, mainLevelSettings.LanguageCode, clickMask);
             MainLevel.Refresh(game.Tables, game.PlayerLevel, mainLevelSettings.LanguageCode, false, false);
