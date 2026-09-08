@@ -1,3 +1,5 @@
+> 历史初查记录：下文描述初次检查时的空目录状态。初始提交现已成功推送；当前状态以 [ImplementationStatus](../ImplementationStatus.md) 为准。
+
 # Nut Sort Relax 当前复刻核查
 
 核查时间：2026-09-07（主机时区）。目标包：`com.nut.sort.relax`，导出版本 1.0.4。

@@ -1,0 +1,8 @@
+{
+  "unity": "2022.3.62f3",
+  "source_unity": "2021.3.57f2",
+  "scope": "Original content module only",
+  "complete_1_to_1": false,
+  "manifest_sha256": "7941c3a26b3dbdfae403942a5d8274f6bf482b066eaeeae96a0f60ba61f5b0a3",
+  "validation": "NUT_CONTENT_VALIDATION_PASS resources=1476 boards=1474 primary=219 loop=80; original first board and seed references verified."
+}

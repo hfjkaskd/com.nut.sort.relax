@@ -1,0 +1,7 @@
+{
+  "name": "NutSort.Content",
+  "rootNamespace": "NutSort.Content",
+  "references": [],
+  "autoReferenced": true,
+  "allowUnsafeCode": false
+}

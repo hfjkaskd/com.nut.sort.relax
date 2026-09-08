@@ -1,0 +1,6 @@
+{
+  "name": "NutSort.Validation",
+  "references": ["NutSort.Content"],
+  "includePlatforms": ["Editor"],
+  "autoReferenced": false
+}
