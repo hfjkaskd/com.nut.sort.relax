@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Newtonsoft.Json.Linq;
 using NutSort.Content;
+using NutSort.Gameplay;
 using NutSort.UI;
 using NutSort.World;
 using UnityEditor;
@@ -18,7 +19,7 @@ namespace NutSort.Validation
         private static OriginalGameplayUnlockPanelHost host;
         private static OriginalUserLocalData user;
         private static OriginalTargetRewardBanner rewardBanner;
-        private static int goldHints,progressDisplays,readyCallbacks;
+        private static int goldHints,progressDisplays,readyCallbacks,initializations;
         private static bool earlyReady;
         private static string stored;
         private static int phase,index,banners,queued,hidden;
@@ -88,7 +89,27 @@ namespace NutSort.Validation
                     user.NewGameplayUnlockIndex=index+1;
                     Check(!host.TryShow(game,true) && !host.IsOpen && host.Panel==null,"No eligible scene decision creates no panel");
                     user.NewGameplayUnlockIndex=index;
-                    Check(host.TryShow(game,true) && host.IsOpen,"Scene config decision opens through runtime host");
+                    string comeOnGold=user.ComeOnGold;
+                    user.ComeOnGold="fixture-existing-guide";
+                    game.BindInitialization(()=>startup.MainLevel,
+                        new OriginalInitializationContinuation(user,
+                            ()=>throw new InvalidOperationException("Nonempty ComeOnGold must skip reward query"),
+                            callback=>throw new InvalidOperationException("Nonempty ComeOnGold must skip synchronization"),
+                            (showBanner,firstInit)=>
+                            {
+                                Check(showBanner && !firstInit,"Actual restart uses native default banner and non-first flags");
+                                user.ComeOnGold=comeOnGold;
+                                Check(host.TryShow(game,showBanner) && host.IsOpen,"Actual initialization continuation opens scene-selected panel through host");
+                                initializations++;
+                            }));
+                    game.RestartLevel();
+                    Check(!host.IsOpen && initializations==index,"Restart does not synchronously complete initialization");
+                    phase=5;deadline=now+3.5;return;
+                }
+                if(phase==5)
+                {
+                    if(!host.IsOpen){Check(now<deadline,"Actual restart continuation reaches unlock panel");return;}
+                    Check(initializations==index+1,"One continuation per actual restart");
                     panel=host.Panel;
                     for(int i=0;i<4;i++)Check(panel.Icons[i].activeSelf==(i==index),"Actual icon visibility");
                     phase=1;deadline=now+.7;return;
@@ -116,7 +137,7 @@ namespace NutSort.Validation
                 Check(readyCallbacks==2 && !earlyReady,"Both independent scene waits respect panel appearance and scaled delay");
                 Check(banners==4 && goldHints==4 && progressDisplays==4 && !rewardBanner.IsAnimating,"All four real banner animations finish and invoke both top callbacks");
                 Check(PlayerPrefs.GetString(OriginalUserStore.Key)==stored,"Unlock and first-level banner add no save");
-                Debug.Log("NUT_GAMEPLAY_UNLOCK_PANEL_PLAY_PASS scene-configured unlock routing, four current rendered variants, actual Continue Button gate/banner/index/close ordering, hidden close and post-destruction queue dispatch; actual target banner completes to both top callbacks; destination and top consumers remain fixture boundaries.");Finish(0);
+                Debug.Log("NUT_GAMEPLAY_UNLOCK_PANEL_PLAY_PASS actual restart-to-main-panel-wait-to-continuation-to-unlock routing, four current rendered variants, actual Continue Button gate/banner/index/close ordering, hidden close and post-destruction queue dispatch; actual target banner completes to both top callbacks; initialization event consumer, destination and top consumers remain fixture boundaries.");Finish(0);
             }
             catch(Exception e){Debug.LogException(e);Finish(1);}
         }

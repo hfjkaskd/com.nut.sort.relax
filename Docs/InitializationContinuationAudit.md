@@ -8,4 +8,4 @@ OriginalInitializationContinuation restores this decision with required typed op
 
 Validation covers below/equal/above boundary, lazy nonempty/whitespace behavior, missing and replaced documents, delayed callbacks with changed user state, independent captured flags, and synchronization failure. Included in OriginalContentValidation.
 
-Integration remains incomplete: this continuation and the previously restored main-panel wait are not automatically wired into production BeginInitialization. Production still uses the partial main panel; complete initialization panel consumers and existing SDK boundary must be connected before claiming end-to-end parity. Component validation is not proof of whole-game 1:1 reconstruction.
+Integration remains incomplete: BeginInitialization now schedules the main-panel wait and this continuation when BindInitialization has supplied the typed UI lifecycle. Normal startup has not yet supplied that binding. Production still uses the partial main panel; complete initialization panel consumers and existing SDK boundary must be connected before claiming end-to-end parity. Component validation is not proof of whole-game 1:1 reconstruction.

@@ -20,6 +20,21 @@ namespace NutSort.World
         private OriginalLevelRepository repository;
         private OriginalLevelSelector selector;
         private OriginalGameplayUnlockConfig unlockConfig;
+        private Func<UnityEngine.Object> initializationMainPanel;
+        private OriginalInitializationContinuation initializationContinuation;
+
+        // Bind the restored UI lifecycle before initialization. The current local
+        // startup has not yet supplied all panel consumers; no fake completion is
+        // substituted when it has not bound this lifecycle.
+        public void BindInitialization(Func<UnityEngine.Object> mainPanel,
+            OriginalInitializationContinuation continuation)
+        {
+            if (mainPanel == null) throw new ArgumentNullException(nameof(mainPanel));
+            if (continuation == null) throw new ArgumentNullException(nameof(continuation));
+            initializationMainPanel = mainPanel;
+            initializationContinuation = continuation;
+        }
+
         private struct PendingInitialization
         {
             public bool Reset, LongEntry;
@@ -120,6 +135,14 @@ namespace NutSort.World
             level.Clear();
             IsExchanging = false;
             pendingInitializations.Add(new PendingInitialization { Reset = reset, LongEntry = useLongEntry });
+            if (initializationContinuation != null)
+            {
+                // The successful local initialization boundary schedules these
+                // independently of board reconstruction, as in 0x9FF7CC.
+                var continuation = initializationContinuation;
+                ScheduleAfterMainPanel(initializationMainPanel, () => continuation.Run(true, useLongEntry));
+            }
+
         }
 
         // Same scaled-time state machine in Editor and on device. Explicit time
