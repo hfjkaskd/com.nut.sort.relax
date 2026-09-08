@@ -27,6 +27,8 @@ namespace NutSort.Validation
         private static int confirmations,userInfoHides,goldGets,confirmationHides;
         private static OriginalWithdrawalConfirmationHost confirmation;
         private static bool previousHint;
+        private static OriginalGoldGetFlow goldGetFlow;
+        private static int levelPanels;
         private static int loadingHides;
         private static bool loadingCaptured;
         private static OriginalWithdrawalPanelValidation.Services withdrawalServices;
@@ -91,9 +93,14 @@ namespace NutSort.Validation
                         id=>throw new InvalidOperationException("Unexpected account input error"),
                         (id,args)=>{Check(id==21&&(int)args[0]==1,"Actual form confirmation retains captured withdrawal level");confirmations++;confirmation.Show(args);},
                         ()=>game.SaveUserData(),value=>OriginalNewbieGuideView.CallbackActionInvoke(value),()=>OriginalWithdrawalConfirmationFlow.IsHintGoldGet=false,()=>userInfoHides++,game.ScheduleDelay,()=>{});
+                    goldGetFlow=new OriginalGoldGetFlow(cb=>throw new InvalidOperationException("Early confirmation must not request GoldGet"),
+                        ()=>throw new InvalidOperationException("Early confirmation does not read HUD hint"),value=>throw new InvalidOperationException("Unexpected raw tip"),
+                        id=>throw new InvalidOperationException("Unexpected GoldGet response tip"),
+                        (id,args)=>{Check(id==28&&(int)args[0]==1&&confirmation.Panel.Closing,"Actual GoldGet routes original level panel while confirmation closes");levelPanels++;},
+                        (show,add)=>throw new InvalidOperationException("Early confirmation does not refresh from a server result"));
                     confirmation=new OriginalWithdrawalConfirmationHost(parent,"Prefabs/Panels/TXUserInfoSurePanel",game.User,game.Tables,"en",()=>"US",()=>"1",()=>true,s=>audio.PlaySound(s),
                         (id,args)=>{Check(id==20&&(int)args[0]==1&&confirmation.IsOpen,"Reenter opens form before closing confirmation");userInfo.Show(args);},
-                        (level,hasArgs)=>{Check(level==1&&hasArgs&&confirmation.Panel.Closing,"GoldGet boundary follows actual close initiation");goldGets++;},
+                        (level,hasArgs)=>{Check(level==1&&hasArgs&&confirmation.Panel.Closing,"GoldGet boundary follows actual close initiation");goldGets++;goldGetFlow.Run(level,hasArgs);},
                         value=>OriginalNewbieGuideView.CallbackActionInvoke(value),()=>confirmationHides++,game.ScheduleDelay,()=>{});
                     game.User.Level1Gold=5;
                     target=new OriginalGuideTargetPanelHost(parent,"Prefabs/Panels/TXGuideTargetCompletePanel",game.User,game.Tables,"en",()=>true,s=>audio.PlaySound(s),()=>"US",value=>new OriginalGoldFormatter(()=>"en-US").Format(value),
@@ -194,8 +201,8 @@ namespace NutSort.Validation
                 }
                 if(phase==13)
                 {
-                    Check(!confirmation.IsOpen&&confirmationHides==2&&goldGets==1&&OriginalNewbieGuideView.CallbackAction!=null,"Confirmation closes without fabricating withdrawal completion");
-                    Debug.Log("NUT_SUCCESS_GUIDE_HOST_PLAY_PASS actual success/guide/loading/account form -> real confirmation -> reenter saved form -> resubmit -> actual Confirm Button -> GoldGet boundary and animated registry removal; no payment result, production initialization/transport remain fixtures.");Finish(0);return;
+                    Check(!confirmation.IsOpen&&confirmationHides==2&&goldGets==1&&levelPanels==1&&OriginalNewbieGuideView.CallbackAction!=null,"Confirmation closes without fabricating withdrawal completion");
+                    Debug.Log("NUT_SUCCESS_GUIDE_HOST_PLAY_PASS actual success/guide/loading/account form -> real confirmation -> reenter saved form -> resubmit -> actual Confirm Button -> native GoldGet early branch -> level panel 28 dispatch and animated registry removal; no payment result, production initialization/transport remain fixtures.");Finish(0);return;
                 }
                 Check(!withdrawal.IsOpen&&withdrawalServices.Closes==1&&withdrawalServices.HiddenCount==1,"Animated close hides and removes real registry entry");
                 game.User.GuideIndex=77;withdrawal.Show(new object[]{1});Check(withdrawal.IsOpen&&withdrawal.Panel.PlayerParent.childCount==1,"Reopen creates a fresh original panel");withdrawal.Hide();
