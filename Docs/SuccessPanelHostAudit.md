@@ -1,0 +1,13 @@
+# SuccessPanel host and reward handoff
+
+OriginalSuccessPanelHost now owns UIName 9 through the existing OriginalPanelRegistry, preserving registration before Init/Refresh and HideAction before destruction/removal. Show retains source duplicate registration behavior through that registry; Refresh reaches the actual view and preserves its append-only reward children. Resources are instantiated from the supplied prefab path, without generated static UI or reflection.
+
+Each panel instance receives its own captured SuccessPanel lifecycle, native RewardGetPanel claim dispatch and OriginalSuccessRewardFlow. The claim adapter's virtual GetReward target is now the actual success response implementation. Its response opens UIName 8 through the supplied panel dispatcher before starting that SuccessPanel instance's close animation. The close completion then invokes registry Hide(9), which runs the success-specific Hide branch around its base action and delayed queue scheduling.
+
+The host composes existing SDK/configuration/time boundaries rather than implementing or auto-completing them. Production callers must supply existing real dependencies; no reward data, server totals, ad success, initialization readiness or region is invented by this class.
+
+Play validation uses the current scene and actual SuccessPanel and RewardPanel prefabs/registries. A real Button dispatch enters a held ad callback; completing that explicit fixture callback enters a held success-response callback. While the response is pending, SuccessPanel stays registered, RewardPanel is absent and balances remain unchanged. An explicitly labeled response fixture then creates RewardPanel while SuccessPanel remains registered, closes SuccessPanel after the native animation, runs actual ItemManager from RewardPanel after one second, and verifies both panels' destruction and separate delayed queue continuations.
+
+Balance and flight consumers in this fixture are narrow probes, not production HUD or flight composition. The whole production startup and unified all-panel dispatcher still need integration; this test does not claim full lifecycle parity. No visual resources change in this round.
+
+Verification: local Unity 2022.3.62f3 Play passed NUT_SUCCESS_PANEL_HOST_PLAY_PASS in Library/success-panel-host-play.log. Full regression passed all 110 markers including NUT_CONTENT_VALIDATION_PASS in Library/success-panel-host-regression.log. No compiler-error or exception entries in either successful log. Preference fixture restored and its backup removed. Existing scene-exit pooled-parent warnings remain outside this change.
