@@ -9,3 +9,5 @@ The actual-scene replay regression verifies paused and running clocks, the absen
 Normal startup still lacks the full initialization event binding, so its board becoming ready does not automatically start this newly restored clock. Full production initialization and success consumers remain outstanding. This change restores their shared state and timer semantics without claiming whole-lifecycle completion.
 
 Unity 2022.3.62f3: 72 full regression PASS markers in Library/unity-initialization-state-validation.log; actual Play PASS in Library/unity-initialization-state-play.log. No validation exceptions or compile errors; preferences restored.
+
+Subsequent integration: SceneInitializationAudit.md supersedes the fixture initialization consumer described above. The fixture now runs OriginalInitializationFlow through OriginalSceneInitialization; it uses explicit reward/guide inputs and no longer directly assigns IsInitDone or uses a nonempty ComeOnGold shortcut. Production startup remains unbound.

@@ -1,0 +1,11 @@
+# Scene initialization event binding
+
+OriginalSceneInitialization is the runtime IOriginalInitializationActions adapter for OriginalInitializationFlow. User, ShowLevel, IsInitDone, deadlock evaluation, stage-guide query, gameplay unlock decision and delayed failure all use the actual scene/shared data. Bind installs OriginalInitializationContinuation with the real reward-progress stage-completion predicate and the required synchronization boundary, then calls the restored initialization flow directly. CompleteRecordGuide re-enters that same flow. UI operations are required typed IOriginalInitializationUI methods, with no reflection, success defaults, or SDK implementation.
+
+The unlock Play fixture now passes through actual RestartLevel -> board reconstruction / independent main-panel wait -> delayed continuation -> OriginalInitializationFlow -> actual deadlock and stage queries -> unlock decision -> runtime panel host. It no longer assigns IsInitDone or replaces the initialization event with a direct unlock call. The panel callback checks IsInitDone is still false; the flow subsequently sets the actual scene flag and Update starts elapsed time. Four variants still exercise real Continue, banner animations, hidden close and queue dispatch.
+
+The fixture explicitly configures completed prior guides, empty ComeOnGold, and a reward document with RealLevel=10 / Stage2RealLevel=20, along with the existing unlock configuration. These are isolated validation inputs, not fabricated production responses or rewards. Unselected UI and synchronization branches throw in the fixture so unexpected routing cannot silently pass. Preference restoration remains required.
+
+Production startup is still incomplete: it has not supplied a full IOriginalInitializationUI implementation, and the full main panel and remaining guide views are not bound there. This change removes the substitute initialization-event consumer from the real-scene unlock validation and provides its runtime adapter; it does not prove all lifecycle branches or visual parity.
+
+Validation: Unity 2022.3.62f3 full regression 72 PASS markers (Library/unity-scene-initialization-validation.log); actual Play PASS (Library/unity-scene-initialization-play.log), no compile errors or validation exceptions, preferences restored.

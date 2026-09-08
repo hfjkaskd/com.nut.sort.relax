@@ -89,20 +89,12 @@ namespace NutSort.Validation
                     user.NewGameplayUnlockIndex=index+1;
                     Check(!host.TryShow(game,true) && !host.IsOpen && host.Panel==null,"No eligible scene decision creates no panel");
                     user.NewGameplayUnlockIndex=index;
-                    string comeOnGold=user.ComeOnGold;
-                    user.ComeOnGold="fixture-existing-guide";
-                    game.BindInitialization(()=>startup.MainLevel,
-                        new OriginalInitializationContinuation(user,
-                            ()=>throw new InvalidOperationException("Nonempty ComeOnGold must skip reward query"),
-                            callback=>throw new InvalidOperationException("Nonempty ComeOnGold must skip synchronization"),
-                            (showBanner,firstInit)=>
-                            {
-                                Check(showBanner && !firstInit,"Actual restart uses native default banner and non-first flags");
-                                user.ComeOnGold=comeOnGold;
-                                Check(host.TryShow(game,showBanner) && host.IsOpen,"Actual initialization continuation opens scene-selected panel through host");
-                                game.IsInitDone=true;
-                                initializations++;
-                            }));
+                    // Explicit branch fixture only; no production reward data or grants.
+                    user.ComeOnGold="";user.IsCompleteRecordGuide=true;
+                    user.IsCompleteGuidePassStage2Level=true;user.IsGuideGold=false;
+                    user.GoldRewardTargetS2CData=JObject.Parse("{\"bear_list\":[null,null,{\"RealLevel\":10,\"Stage2RealLevel\":20}]}");
+                    var progress=new OriginalRewardProgress(user,game.Tables,value=>value.ToString());
+                    new OriginalSceneInitialization(game,progress,new InitializationUI()).Bind(()=>startup.MainLevel);
                     game.RestartLevel();
                     Check(!host.IsOpen && initializations==index,"Restart does not synchronously complete initialization");
                     Check(!game.IsInitDone && user.PassLevelTime==0,"Actual restart resets and pauses the native elapsed clock");
@@ -145,9 +137,28 @@ namespace NutSort.Validation
                 Check(readyCallbacks==2 && !earlyReady,"Both independent scene waits respect panel appearance and scaled delay");
                 Check(banners==4 && goldHints==4 && progressDisplays==4 && !rewardBanner.IsAnimating,"All four real banner animations finish and invoke both top callbacks");
                 Check(PlayerPrefs.GetString(OriginalUserStore.Key)==stored,"Unlock and first-level banner add no save");
-                Debug.Log("NUT_GAMEPLAY_UNLOCK_PANEL_PLAY_PASS actual restart-to-main-panel-wait-to-continuation-to-unlock routing, four current rendered variants, actual Continue Button gate/banner/index/close ordering, hidden close and post-destruction queue dispatch; actual target banner completes to both top callbacks; initialization event consumer, destination and top consumers remain fixture boundaries.");Finish(0);
+                Debug.Log("NUT_GAMEPLAY_UNLOCK_PANEL_PLAY_PASS actual restart-to-main-panel-wait-to-continuation-to-unlock routing, four current rendered variants, actual Continue Button gate/banner/index/close ordering, hidden close and post-destruction queue dispatch; actual target banner completes to both top callbacks; actual initialization event owns completion state; other UI branches, reward document, destination and top consumers remain fixture boundaries.");Finish(0);
             }
             catch(Exception e){Debug.LogException(e);Finish(1);}
+        }
+        private sealed class InitializationUI : IOriginalInitializationUI
+        {
+            public void ShowUnlockPanel(int id,int selected,bool showBanner)
+            {
+                Check(id==13 && selected==index && showBanner,"Native initialization event routes selected unlock and banner flag");
+                Check(!game.IsInitDone,"Unlock is shown before the initialization event marks completion");
+                Check(host.Show(selected,showBanner)!=null,"Actual initialization event opens through runtime host");
+                initializations++;
+            }
+            private static void Unexpected(){throw new InvalidOperationException("Unexpected initialization branch in unlock fixture");}
+            public void SynchronizeCompletedStage(Action completed){Unexpected();}
+            public void ShowPanel(int id){Unexpected();}
+            public void CloseAllPanels(){Unexpected();}
+            public void ShowTargetRewardBanner(Action completed){Unexpected();}
+            public void HideLevelHint(){Unexpected();}
+            public void ShowEveryDayGift(){Unexpected();}
+            public void PushPlayerGoldHint(){Unexpected();}
+            public void CloseRecordGuide(){Unexpected();}
         }
         private static void Check(bool value,string message){if(!value)throw new InvalidOperationException(message);}
         private static void Finish(int code){OriginalPreferenceFixture.Restore();SessionState.SetBool(Key,false);EditorApplication.update-=Tick;EditorApplication.Exit(code);}

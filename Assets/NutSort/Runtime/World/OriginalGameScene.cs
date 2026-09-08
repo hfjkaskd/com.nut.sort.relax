@@ -47,6 +47,7 @@ namespace NutSort.World
         public OriginalLevelView Level => level;
         public Camera WorldCamera => GameCamera;
         public OriginalTables Tables { get; private set; }
+        public OriginalUserLocalData User => audioPlayer.UserState.Data;
         public int PlayerLevel => audioPlayer.UserState.Data.Level;
         public int ShowLevel => Tables.GetShowLevel(PlayerLevel);
         public bool InputBlocked { get; set; }
