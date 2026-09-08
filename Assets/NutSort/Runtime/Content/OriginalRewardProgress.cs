@@ -9,6 +9,8 @@ namespace NutSort.Content
     public sealed class OriginalRewardProgressData
     {
         public int DailyLevels { get; private set; }
+        public int StartLevel { get; private set; }
+        public int Stage2StartRealLevel { get; private set; }
         public int RealLevel { get; private set; }
         public int Stage2RealLevel { get; private set; }
         public int Stage2StartShowLevel { get; private set; }
@@ -26,6 +28,8 @@ namespace NutSort.Content
             return new OriginalRewardProgressData
             {
                 DailyLevels = Integer(document, "cal_cfg"),
+                StartLevel = Integer(row, "StartLevel"),
+                Stage2StartRealLevel = Integer(row, "Stage2StartRealLevel"),
                 RealLevel = Integer(row, "RealLevel"),
                 Stage2RealLevel = Integer(row, "Stage2RealLevel"),
                 Stage2StartShowLevel = Integer(row, "Stage2StartShowLevel"),
