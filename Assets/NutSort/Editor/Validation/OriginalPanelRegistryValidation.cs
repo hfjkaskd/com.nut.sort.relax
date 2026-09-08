@@ -29,12 +29,16 @@ namespace NutSort.Validation
                 var user=OriginalMainTopViewValidation.MakeUser();user.GoldRewardTargetS2CData=JObject.Parse("{\"bear_zs_show\":\"250\"}");user.ServerConfigData=new JObject();
                 var tables=new OriginalTables(Resources.Load<OriginalTableSettings>("Configuration/OriginalTables"));
                 OriginalPanelRegistry<OriginalFailurePanelView> live=null;
+                var queue=new OriginalPanelActionQueue();Action pending=null;int events=0;
+                queue.Add(()=>events++);
                 live=new OriginalPanelRegistry<OriginalFailurePanelView>(id=>"FailPanel",
                     id=>UnityEngine.Object.Instantiate(Resources.Load<GameObject>("prefabs/panels/FailPanel"),root.transform,false).GetComponent<OriginalFailurePanelView>(),
-                    (id,p)=>{p.Bind(user,tables,"en",()=>true,s=>{},done=>done(),()=>{},()=>{},()=>live.Hide(id));p.Init();},
-                    p=>p.Refresh(),p=>{},p=>UnityEngine.Object.DestroyImmediate(p.gameObject));
+                    (id,p)=>{p.Bind(user,tables,"en",()=>true,s=>{},done=>done(),()=>{},()=>{},()=>live.Hide(id));p.BindHide(queue,(seconds,callback)=>{Check(seconds==2.5f,"Original hide delay");pending=callback;});p.Init();},
+                    p=>p.Refresh(),p=>p.Hide(),p=>UnityEngine.Object.DestroyImmediate(p.gameObject));
                 var first=live.Show(10);Check(first.CoinValue.text=="250" && live.Count==1,"Actual prefab initialized/refreshed through registry");
                 first.Restart.onClick.Invoke();Check(first==null && live.Count==0,"Actual Restart Button closes through registry");
+                Check(events==0 && pending!=null,"Closing schedules rather than executes next panel action");
+                pending();Check(events==1,"Queued manager callback survives destruction of panel");
                 var second=live.Show(10);Check(second!=null && live.Count==1,"Subsequent open instantiates new panel");live.Hide(10);
             }
             finally {UnityEngine.Object.DestroyImmediate(root);}

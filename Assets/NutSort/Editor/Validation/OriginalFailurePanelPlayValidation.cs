@@ -15,7 +15,7 @@ namespace NutSort.Validation
         private static OriginalGameScene game;
         private static OriginalFailurePanelView panel;
         private static NutSort.Content.OriginalUserLocalData user;
-        private static int phase,closed;
+        private static int phase,closed,queued;
         private static double deadline,timeout;
         static OriginalFailurePanelPlayValidation() {if(SessionState.GetBool(Key,false)){timeout=EditorApplication.timeSinceStartup+60;EditorApplication.update+=Tick;}}
         public static void RunPlay()
@@ -37,7 +37,8 @@ namespace NutSort.Validation
                     panel=UnityEngine.Object.Instantiate(Resources.Load<GameObject>("prefabs/panels/FailPanel"),old.transform.parent,false).GetComponent<OriginalFailurePanelView>();
                     user=OriginalMainTopViewValidation.MakeUser();user.GoldRewardTargetS2CData=JObject.Parse("{\"bear_zs_show\":\"1,250\"}");user.ServerConfigData=JObject.Parse("{\"LSSLSMAC\":12}");user.CurrentLevelAddScrewCount=0;
                     var audio=UnityEngine.Object.FindObjectOfType<OriginalAudioPlayer>();
-                    panel.Bind(user,game.Tables,"en",()=>true,s=>audio.PlaySound(s),game.RestartAfterFailure,()=>game.IsFail=false,()=>{},()=>{closed++;panel.gameObject.SetActive(false);});
+                    panel.Bind(user,game.Tables,"en",()=>true,s=>audio.PlaySound(s),game.RestartAfterFailure,()=>game.IsFail=false,()=>{},()=>{closed++;panel.Hide();UnityEngine.Object.Destroy(panel.gameObject);});
+                    var queue=new OriginalPanelActionQueue();queue.Add(()=>queued++);panel.BindHide(queue,game.ScheduleDelay);
                     game.ModalInputBlocked=true;game.IsFail=true;panel.Init();panel.Refresh();phase=1;deadline=now+.6;return;
                 }
                 if(now<deadline)return;
@@ -45,8 +46,13 @@ namespace NutSort.Validation
                 if(phase==2){user.CurrentLevelAddScrewCount=12;panel.Refresh();phase=3;deadline=now+.3;return;}
                 if(phase==3){Capture("failure-panel-gray-play");phase=4;deadline=now+.3;return;}
                 Check(File.Exists("Library/ValidationCaptures/failure-panel-play.png") && File.Exists("Library/ValidationCaptures/failure-panel-gray-play.png"),"Captures written");
-                panel.Restart.onClick.Invoke();Check(closed==1 && !game.IsFail && game.IsRestarting,"Actual restart button invokes scene reset before close");
-                Debug.Log("NUT_FAILURE_PANEL_PLAY_VALIDATION_PASS latest full failure layout and gray state rendered in actual scene, with actual restart Button/scene reset; fixture reward data only.");Finish(0);
+                if(phase==4)
+                {
+                    panel.Restart.onClick.Invoke();Check(closed==1 && !game.IsFail && game.IsRestarting,"Actual restart button invokes scene reset before close");
+                    Check(queued==0,"Queue remains deferred after destruction request");phase=5;deadline=now+2.7;return;
+                }
+                Check(panel==null && queued==1,"Scene-owned delay dispatches queue after panel destruction");
+                Debug.Log("NUT_FAILURE_PANEL_PLAY_VALIDATION_PASS latest full failure layout and gray state rendered in actual scene, with actual restart Button/scene reset and delayed event after destroyed panel; fixture reward data only.");Finish(0);
             }
             catch(Exception e){Debug.LogException(e);Finish(1);}
         }

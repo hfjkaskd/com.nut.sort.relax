@@ -421,6 +421,7 @@ MonoBehaviour:
   revive: {fileID: 114900271049623953}
   defaultMaximum: 12
   grayPath: Materials/GrayMaterial
+  queueDelay: 2.5
   loseSound: GameLose
   clickSound: Click
 --- !u!224 &224470112387431263

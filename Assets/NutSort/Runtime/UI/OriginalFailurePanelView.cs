@@ -13,6 +13,10 @@ namespace NutSort.UI
         [SerializeField] private Button restart,revive;
         [SerializeField] private int defaultMaximum;
         [SerializeField] private string grayPath,loseSound,clickSound;
+        [SerializeField] private float queueDelay;
+        private OriginalPanelActionQueue actionQueue;
+        private Action<float,Action> schedule;
+        private Action hidden;
         private OriginalTables tables;
         private string language;
         private OriginalFailurePanelData data;
@@ -49,6 +53,17 @@ namespace NutSort.UI
             audio(loseSound);
         }
         public void Refresh() {data.Refresh();}
+        public void BindHide(OriginalPanelActionQueue actionQueue, Action<float,Action> schedule, Action hidden = null)
+        {
+            this.actionQueue=actionQueue;this.schedule=schedule;this.hidden=hidden;
+        }
+        // BaseLSSPanel.HideLssPanel (0x9C5218). The queued callback belongs
+        // to the manager, so destroying this view must not cancel it.
+        public void Hide()
+        {
+            hidden?.Invoke();
+            schedule(queueDelay,actionQueue.Dequeue);
+        }
         private void SetGray(bool value)
         {
             if(gray==null)gray=Resources.Load<Material>(grayPath);
