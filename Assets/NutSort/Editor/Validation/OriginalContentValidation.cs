@@ -79,6 +79,7 @@ namespace NutSort.Validation
                 Expect<FormatException>(() => OriginalContentCodec.Decrypt("invalid base64!", settings.Key, settings.IV));
                 Expect<FileNotFoundException>(() => repository.ReadJson("LevelConfig/missing-evidence"));
                 Expect<ArgumentException>(() => repository.LoadBoard(false, "../invalid"));
+                OriginalSelectionValidation.Validate(repository, settings);
                 Debug.Log("NUT_CONTENT_VALIDATION_PASS resources=1476 boards=1474 primary=219 loop=80; original first board and seed references verified.");
                 EditorApplication.Exit(0);
             }

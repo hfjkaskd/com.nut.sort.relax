@@ -1,0 +1,7 @@
+{
+  "complete_1_to_1": false,
+  "validation": "NUT_SELECTION_VALIDATION_PASS primary boundaries, loop bounds, special guide mapping, overflow and sticky random seed verified.",
+  "source_rva": "0x9FCE64",
+  "scope": "Original selection rules and content regression",
+  "unity": "2022.3.62f3"
+}

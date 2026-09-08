@@ -18,3 +18,9 @@ MonoBehaviour:
   loopBoardDirectory: LevelConfig/Level1
   key: d2d6e6b5210738f3
   iv: d2d6e6b5210738f3
+  firstLevelId: 1
+  normalLevelOffset: 3
+  guideContinuationOffset: 4
+  finalPrimaryId: 219
+  loopMinId: 220
+  loopMaxIdExclusive: 300
