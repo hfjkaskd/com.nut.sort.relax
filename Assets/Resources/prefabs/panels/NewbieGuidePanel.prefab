@@ -563,6 +563,9 @@ MonoBehaviour:
   - {fileID: 114393105877652414}
   - {fileID: 114574190619683098}
   hollowMask: {fileID: 114918264173551851}
+  labels:
+  - Text: {fileID: 114431740505123533}
+    Id: 1
   emptyMarkerPath: Atlas/NewbieGuidePanel/dian
   filledMarkerPath: Atlas/NewbieGuidePanel/dian1
   maskRevealDelay: 0.2

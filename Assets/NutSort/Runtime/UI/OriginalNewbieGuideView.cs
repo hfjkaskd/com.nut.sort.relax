@@ -15,6 +15,7 @@ namespace NutSort.UI
         [SerializeField] private Transform[] TipPos;
         [SerializeField] private GameObject Teach;
         [SerializeField] private Image[] TeachLevels;
+        [SerializeField] private OriginalReplayPanel.Label[] labels;
         [SerializeField] private OriginalHollowMaskGraphic hollowMask;
         [SerializeField] private string emptyMarkerPath,filledMarkerPath;
         [SerializeField] private float maskRevealDelay;
@@ -178,6 +179,11 @@ namespace NutSort.UI
         }
         // The source banner completion callback 0x9E4D98 is empty, but non-null.
         private static void CompleteWithdrawalBanner() { }
+
+        public void InitializeLabels(OriginalTables tables,string language)
+        {
+            foreach(var label in labels)label.Text.text=tables.Text.GetText(label.Id,language);
+        }
 
         public void BindGuide(OriginalUserLocalData user,Func<bool> skipTeaching,IOriginalGuideBranches branches)
         {
