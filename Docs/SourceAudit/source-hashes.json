@@ -1,0 +1,14 @@
+[
+  {
+    "name": "base.apk",
+    "first_sha256": "c1f84a18c886afc8e4dcc9e3d350ff5f9a23fac29c328f26a3cf223061baed1a",
+    "latest_sha256": "c1f84a18c886afc8e4dcc9e3d350ff5f9a23fac29c328f26a3cf223061baed1a",
+    "equal": true
+  },
+  {
+    "name": "split_config.arm64_v8a.apk",
+    "first_sha256": "114666025e9af13c12408e93a9fe6dfa08cc42a2e526fba1a534757af284fd9a",
+    "latest_sha256": "114666025e9af13c12408e93a9fe6dfa08cc42a2e526fba1a534757af284fd9a",
+    "equal": true
+  }
+]

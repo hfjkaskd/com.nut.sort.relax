@@ -1,0 +1,338 @@
+internal class <Module> // TypeDefIndex: 7619
+public class UIScriptableObject : ScriptableObject // TypeDefIndex: 7620
+private sealed class LuoSiSort.<>c // TypeDefIndex: 7621
+private sealed class LuoSiSort.<Init>d__4 : IEnumerator<object>, IEnumerator, IDisposable // TypeDefIndex: 7622
+public class LuoSiSort : MonoSingleton<LuoSiSort> // TypeDefIndex: 7623
+public class GoldRewardTargetS2C : S2CLSSBase // TypeDefIndex: 7624
+public class GoldRewardTargetS2CData // TypeDefIndex: 7625
+public class RewardDetailInfo // TypeDefIndex: 7626
+public class ExtendInfo // TypeDefIndex: 7627
+public class ExtendGoldInfo // TypeDefIndex: 7628
+public class SystemInfo : MonoBehaviour // TypeDefIndex: 7629
+public class UIHollowOutImage : Graphic // TypeDefIndex: 7630
+public class Tip : MonoBehaviour // TypeDefIndex: 7631
+public class PlayerInfo : MonoBehaviour // TypeDefIndex: 7632
+private sealed class PMDBullet.<>c__DisplayClass10_0 // TypeDefIndex: 7633
+public class PMDBullet : MonoBehaviour // TypeDefIndex: 7634
+public class PMDBullet1 : MonoBehaviour // TypeDefIndex: 7635
+public class PMDItem : MonoBehaviour // TypeDefIndex: 7636
+public class PMDSimple : MonoBehaviour // TypeDefIndex: 7637
+private sealed class ButtonTween.<ChangeScaleCoroutine>d__10 : IEnumerator<object>, IEnumerator, IDisposable // TypeDefIndex: 7638
+public class ButtonTween : MonoBehaviour, IPointerDownHandler, IEventSystemHandler, IPointerUpHandler // TypeDefIndex: 7639
+public static class DebugLSSUtil // TypeDefIndex: 7640
+public class FileLSSUtil // TypeDefIndex: 7641
+public static class ListUtil // TypeDefIndex: 7642
+public class MonoSingleton<T> : MonoBehaviour // TypeDefIndex: 7643
+public class PathUtil // TypeDefIndex: 7644
+public class Singleton<T> // TypeDefIndex: 7645
+public static class StringUtil // TypeDefIndex: 7646
+private sealed class TimeLSSUtil.<DelayCallbackAsync>d__11 : IEnumerator<object>, IEnumerator, IDisposable // TypeDefIndex: 7647
+private sealed class TimeLSSUtil.<UntilCallbackAsync>d__12 : IEnumerator<object>, IEnumerator, IDisposable // TypeDefIndex: 7648
+public class TimeLSSUtil : Singleton<TimeLSSUtil> // TypeDefIndex: 7649
+public static class TransformUtil // TypeDefIndex: 7650
+private sealed class UILSSUtil.<>c__DisplayClass0_0 // TypeDefIndex: 7651
+private sealed class UILSSUtil.<>c__DisplayClass1_0 // TypeDefIndex: 7652
+private sealed class UILSSUtil.<>c__DisplayClass2_0 // TypeDefIndex: 7653
+private sealed class UILSSUtil.<>c__DisplayClass3_0 // TypeDefIndex: 7654
+private sealed class UILSSUtil.<>c__DisplayClass4_0 // TypeDefIndex: 7655
+private sealed class UILSSUtil.<>c__DisplayClass5_0 // TypeDefIndex: 7656
+private sealed class UILSSUtil.<>c__DisplayClass6_0 // TypeDefIndex: 7657
+private sealed class UILSSUtil.<>c // TypeDefIndex: 7658
+public static class UILSSUtil // TypeDefIndex: 7659
+public enum TXStage // TypeDefIndex: 7660
+public class TXMgr : Singleton<TXMgr> // TypeDefIndex: 7661
+public class UserLocalData // TypeDefIndex: 7662
+public class UserLSSInfo // TypeDefIndex: 7663
+private sealed class UserMgr.<>c // TypeDefIndex: 7664
+private sealed class UserMgr.<>c__DisplayClass20_0 // TypeDefIndex: 7665
+public class UserMgr : Singleton<UserMgr> // TypeDefIndex: 7666
+public enum GoldType // TypeDefIndex: 7667
+public class GoldHelp : MonoBehaviour // TypeDefIndex: 7668
+public class Item : MonoBehaviour // TypeDefIndex: 7669
+public class ScreenFixHelp : MonoBehaviour // TypeDefIndex: 7670
+private sealed class AppRatingPanel.<>c__DisplayClass4_0 // TypeDefIndex: 7671
+public class AppRatingPanel : BaseLSSPanel // TypeDefIndex: 7672
+private sealed class BaseLSSPanel.<>c // TypeDefIndex: 7673
+public class BaseLSSPanel : MonoBehaviour // TypeDefIndex: 7674
+public class TXChannelPanel : BaseLSSPanel // TypeDefIndex: 7675
+public class TXCheckHintPanel : BaseLSSPanel // TypeDefIndex: 7676
+private sealed class TXCoinPanel.<>c__DisplayClass13_0 // TypeDefIndex: 7677
+public class TXCoinPanel : BaseLSSPanel // TypeDefIndex: 7678
+private sealed class TXComeOnPanel.<>c // TypeDefIndex: 7679
+public class TXComeOnPanel : BaseLSSPanel // TypeDefIndex: 7680
+public class TXGuideAssessPanel : BaseLSSPanel // TypeDefIndex: 7681
+public class TXGuideAssessResultPanel : BaseLSSPanel // TypeDefIndex: 7682
+public class TXGuideAssessRewardPanel : BaseLSSPanel // TypeDefIndex: 7683
+public class TXGuideCoinRewardHintPanel : BaseLSSPanel // TypeDefIndex: 7684
+public class TXGuideCoinRewardPanel : BaseLSSPanel // TypeDefIndex: 7685
+public class TXGuideGoldRewardPanel : BaseLSSPanel // TypeDefIndex: 7686
+public class TXGuideHideLevelPanel : BaseLSSPanel // TypeDefIndex: 7687
+public class TXGuideLoadingPanel : BaseLSSPanel // TypeDefIndex: 7688
+public class TXGuideTargetCompletePanel : BaseLSSPanel // TypeDefIndex: 7689
+public class TXGuideTXRewareTakeEffectPanel : BaseLSSPanel // TypeDefIndex: 7690
+public class TXGuideUserTXShowPanel : BaseLSSPanel // TypeDefIndex: 7691
+private sealed class TXLevelPanel.<>c__DisplayClass11_0 // TypeDefIndex: 7692
+public class TXLevelPanel : BaseLSSPanel // TypeDefIndex: 7693
+public class TXLevelSuccessPanel : BaseLSSPanel // TypeDefIndex: 7694
+public class TXPanel : BaseLSSPanel // TypeDefIndex: 7695
+private sealed class TXProgress0Panel.<>c__DisplayClass8_0 // TypeDefIndex: 7696
+private sealed class TXProgress0Panel.<>c // TypeDefIndex: 7697
+private sealed class TXProgress0Panel.<>c__DisplayClass9_0 // TypeDefIndex: 7698
+public class TXProgress0Panel : TXProgressBasePanel // TypeDefIndex: 7699
+public class TXProgress1Panel : TXProgressBasePanel // TypeDefIndex: 7700
+private sealed class TXProgress2Panel.<>c // TypeDefIndex: 7701
+public class TXProgress2Panel : TXProgressBasePanel // TypeDefIndex: 7702
+public class TXProgress3Panel : TXProgressBasePanel // TypeDefIndex: 7703
+private sealed class TXProgressBasePanel.<>c__DisplayClass8_0 // TypeDefIndex: 7704
+public class TXProgressBasePanel : BaseLSSPanel // TypeDefIndex: 7705
+public class TXRecordGuidePanel : BaseLSSPanel // TypeDefIndex: 7706
+private sealed class TXRecordItem.<>c // TypeDefIndex: 7707
+public class TXRecordItem : MonoBehaviour // TypeDefIndex: 7708
+public class TXRecordPanel : BaseLSSPanel // TypeDefIndex: 7709
+public class TXSuccessPanel : BaseLSSPanel // TypeDefIndex: 7710
+private sealed class TXTargetHintPanel.<>c // TypeDefIndex: 7711
+public class TXTargetHintPanel : BaseLSSPanel // TypeDefIndex: 7712
+public class TXTooFastHintPanel : BaseLSSPanel // TypeDefIndex: 7713
+private sealed class TXUserInfoPanel.<>c__DisplayClass13_0 // TypeDefIndex: 7714
+public class TXUserInfoPanel : BaseLSSPanel // TypeDefIndex: 7715
+public class TXUserInfoSurePanel : BaseLSSPanel // TypeDefIndex: 7716
+public class EveryDayGiftPanel : BaseLSSPanel // TypeDefIndex: 7717
+private sealed class FailPanel.<>c__DisplayClass9_0 // TypeDefIndex: 7718
+private sealed class FailPanel.<>c // TypeDefIndex: 7719
+public class FailPanel : BaseLSSPanel // TypeDefIndex: 7720
+private sealed class ItemGetPanel.<>c__DisplayClass10_0 // TypeDefIndex: 7721
+public class ItemGetPanel : BaseLSSPanel // TypeDefIndex: 7722
+private sealed class ItemRewardPanel.<>c__DisplayClass4_0 // TypeDefIndex: 7723
+public class ItemRewardPanel : BaseLSSPanel // TypeDefIndex: 7724
+public class LoadingPanel : MonoBehaviour // TypeDefIndex: 7725
+private sealed class LuckyDrawPanel.<>c__DisplayClass7_0 // TypeDefIndex: 7726
+public class LuckyDrawPanel : BaseLSSPanel // TypeDefIndex: 7727
+private sealed class LuckyRewardGetPanel.<>c__DisplayClass3_0 // TypeDefIndex: 7728
+public class LuckyRewardGetPanel : RewardGetPanel // TypeDefIndex: 7729
+private sealed class CoinItem.<>c__DisplayClass3_0 // TypeDefIndex: 7730
+private sealed class CoinItem.<>c__DisplayClass3_1 // TypeDefIndex: 7731
+private sealed class CoinItem.<>c // TypeDefIndex: 7732
+public class CoinItem : ItemBase // TypeDefIndex: 7733
+private sealed class GoldItem.<>c__DisplayClass3_0 // TypeDefIndex: 7734
+private sealed class GoldItem.<>c__DisplayClass3_1 // TypeDefIndex: 7735
+private sealed class GoldItem.<>c // TypeDefIndex: 7736
+public class GoldItem : ItemBase // TypeDefIndex: 7737
+public class HideLevel : MonoBehaviour // TypeDefIndex: 7738
+public abstract class ItemBase : MonoBehaviour // TypeDefIndex: 7739
+public class MainPanel : BaseLSSPanel // TypeDefIndex: 7740
+public class MainPanelBottom : MonoBehaviour // TypeDefIndex: 7741
+public class MainPanelTop : MonoBehaviour // TypeDefIndex: 7742
+public class OtherItem : ItemBase // TypeDefIndex: 7743
+private sealed class PlayerGoldGetHint.<>c__DisplayClass10_0 // TypeDefIndex: 7744
+public class PlayerGoldGetHint : MonoBehaviour // TypeDefIndex: 7745
+private sealed class TargetRewardBanner.<>c__DisplayClass3_0 // TypeDefIndex: 7746
+public class TargetRewardBanner : MonoBehaviour // TypeDefIndex: 7747
+public class TX_JD : MonoBehaviour // TypeDefIndex: 7748
+public class MessagePanel : MonoBehaviour // TypeDefIndex: 7749
+public class MyLevelPanel : BaseLSSPanel // TypeDefIndex: 7750
+private sealed class NewbieGuidePanel.<>c__DisplayClass23_0 // TypeDefIndex: 7751
+private sealed class NewbieGuidePanel.<>c__DisplayClass23_1 // TypeDefIndex: 7752
+private sealed class NewbieGuidePanel.<>c__DisplayClass23_2 // TypeDefIndex: 7753
+private sealed class NewbieGuidePanel.<>c__DisplayClass23_3 // TypeDefIndex: 7754
+private sealed class NewbieGuidePanel.<>c // TypeDefIndex: 7755
+public class NewbieGuidePanel : BaseLSSPanel // TypeDefIndex: 7756
+private sealed class NewPeopleRewardGetPanel.<>c // TypeDefIndex: 7757
+public class NewPeopleRewardGetPanel : RewardGetPanel // TypeDefIndex: 7758
+public class OnHookPanel : BaseLSSPanel // TypeDefIndex: 7759
+public class ReplayPanel : BaseLSSPanel // TypeDefIndex: 7760
+public class RewardGetPanel : BaseLSSPanel // TypeDefIndex: 7761
+public class RewardPanel : BaseLSSPanel // TypeDefIndex: 7762
+public class SettingPanel : BaseLSSPanel // TypeDefIndex: 7763
+private sealed class SuccessPanel.<>c__DisplayClass6_0 // TypeDefIndex: 7764
+public class SuccessPanel : RewardGetPanel // TypeDefIndex: 7765
+public class TipPanel : BaseLSSPanel // TypeDefIndex: 7766
+public class UnlockGameplayPanel : BaseLSSPanel // TypeDefIndex: 7767
+private sealed class PanelLssTween.<>c__DisplayClass1_0 // TypeDefIndex: 7768
+public class PanelLssTween : MonoBehaviour // TypeDefIndex: 7769
+public class ConfigTable : TableBase // TypeDefIndex: 7770
+public class LevelTable : TableBase // TypeDefIndex: 7771
+public class LevelInfo // TypeDefIndex: 7772
+public class PayTable : TableBase // TypeDefIndex: 7773
+public class PayChannel // TypeDefIndex: 7774
+public class ChannelInfo // TypeDefIndex: 7775
+public class SerializableData // TypeDefIndex: 7776
+public class TableBase // TypeDefIndex: 7777
+public class TableMgr : Singleton<TableMgr> // TypeDefIndex: 7778
+public class TextTable : TableBase // TypeDefIndex: 7779
+public class TextInfo // TypeDefIndex: 7780
+private sealed class HttpMgr.<RequestServerDataAsync>d__3 : IEnumerator<object>, IEnumerator, IDisposable // TypeDefIndex: 7781
+public class HttpMgr : Singleton<HttpMgr> // TypeDefIndex: 7782
+private sealed class RequestMgr.<>c__DisplayClass10_0 // TypeDefIndex: 7783
+private sealed class RequestMgr.<>c__DisplayClass11_0 // TypeDefIndex: 7784
+private sealed class RequestMgr.<>c__DisplayClass12_0 // TypeDefIndex: 7785
+private sealed class RequestMgr.<>c // TypeDefIndex: 7786
+private sealed class RequestMgr.<>c__DisplayClass14_0 // TypeDefIndex: 7787
+private sealed class RequestMgr.<>c__DisplayClass15_0 // TypeDefIndex: 7788
+private sealed class RequestMgr.<>c__DisplayClass16_0 // TypeDefIndex: 7789
+private sealed class RequestMgr.<>c__DisplayClass17_0 // TypeDefIndex: 7790
+private sealed class RequestMgr.<>c__DisplayClass18_0 // TypeDefIndex: 7791
+private sealed class RequestMgr.<>c__DisplayClass19_0 // TypeDefIndex: 7792
+private sealed class RequestMgr.<>c__DisplayClass20_0 // TypeDefIndex: 7793
+private sealed class RequestMgr.<>c__DisplayClass21_0 // TypeDefIndex: 7794
+private sealed class RequestMgr.<>c__DisplayClass22_0 // TypeDefIndex: 7795
+private sealed class RequestMgr.<>c__DisplayClass23_0 // TypeDefIndex: 7796
+private sealed class RequestMgr.<>c__DisplayClass24_0 // TypeDefIndex: 7797
+private sealed class RequestMgr.<>c__DisplayClass25_0 // TypeDefIndex: 7798
+private sealed class RequestMgr.<>c__DisplayClass26_0 // TypeDefIndex: 7799
+public class RequestMgr : Singleton<RequestMgr> // TypeDefIndex: 7800
+private sealed class ClearanceRewardGetInfo.<>c__DisplayClass2_0 // TypeDefIndex: 7801
+public class ClearanceRewardGetInfo : InfoLSSBase // TypeDefIndex: 7802
+public class ClearanceRewardGetHDXCC2S : C2SLSSBase // TypeDefIndex: 7803
+public class ClearanceRewardGetS2C : S2CLSSBase // TypeDefIndex: 7804
+public class ClearanceRewardGetS2CData // TypeDefIndex: 7805
+private sealed class ClearanceRewardShowInfo.<>c__DisplayClass2_0 // TypeDefIndex: 7806
+public class ClearanceRewardShowInfo : InfoLSSBase // TypeDefIndex: 7807
+public class ClearanceRewardShowC2S : C2SLSSBase // TypeDefIndex: 7808
+public class ClearanceRewardShowS2C : S2CLSSBase // TypeDefIndex: 7809
+public class ClearanceRewardShowS2CData // TypeDefIndex: 7810
+private sealed class ExtraGoldRewardInfo.<>c__DisplayClass2_0 // TypeDefIndex: 7811
+public class ExtraGoldRewardInfo : InfoLSSBase // TypeDefIndex: 7812
+public class ExtraGoldRewardC2S : C2SLSSBase // TypeDefIndex: 7813
+public class ExtraGoldRewardS2C : S2CLSSBase // TypeDefIndex: 7814
+public class ExtraGoldRewardS2CData // TypeDefIndex: 7815
+private sealed class GoldGet1Info.<>c__DisplayClass2_0 // TypeDefIndex: 7816
+public class GoldGet1Info : InfoLSSBase // TypeDefIndex: 7817
+private sealed class GoldGetInfo.<>c__DisplayClass2_0 // TypeDefIndex: 7818
+public class GoldGetInfo : InfoLSSBase // TypeDefIndex: 7819
+public class GoldGetC2S : C2SLSSBase // TypeDefIndex: 7820
+public class GoldGetS2C : S2CLSSBase // TypeDefIndex: 7821
+private sealed class GoldRewardTargetInfo.<>c__DisplayClass4_0 // TypeDefIndex: 7822
+public class GoldRewardTargetInfo : InfoLSSBase // TypeDefIndex: 7823
+private sealed class InfoSyncInfo.<>c__DisplayClass2_0 // TypeDefIndex: 7824
+public class InfoSyncInfo : InfoLSSBase // TypeDefIndex: 7825
+public class InfoSyncC2S : C2SLSSBase // TypeDefIndex: 7826
+public class InfoSyncS2C : S2CLSSBase // TypeDefIndex: 7827
+public class InfoSyncS2CData // TypeDefIndex: 7828
+private sealed class LuckyDrawGoldGetInfo.<>c__DisplayClass2_0 // TypeDefIndex: 7829
+public class LuckyDrawGoldGetInfo : InfoLSSBase // TypeDefIndex: 7830
+public class LuckyDrawGoldGetC2S : C2SLSSBase // TypeDefIndex: 7831
+public class LuckyDrawGoldGetS2C : S2CLSSBase // TypeDefIndex: 7832
+public class LuckyDrawGoldGetS2CData // TypeDefIndex: 7833
+private sealed class LuckyRewardGetInfo.<>c__DisplayClass2_0 // TypeDefIndex: 7834
+public class LuckyRewardGetInfo : InfoLSSBase // TypeDefIndex: 7835
+public class LuckyRewardGetC2S : C2SLSSBase // TypeDefIndex: 7836
+public class LuckyRewardGetS2C : S2CLSSBase // TypeDefIndex: 7837
+public class LuckyRewardGetS2CData // TypeDefIndex: 7838
+private sealed class LuckyRewardShowInfo.<>c__DisplayClass2_0 // TypeDefIndex: 7839
+public class LuckyRewardShowInfo : InfoLSSBase // TypeDefIndex: 7840
+public class LuckyRewardShowC2S : C2SLSSBase // TypeDefIndex: 7841
+public class LuckyRewardShowS2C : S2CLSSBase // TypeDefIndex: 7842
+public class LuckyRewardShowS2CData // TypeDefIndex: 7843
+private sealed class NewPeopleCoinRewardInfo.<>c__DisplayClass2_0 // TypeDefIndex: 7844
+public class NewPeopleCoinRewardInfo : InfoLSSBase // TypeDefIndex: 7845
+public class NewPeopleCoinRewardC2S : C2SLSSBase // TypeDefIndex: 7846
+public class NewPeopleCoinRewardS2C : S2CLSSBase // TypeDefIndex: 7847
+public class NewPeopleCoinRewardS2CData // TypeDefIndex: 7848
+private sealed class PMDInfo.<>c__DisplayClass3_0 // TypeDefIndex: 7849
+public class PMDInfo : InfoLSSBase // TypeDefIndex: 7850
+public class PMDC2S : C2SLSSBase // TypeDefIndex: 7851
+public class PMDS2C : S2CLSSBase // TypeDefIndex: 7852
+public class PMDS2CData // TypeDefIndex: 7853
+public class PMDS2CInfo // TypeDefIndex: 7854
+private sealed class RegisterInfo.<>c__DisplayClass2_0 // TypeDefIndex: 7855
+public class RegisterInfo : InfoLSSBase // TypeDefIndex: 7856
+public class RegisterC2S : C2SLSSBase // TypeDefIndex: 7857
+public class RegisterS2C : S2CLSSBase // TypeDefIndex: 7858
+public class RegisterS2CData // TypeDefIndex: 7859
+private sealed class ServerConfigInfo.<>c__DisplayClass3_0 // TypeDefIndex: 7860
+public class ServerConfigInfo : InfoLSSBase // TypeDefIndex: 7861
+public class ConfigC2S : C2SLSSBase // TypeDefIndex: 7862
+public class ServerConfigData // TypeDefIndex: 7863
+private sealed class VideoToolRewardInfo.<>c__DisplayClass2_0 // TypeDefIndex: 7864
+public class VideoToolRewardInfo : InfoLSSBase // TypeDefIndex: 7865
+public class VideoToolRewardC2S : C2SLSSBase // TypeDefIndex: 7866
+public class VideoToolRewardS2C : S2CLSSBase // TypeDefIndex: 7867
+public class VideoToolRewardS2CData // TypeDefIndex: 7868
+private sealed class VPNCheckInfo.<>c__DisplayClass2_0 // TypeDefIndex: 7869
+public class VPNCheckInfo : InfoLSSBase // TypeDefIndex: 7870
+public class VPNCheckC2S : C2SLSSBase // TypeDefIndex: 7871
+public class VPNCheckS2C : S2CLSSBase // TypeDefIndex: 7872
+public class VPNCheckS2CData // TypeDefIndex: 7873
+public class C2SData // TypeDefIndex: 7874
+public class C2SLSSBase // TypeDefIndex: 7875
+public class InfoLSSBase // TypeDefIndex: 7876
+public class S2CLSSBase // TypeDefIndex: 7877
+public class AndroidSdk // TypeDefIndex: 7878
+public class CallbackConfigBase // TypeDefIndex: 7879
+public class CountryConfig // TypeDefIndex: 7880
+public class NUTSORT_OBJ : MonoSingleton<NUTSORT_OBJ> // TypeDefIndex: 7881
+public class SdkMgr // TypeDefIndex: 7882
+public class EffectMgr : Singleton<EffectMgr> // TypeDefIndex: 7883
+public class ItemMgr : Singleton<ItemMgr> // TypeDefIndex: 7884
+public class PrefabPoolInfo // TypeDefIndex: 7885
+public class PrefabPoolMgr : Singleton<PrefabPoolMgr> // TypeDefIndex: 7886
+private sealed class ResourceMgr.<>c__DisplayClass5_0 // TypeDefIndex: 7887
+public class ResourceMgr : Singleton<ResourceMgr> // TypeDefIndex: 7888
+public enum UIName // TypeDefIndex: 7889
+public enum CountryCode // TypeDefIndex: 7890
+public class CountryLssInfo // TypeDefIndex: 7891
+public class CountryMgr // TypeDefIndex: 7892
+private sealed class AudioMgr.<>c__DisplayClass3_0 // TypeDefIndex: 7893
+private sealed class AudioMgr.<>c__DisplayClass5_0 // TypeDefIndex: 7894
+private sealed class AudioMgr.<PlayAudioAsync>d__5 : IEnumerator<object>, IEnumerator, IDisposable // TypeDefIndex: 7895
+public class AudioMgr : Singleton<AudioMgr> // TypeDefIndex: 7896
+private sealed class UIMgr.<>c__DisplayClass19_0 // TypeDefIndex: 7897
+public class UIMgr : MonoSingleton<UIMgr> // TypeDefIndex: 7898
+public class Coordinate // TypeDefIndex: 7899
+public enum NutColor // TypeDefIndex: 7900
+public enum NutType // TypeDefIndex: 7901
+public enum ScrewType // TypeDefIndex: 7902
+public class ItemGetInfo // TypeDefIndex: 7903
+public class ItemInfo // TypeDefIndex: 7904
+public enum ItemType // TypeDefIndex: 7905
+public class Level : MonoBehaviour // TypeDefIndex: 7906
+public class LevelConfig // TypeDefIndex: 7907
+public class LevelDataConfig // TypeDefIndex: 7908
+public class LevelConfigModel // TypeDefIndex: 7909
+public class Reward // TypeDefIndex: 7910
+public class LevelDataInfo // TypeDefIndex: 7911
+public class LevelData // TypeDefIndex: 7912
+public class ScrewData // TypeDefIndex: 7913
+public class CData // TypeDefIndex: 7914
+public class LPData // TypeDefIndex: 7915
+public class BIMData // TypeDefIndex: 7916
+public class OBIMData // TypeDefIndex: 7917
+public class OBIMObjData // TypeDefIndex: 7918
+private sealed class LevelInfo.<>c // TypeDefIndex: 7919
+public class LevelInfo // TypeDefIndex: 7920
+private sealed class LuoSiSortMgr.<>c__DisplayClass14_0 // TypeDefIndex: 7921
+private sealed class LuoSiSortMgr.<>c // TypeDefIndex: 7922
+private sealed class LuoSiSortMgr.<>c__DisplayClass15_0 // TypeDefIndex: 7923
+private sealed class LuoSiSortMgr.<>c__DisplayClass19_0 // TypeDefIndex: 7924
+private sealed class LuoSiSortMgr.<>c__DisplayClass19_1 // TypeDefIndex: 7925
+private sealed class LuoSiSortMgr.<>c__DisplayClass19_2 // TypeDefIndex: 7926
+private sealed class LuoSiSortMgr.<>c__DisplayClass29_0 // TypeDefIndex: 7927
+public class LuoSiSortMgr : Singleton<LuoSiSortMgr> // TypeDefIndex: 7928
+public static class LuoSiSortUtil // TypeDefIndex: 7929
+private sealed class Nut.<>c__DisplayClass26_0 // TypeDefIndex: 7930
+private sealed class Nut.<>c__DisplayClass30_0 // TypeDefIndex: 7931
+private sealed class Nut.<>c__DisplayClass32_0 // TypeDefIndex: 7932
+public class Nut : MonoBehaviour // TypeDefIndex: 7933
+public class NutData // TypeDefIndex: 7934
+public class NutInfo // TypeDefIndex: 7935
+public class NutPos // TypeDefIndex: 7936
+private sealed class OperatorInfo.<>c__DisplayClass4_0 // TypeDefIndex: 7937
+private sealed class OperatorInfo.<>c__DisplayClass4_1 // TypeDefIndex: 7938
+public class OperatorInfo // TypeDefIndex: 7939
+public class GameScene : MonoSingleton<GameScene> // TypeDefIndex: 7940
+public class ScenePosGroup : MonoBehaviour // TypeDefIndex: 7941
+public class ScrewPos : MonoBehaviour // TypeDefIndex: 7942
+private sealed class Screw.<>c__DisplayClass18_0 // TypeDefIndex: 7943
+public class Screw : MonoBehaviour // TypeDefIndex: 7944
+private sealed class ScrewInfo.<>c__DisplayClass47_0 // TypeDefIndex: 7945
+private sealed class ScrewInfo.<>c__DisplayClass47_1 // TypeDefIndex: 7946
+private sealed class ScrewInfo.<>c__DisplayClass47_2 // TypeDefIndex: 7947
+private sealed class ScrewInfo.<>c // TypeDefIndex: 7948
+public class ScrewInfo // TypeDefIndex: 7949
+public class ScrewTile : MonoBehaviour // TypeDefIndex: 7950
+public class ScrewTypeData // TypeDefIndex: 7951
+public class ScrewTypeDataObj // TypeDefIndex: 7952
+public class ScrewTypeObj : MonoBehaviour // TypeDefIndex: 7953
+private struct <PrivateImplementationDetails>.__StaticArrayInitTypeSize=16 // TypeDefIndex: 7954
+private struct <PrivateImplementationDetails>.__StaticArrayInitTypeSize=40 // TypeDefIndex: 7955
+internal sealed class <PrivateImplementationDetails> // TypeDefIndex: 7956

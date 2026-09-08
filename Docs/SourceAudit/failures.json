@@ -1,0 +1,17 @@
+[
+  {
+    "file": "resources.assets",
+    "path_id": 7232,
+    "type": "MonoBehaviour",
+    "unity_version": "2021.3.57f2",
+    "name": "",
+    "error": "PPtr can't deref with m_PathID == 0!"
+  },
+  {
+    "file": "resources.assets",
+    "path_id": 7603,
+    "type": "MonoBehaviour",
+    "unity_version": "2021.3.57f2",
+    "error": "failed to dump nodes raw"
+  }
+]
