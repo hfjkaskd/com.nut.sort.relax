@@ -20,6 +20,8 @@ namespace NutSort.UI
         [SerializeField] private float maskRevealDelay;
         [SerializeField] private float successGuideMaskDuration,successGuideReopenDelay;
         private Action<float,Action> scheduleMask;
+        private OriginalTeachingFlow teachingFlow;
+        private IOriginalGuideBranches guideBranches;
         private OriginalTables tables;
         private string language;
         private Action<bool> canOperate;
@@ -89,6 +91,26 @@ namespace NutSort.UI
             };
             var completion=new OriginalWithdrawalGuideCompletion(user,InitialGuideIndex,refreshGold,initializeLevel);
             CallbackAction=completion.Complete;
+        }
+
+        public void BindGuide(OriginalUserLocalData user,Func<bool> skipTeaching,IOriginalGuideBranches branches)
+        {
+            teachingFlow=new OriginalTeachingFlow(user,this,skipTeaching);
+            guideBranches=branches ?? throw new ArgumentNullException(nameof(branches));
+        }
+        // 0x9E201C: teaching precedes even the out-of-range/index no-op branches.
+        public void ShowGuide()
+        {
+            if(teachingFlow.Run())return;
+            switch(InitialGuideIndex)
+            {
+                case 0:guideBranches.ShowSuccess();break;
+                case 1:guideBranches.ShowTargetCompletion();break;
+                case 2:guideBranches.ShowWithdrawal();break;
+                case 3:guideBranches.ShowCoin();break;
+                case 10:case 12:case 14:guideBranches.ShowGoldEntry(InitialGuideIndex);break;
+                case 11:case 13:case 15:guideBranches.ShowWithdrawalStage(InitialGuideIndex);break;
+            }
         }
 
         public bool IsOpen { get; private set; }
