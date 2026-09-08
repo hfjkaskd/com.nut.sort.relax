@@ -13,6 +13,7 @@ namespace NutSort.World
         public Vector3 ReadyPosition;
         public Vector3 InitialPosition;
         public string ScrewPositionPath;
+        public string ScrewRowPath;
         public float NutInitDelay;
         public float NutInitLongDelay;
         public float DoneRiseDuration;

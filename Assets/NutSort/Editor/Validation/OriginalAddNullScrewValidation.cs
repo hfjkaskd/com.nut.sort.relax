@@ -20,7 +20,7 @@ namespace NutSort.Validation
                 level.Bind(data,pool,false,true);level.AdvanceInitialization(.51f);
                 var layout=Resources.Load<OriginalLayoutSettings>("Configuration/OriginalLayout");
                 var original=new OriginalScrewView[6];var positions=new Vector3[6];
-                for(int i=0;i<6;i++){original[i]=level.GetScrew(i);positions[i]=original[i].transform.parent.localPosition;}
+                for(int i=0;i<6;i++){original[i]=level.GetScrew(i);positions[i]=original[i].transform.parent.position;}
                 var slots=original[0].State.Slots;var nut=slots[0].Nut;slots[0].IsReady=true;
                 int nuts=level.NutViewCount,reads=0,cameras=0,effects=0;
                 level.UnlockRequested+=view=>{Check(cameras==effects+1,"Camera precedes initialized effect target");Check(view.TileCount==view.State.Capacity,"Segments exist before effect");effects++;};
@@ -31,7 +31,7 @@ namespace NutSort.Validation
                 for(int i=0;i<6;i++)
                 {
                     Check(level.GetScrew(i)==original[i]&&level.Board.Screws[i]==original[i].State,"Existing state and prefab references preserved");
-                    Check(original[i].transform.parent.localPosition==(i<3?positions[i]:layout.Position(2,4,original[i].State.Coordinate)),"Only selected row recenters");
+                    Check(original[i].transform.parent.position==(i<3?positions[i]:layout.Position(2,4,original[i].State.Coordinate)),"Only selected row recenters");
                 }
                 var second=level.AddNullScrew(()=>false,camera);
                 Check(second.State.Coordinate==new Vector2Int(0,3)&&second.State.Capacity==4&&second.State.Slots.Length==1,"Next smallest row; previous one-capacity rod gives one slot");

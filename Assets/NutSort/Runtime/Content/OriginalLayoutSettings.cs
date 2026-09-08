@@ -56,11 +56,19 @@ namespace NutSort.Content
             if (rows <= 0 || rowColumns <= 0 || coordinate.x < 0 || coordinate.x >= rows ||
                 coordinate.y < 0 || coordinate.y >= rowColumns)
                 throw new ArgumentOutOfRangeException(nameof(coordinate));
+            return RowPosition(rows, coordinate.x) + ColumnPosition(rowColumns, coordinate.y);
+        }
+
+        public Vector3 RowPosition(int rows, int row)
+        {
             float baseZ = rows % 2 == 0 ? evenRowsBaseZ : (rows / 2) * oddRowsBaseStepZ;
-            float z = baseZ + (rows - 1 - coordinate.x) * rowSpacingZ;
-            float spacing = rowColumns < wideRowThreshold ? shortRowSpacingX : wideRowSpacingX;
-            float x = (coordinate.y - (rowColumns - 1) * 0.5f) * spacing;
-            return new Vector3(x, 0f, z);
+            return new Vector3(0f, 0f, baseZ + (rows - 1 - row) * rowSpacingZ);
+        }
+
+        public Vector3 ColumnPosition(int columns, int column)
+        {
+            float spacing = columns < wideRowThreshold ? shortRowSpacingX : wideRowSpacingX;
+            return new Vector3((column - (columns - 1) * 0.5f) * spacing, 0f, 0f);
         }
 
         // GameScene.FixCameraSize, RVA 0xA05324. Keep the subtraction before
