@@ -29,7 +29,7 @@ namespace NutSort.World
         public bool IsEntryAnimating => entryActive;
         public bool IsSelectionAnimating => selectionActive;
 
-        private void Update() { AdvanceMotion(Time.deltaTime); }
+        private void Update() { AdvanceMotion(Time.deltaTime, Time.unscaledDeltaTime); }
 
         private void EnsureMotion()
         {
@@ -95,6 +95,7 @@ namespace NutSort.World
 
         public void StopMotion()
         {
+            CancelTransfer();
             entryActive = selectionActive = false;
             selectionComplete = sparkRequested = null;
             if (Root != null) CancelReadyPose();
@@ -102,11 +103,14 @@ namespace NutSort.World
 
         // The runtime and deterministic validation drive exactly the same state
         // transition code. No Editor-specific initialization or animation path.
-        public void AdvanceMotion(float deltaTime)
+        public void AdvanceMotion(float deltaTime) { AdvanceMotion(deltaTime, deltaTime); }
+
+        public void AdvanceMotion(float deltaTime, float unscaledDeltaTime)
         {
-            if (!entryActive && !selectionActive && !wobbling) return;
+            if (!entryActive && !selectionActive && !wobbling && transferPhase == TransferPhase.None) return;
             EnsureMotion();
-            if (deltaTime < 0f) throw new ArgumentOutOfRangeException(nameof(deltaTime));
+            if (deltaTime < 0f || unscaledDeltaTime < 0f) throw new ArgumentOutOfRangeException(nameof(deltaTime));
+            TransferPhase phaseAtFrameStart = transferPhase;
             if (wobbling) AdvanceWobble(deltaTime);
             if (entryActive)
             {
@@ -130,7 +134,12 @@ namespace NutSort.World
                     if (t >= 1f) entryActive = false;
                 }
             }
-            if (!selectionActive) return;
+            if (selectionActive) AdvanceSelection(deltaTime);
+            AdvanceTransfer(deltaTime, unscaledDeltaTime, phaseAtFrameStart);
+        }
+
+        private void AdvanceSelection(float deltaTime)
+        {
             selectionTime += deltaTime;
             float selectionT = Mathf.Clamp01(selectionTime / selectionDuration);
             float y = Mathf.LerpUnclamped(startY, endY, motionSettings.SelectionEase.Evaluate(selectionT));

@@ -21,5 +21,7 @@ namespace NutSort.World
         public float BobSpeed;
         public float BobMin;
         public float BobMax;
+        public float TransferStagger;
+        public float TransferDuration;
     }
 }

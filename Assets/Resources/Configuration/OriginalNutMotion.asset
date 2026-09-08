@@ -74,3 +74,5 @@ MonoBehaviour:
   BobSpeed: 0.05
   BobMin: -0.05
   BobMax: 0.05
+  TransferStagger: 0.1
+  TransferDuration: 0.2

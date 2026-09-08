@@ -1,0 +1,25 @@
+{
+  "unity": "2022.3.62f3",
+  "result": "pass",
+  "validator": "NutSort.Validation.OriginalContentValidation.Run",
+  "transferValidator": "OriginalTransferValidation",
+  "contentResources": 1476,
+  "boards": 1474,
+  "checks": [
+    "fixed destination slot rebinding",
+    "preserve-world parent change",
+    "ready and unready transfer paths",
+    "unscaled stagger with scaled animation",
+    "destination ready height",
+    "landing callback before spark request",
+    "operation gate until complete animation",
+    "pooled cancellation"
+  ],
+  "limitations": [
+    "No playable main scene yet",
+    "Spark request not connected to particle playback",
+    "Whole-screw completion animation pending",
+    "No current rendered scene fidelity comparison"
+  ],
+  "rawEvidence": "Retained locally outside repository"
+}

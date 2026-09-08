@@ -85,6 +85,7 @@ namespace NutSort.Validation
                 OriginalRenderingValidation.Validate();
                 OriginalPrefabValidation.Validate();
                 OriginalNutMotionValidation.Validate(repository);
+                OriginalTransferValidation.Validate(repository);
                 Debug.Log("NUT_CONTENT_VALIDATION_PASS resources=1476 boards=1474 primary=219 loop=80; original first board and seed references verified.");
                 EditorApplication.Exit(0);
             }
