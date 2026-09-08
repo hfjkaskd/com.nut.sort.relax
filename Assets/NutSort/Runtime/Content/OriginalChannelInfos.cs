@@ -9,6 +9,8 @@ namespace NutSort.Content
     {
         public string Channel;
         public List<string> Info;
+        public bool IsEmail=>Info.Contains("email");
+        public bool IsName=>Info.Contains("name01")||Info.Contains("name02");
     }
     public sealed class OriginalChannelInfos
     {
