@@ -98,6 +98,7 @@ namespace NutSort.Validation
                 OriginalLockedScrewValidation.Validate(repository);
                 OriginalResumeValidation.Validate(repository);
                 OriginalGameplayUnlockValidation.Validate();
+                OriginalGameplayUnlockDisplayValidation.Validate();
                 OriginalGameplayUnlockContinueValidation.Validate();
                 OriginalGameplayUnlockConfigValidation.Validate();
                 OriginalInitializationFlowValidation.Validate();
