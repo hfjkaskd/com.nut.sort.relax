@@ -34,7 +34,7 @@ Completing the record guide closes it first, sets IsCompleteRecordGuide, and re-
 
 ## Remaining integration
 
-- Restore the record-guide prefab, native panel animation and currency-particle material selection from the current export.
+- Record-guide prefab, native panel animation and currency-particle material selection are now restored and exercised in a real-canvas validation host (RecordGuideAudit.md). Production dispatcher binding remains pending.
 - Restore the original newbie, assessment and reward panels, banner and unlock/daily-gift consumers, then bind the required action interface to real scene components.
 - IsCannotMove, CheckDie/IsOnlyDontMove, native hidden-root delay and per-mask save points are now available through the level view (see DeadlockAudit.md). Bind this action when the higher-priority panels are restored; the skeletal break animation is still pending.
 - Connect the post-initialization main-panel wait and 1.5-second callback timing. The existing board initialization gate does not establish this lifecycle parity.
