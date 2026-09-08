@@ -1,0 +1,9 @@
+# Original punch trajectory generation
+
+OriginalPunchPath restores the trajectory construction in DOTween.Punch (0xA0EB1C), used by source FailPanel CoinTip PunchRotation. Current prefab values are direction (0,0,10), duration 2, vibrato 6, elasticity 1. The source computes max(2, trunc(vibrato * duration)) segments, yielding 12. Duration weights are first generated as (i+1)/count * duration, summed, then scaled by duration/sum. Displacements begin at full direction, alternate negative/positive clamped magnitude while decreasing magnitude by initialMagnitude/count, and finish at zero. Elasticity is clamped to [0,1] and affects negative swings only.
+
+The implementation allocates its two small arrays once when constructed; no frame update allocation is introduced. Parameters are constructor inputs to be supplied by the future serialized rotation component. It intentionally contains no sinusoidal approximation or substitute visual animation.
+
+57 regression PASS markers in Library/unity-punch-path-validation.log, with checks for all twelve source segment weights/offsets, total duration, three-axis direction, elasticity bounds, minimum two-point paths and zero direction. No compiler errors or exceptions found; preference fixture restored with backup absent. These tests prove trajectory generation for the source configuration and listed boundary cases, not arbitrary malformed numeric inputs or rendered rotation fidelity.
+
+Vector3ArrayPlugin.EvaluateAndApply (0xA29B38) was also inspected: it selects the segment by accumulated raw durations then applies the configured easing within that segment. Rotation startup offsets, target assignment, incremental loop behavior and scene-global playback remain to be restored before CoinTip can use the path. No runtime panel binding or prefab was changed this round. SDK treatment remains unchanged; whole-game replication is incomplete.
