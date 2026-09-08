@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using TMPro;
 using UnityEngine;
@@ -15,8 +16,14 @@ namespace NutSort.UI
         [SerializeField] private OriginalLoadingSettings settings;
         private string[] percentages;
         private bool showing;
-        private int completionPhase, lastPercentage = -1;
-        private float value, completionStart, elapsed;
+        private int lastPercentage = -1;
+        private float value;
+        private struct Completion
+        {
+            public float Start, Elapsed;
+            public bool Holding;
+        }
+        private readonly List<Completion> completions = new List<Completion>();
         public float Value => value;
         public bool IsVisible => gameObject.activeSelf;
         public Image ProgressImage => Bar;
@@ -48,7 +55,7 @@ namespace NutSort.UI
             }
             else
             {
-                completionStart = value; elapsed = 0f; completionPhase = 1;
+                completions.Add(new Completion { Start = value });
             }
         }
         private void Update() { AdvanceAutomatic(Time.deltaTime); }
@@ -71,21 +78,31 @@ namespace NutSort.UI
         public void AdvanceCompletion(float deltaTime)
         {
             if (deltaTime < 0f) throw new ArgumentOutOfRangeException(nameof(deltaTime));
-            if (completionPhase == 0) return;
-            elapsed += deltaTime;
-            if (completionPhase == 1)
+            // DOVirtual.Float creates independent tracks; SetState never kills
+            // an earlier animation or its delayed hide. Preserve creation order.
+            int count = completions.Count, index = 0;
+            for (int i = 0; i < count; i++)
             {
-                float t = Mathf.Clamp01(elapsed / settings.CompletionDuration);
-                value = Mathf.LerpUnclamped(completionStart, 1f, 1f - (1f-t)*(1f-t));
-                SetValue();
-                if (t < 1f) return;
-                value = 1f; SetValue();
-                completionPhase = 2; elapsed = 0f;
-            }
-            else if (elapsed >= settings.CompletedHoldDuration)
-            {
-                completionPhase = 0;
-                gameObject.SetActive(false);
+                var completion = completions[index];
+                completion.Elapsed += deltaTime;
+                if (!completion.Holding)
+                {
+                    float t = Mathf.Clamp01(completion.Elapsed / settings.CompletionDuration);
+                    value = Mathf.LerpUnclamped(completion.Start, 1f, 1f - (1f-t)*(1f-t));
+                    SetValue();
+                    if (t >= 1f)
+                    {
+                        value = 1f; SetValue();
+                        completion.Holding = true; completion.Elapsed = 0f;
+                    }
+                }
+                else if (completion.Elapsed >= settings.CompletedHoldDuration)
+                {
+                    completions.RemoveAt(index);
+                    gameObject.SetActive(false);
+                    continue;
+                }
+                completions[index++] = completion;
             }
         }
         private void SetValue()
