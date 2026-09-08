@@ -100,6 +100,7 @@ namespace NutSort.Validation
                 OriginalInitializationFlowValidation.Validate();
                 OriginalDeadlockValidation.Validate();
                 OriginalRecordGuideValidation.Validate();
+                OriginalRewardProgressValidation.Validate();
                 OriginalReplayValidation.Validate();
                 OriginalSceneValidation.Validate();
                 Debug.Log("NUT_CONTENT_VALIDATION_PASS resources=1476 boards=1474 primary=219 loop=80; original first board and seed references verified.");
