@@ -115,6 +115,7 @@ namespace NutSort.Validation
                 OriginalGoldEntryGuideValidation.Validate();
                 OriginalWithdrawalStageGuideValidation.Validate();
                 OriginalTargetGuideReturnValidation.Validate();
+                OriginalGuideBranchAdapterValidation.Validate();
                 OriginalNewbieInteractionValidation.Validate();
                 OriginalNewbieCompletionValidation.Validate();
                 OriginalGuideTargetCompletionValidation.Validate();
