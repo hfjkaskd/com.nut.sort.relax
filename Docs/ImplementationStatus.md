@@ -139,3 +139,5 @@
 - 已恢复 PlayerGoldGetHint 的 UTC 整秒推送调度、-1 禁用状态、LSSUPT 随机间隔，以及面板/缺失数据时原定时间加 3 秒的重试规则；成功展示前先排下次推送，原配置保持不变。40 组完整回归通过，测试存档已恢复。其预制体、文本/粒子/展示动画和实际 Update 接线仍待完成，正式 Top 尚未完整组装；SDK 未改动。详见 Docs/PlayerGoldHintScheduleAudit.md。
 
 - 已恢复 PlayerGoldGetHint 普通推送/自身收益两套名称和金额文案，保留当前关卡读取、95/96/97/152 号推送文案、94 号自身称呼及自身传入金额，不混用弹幕文本。41 组回归通过，原配置保持不变，测试存档恢复。其图标、预制体、展示动画与完整 Top 接入仍待完成；SDK 未改动。详见 Docs/PlayerGoldHintTextAudit.md。
+
+- 已恢复收益提示渠道元数据查询、UserLssInfo.GetType 存档索引和原图标路径，区分普通推送缺图保留旧图与通用随机/自身收益直接赋值的行为。42 组回归通过，测试存档恢复。收益提示预制体/动画及正式 Top 仍待接入，SDK 未改动。详见 Docs/HintIconsAudit.md。

@@ -19,6 +19,7 @@ namespace NutSort.Content
         public int LevelCount => levels.Length;
         public OriginalTextCatalog Text { get; }
         public OriginalPayChannels PayChannels { get; }
+        public OriginalChannelInfos ChannelInfos { get; }
         public OriginalLevelInfo LastLevel => levels[levels.Length - 1];
 
         public OriginalTables(OriginalTableSettings settings)
@@ -29,6 +30,7 @@ namespace NutSort.Content
             finally { Resources.UnloadAsset(asset); }
             Text = new OriginalTextCatalog(ReadTable("text.json"));
             PayChannels = new OriginalPayChannels(ReadTable("pay.json"));
+            ChannelInfos = new OriginalChannelInfos(ReadTable("pay.json"));
             var rows = (JArray)ReadTable("level.json")["list"];
             levels = new OriginalLevelInfo[rows.Count];
             for (int i = 0; i < rows.Count; i++)
