@@ -56,6 +56,7 @@ namespace NutSort.World
         public void ShowEveryDayGift() => ui.ShowEveryDayGift();
         public void PushPlayerGoldHint() => ui.PushPlayerGoldHint();
         public void CloseRecordGuide() => ui.CloseRecordGuide();
+        public void Run(bool showBanner=true,bool firstInit=false) => flow.Run(showBanner,firstInit);
         public void CompleteRecordGuide() => flow.CompleteRecordGuide();
     }
 }
