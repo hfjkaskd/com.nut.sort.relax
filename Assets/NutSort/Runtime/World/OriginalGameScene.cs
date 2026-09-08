@@ -60,6 +60,10 @@ namespace NutSort.World
         {
             if (IsRestarting) return;
             IsRestarting = true;
+            var user = audioPlayer.UserState.Data;
+            user.LuckyScrewDoneCount = 0;
+            user.PassLevelTime = 0;
+            user.Init();
             level.Clear();
             StartCoroutine(RebuildLevel());
         }

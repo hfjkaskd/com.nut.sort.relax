@@ -10,7 +10,7 @@ namespace NutSort.Validation
         public static void Validate()
         {
             var settings = Resources.Load<OriginalAudioSettings>("Configuration/OriginalAudio");
-            Check(settings != null && settings.DefaultEnabled && settings.ResourcePrefix == "Audio/" && settings.BgmName == "BGM" && settings.SelectName == "Select" && settings.MoveNameFormat == "Move{0}", "Original audio configuration");
+            Check(settings != null && settings.ResourcePrefix == "Audio/" && settings.BgmName == "BGM" && settings.SelectName == "Select" && settings.MoveNameFormat == "Move{0}", "Original audio configuration");
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/NutSort/Prefabs/AudioVoice.prefab");
             var voice = prefab.GetComponent<AudioSource>();
             Check(voice.clip == null && !voice.playOnAwake && !voice.loop && voice.spatialBlend == 0 && voice.volume == 1 && voice.pitch == 1, "Original 2D source defaults and lazy clip loading");

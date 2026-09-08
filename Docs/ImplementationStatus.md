@@ -59,6 +59,11 @@
 
 - 十七组回归、真实 UGUI 射线/指针派发重开测试及音频回归通过：透明 Mask 命中、重复开关面板、取消保留棋盘/选中、重开清理及延迟恢复、单次 StageStart 均验证。最新 `replay-panel.png` 已检查；未完成原版与目标全画面的逐帧对照，不将该截图视为完整 1:1 的证明。
 
+- 已恢复 UserLocalData 的 62 个顶层字段和原存档 key `UserLocalData`。字段按源类型显式读取/写入，不通过反射查找；原构造默认值 Level=1、LevelId=1、RevokeCount=5、IsAudio/IsVibrate=true 放入轻量配置，其他值保持零/null，未编造用户标识、名字、收益或服务器回复。三个嵌套用户/服务器/支付文档仅作为原 JSON 对象保留，尚未实现其完整类型与业务语义。
+- 场景预配置 OriginalUserSession，从 Unity PlayerPrefs 读取共享玩家状态；音频开关改为读写其中 IsAudio，删除独立 DefaultEnabled 状态。原音频按钮语义仍为仅改内存；没有另造音频存档 key 或每次切换自动存档。重开实际接入原 InitLevel 的 LuckyScrewDoneCount=0、PassLevelTime=0，以及 UserLocalData.Init 仅清零 CurrentLevelAddScrewCount 的规则。
+- 已实现原 SaveData 外层写入边界：无玩家数据不写；有当前棋盘时由调用方提供原格式 JSON 替换 LevelInfo；无当前棋盘时保留原字符串；整体序列化后 SetString 并 Save。**当前玩法自动保存与断点续局尚未接入**，避免在未恢复完整 LevelInfo 序列化关系前改写棋盘。GameScene 仍使用显式关卡配置，读取存档中的 Level 不代表已恢复该关的棋盘。
+- 十八组回归验证通过，包含所有 62 字段的合成样本往返、64 位整数精度、遗漏字段默认值、重复/大小写字段顺序、非法输入不重置为新用户、嵌套 JSON 和 LevelInfo 字符串保留。真实 Play 以可恢复测试存档验证原 key 读取、启动静音、共享状态、无自动写入及显式整份保存/重读；原 PlayerPrefs 已恢复，备份文件已清理。重开真实 Play 也验证上述三项本关计数清零及既有面板/棋盘链无回归。该合成样本验证不等于已完成原版真机存档导入与续局对照。
+
 ## 仍未完成
 
 - 原主流程的主界面、胜负后续分支、引导、奖励、存档及地区初始化尚未接入。加载界面已恢复并连接当前本地启动流程；原服务器/SDK 等待链没有被伪造。当前可运行场景仅完成核心首关排序链路，不能代替完整游戏生命周期。关卡加载模块通过不等于游戏已经可以玩。

@@ -87,7 +87,10 @@ namespace NutSort.Validation
                         game.Level.Operate(0);Click(replay.ReplayButton);phase=4;deadline=now+.55;break;
                     case 4:
                         startsBeforeReplay=stageStarts;
+                        var user=UnityEngine.Object.FindObjectOfType<OriginalUserSession>().Data;
+                        user.CurrentLevelAddScrewCount=2;user.PassLevelTime=23;user.LuckyScrewDoneCount=7;
                         Click(replay.Panel.ReplayButton);
+                        Check(user.CurrentLevelAddScrewCount==0&&user.PassLevelTime==0&&user.LuckyScrewDoneCount==0,"Original reset clears current-level added screws, time and lucky count");
                         Check(game.IsRestarting&&game.Level.Board==null,"Replay alias dispatch clears board immediately");
                         phase=5;deadline=now+.12;break;
                     case 5:

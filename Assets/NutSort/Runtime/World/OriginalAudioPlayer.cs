@@ -9,6 +9,7 @@ namespace NutSort.World
     public sealed class OriginalAudioPlayer : MonoBehaviour
     {
         [SerializeField] private OriginalAudioSettings settings;
+        [SerializeField] private OriginalUserSession userState;
         [SerializeField] private AudioSource background;
         [SerializeField] private AudioSource voicePrefab;
         private sealed class ClipEntry { public AudioClip Clip; public string ObjectName; }
@@ -18,7 +19,8 @@ namespace NutSort.World
         private readonly List<Voice> active = new List<Voice>();
         private OriginalLevelView level;
         private bool initialized;
-        public bool AudioEnabled { get; private set; }
+        public bool AudioEnabled => userState.Data.IsAudio;
+        public OriginalUserSession UserState => userState;
         public AudioSource Background => background;
         public int ActiveVoiceCount => active.Count;
         public int CachedClipCount => clips.Count;
@@ -28,9 +30,9 @@ namespace NutSort.World
         public void Initialize()
         {
             if (initialized) return;
-            if (settings == null || background == null || voicePrefab == null)
+            if (settings == null || userState == null || background == null || voicePrefab == null)
                 throw new InvalidOperationException("Original audio prefab references are incomplete.");
-            AudioEnabled = settings.DefaultEnabled;
+            userState.Initialize();
             initialized = true;
         }
 
@@ -94,7 +96,7 @@ namespace NutSort.World
         }
         public void SetAudioEnabled(bool value)
         {
-            Initialize(); AudioEnabled = value;
+            Initialize(); userState.Data.IsAudio = value;
             if (value) PlayBgm(); else background.Pause();
             // Source leaves already-playing short effects alone.
         }

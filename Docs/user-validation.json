@@ -1,0 +1,296 @@
+{
+  "scope": "Source user envelope, shared audio state and original replay reset counters; full resume remains incomplete",
+  "fieldCount": 62,
+  "fields": [
+    {
+      "name": "IsVPN",
+      "type": "bool"
+    },
+    {
+      "name": "IsTestedVPN",
+      "type": "bool"
+    },
+    {
+      "name": "UserId",
+      "type": "string"
+    },
+    {
+      "name": "UserName",
+      "type": "string"
+    },
+    {
+      "name": "UserLevel",
+      "type": "int"
+    },
+    {
+      "name": "Level",
+      "type": "int"
+    },
+    {
+      "name": "LevelId",
+      "type": "int"
+    },
+    {
+      "name": "LevelSeed",
+      "type": "int"
+    },
+    {
+      "name": "PassLevelTime",
+      "type": "float"
+    },
+    {
+      "name": "IsRandomLevelSeed",
+      "type": "bool"
+    },
+    {
+      "name": "LoginDay",
+      "type": "int"
+    },
+    {
+      "name": "TodayPassLevelCount",
+      "type": "int"
+    },
+    {
+      "name": "LoginDayCoin",
+      "type": "int"
+    },
+    {
+      "name": "Gold",
+      "type": "float"
+    },
+    {
+      "name": "Coin",
+      "type": "double"
+    },
+    {
+      "name": "AddScrewCount",
+      "type": "int"
+    },
+    {
+      "name": "RevokeCount",
+      "type": "int"
+    },
+    {
+      "name": "ExchangeCount",
+      "type": "int"
+    },
+    {
+      "name": "CurrentLevelAddScrewCount",
+      "type": "int"
+    },
+    {
+      "name": "IsAudio",
+      "type": "bool"
+    },
+    {
+      "name": "IsVibrate",
+      "type": "bool"
+    },
+    {
+      "name": "RegisterTime",
+      "type": "long"
+    },
+    {
+      "name": "LoginTime",
+      "type": "long"
+    },
+    {
+      "name": "UserLssInfo",
+      "type": "UserLSSInfo"
+    },
+    {
+      "name": "ServerConfigData",
+      "type": "ServerConfigData"
+    },
+    {
+      "name": "GoldRewardTargetS2CData",
+      "type": "GoldRewardTargetS2CData"
+    },
+    {
+      "name": "ScrewDoneCount",
+      "type": "int"
+    },
+    {
+      "name": "ScrewMoveCount",
+      "type": "int"
+    },
+    {
+      "name": "LuckyDrawScrewDoneTimes",
+      "type": "int"
+    },
+    {
+      "name": "LuckyDrawShowTimes",
+      "type": "int"
+    },
+    {
+      "name": "NewGameplayUnlockIndex",
+      "type": "int"
+    },
+    {
+      "name": "GuideIndex",
+      "type": "int"
+    },
+    {
+      "name": "LevelInfo",
+      "type": "string"
+    },
+    {
+      "name": "LuckyScrewDoneCount",
+      "type": "int"
+    },
+    {
+      "name": "TXTargetGold",
+      "type": "string"
+    },
+    {
+      "name": "ComeOnGold",
+      "type": "string"
+    },
+    {
+      "name": "ComeOnAddGold",
+      "type": "string"
+    },
+    {
+      "name": "Level1TXTime",
+      "type": "long"
+    },
+    {
+      "name": "IsTXLevel1",
+      "type": "bool"
+    },
+    {
+      "name": "IsGoldReduceLevel1",
+      "type": "bool"
+    },
+    {
+      "name": "IsGoldReduceLevel2",
+      "type": "bool"
+    },
+    {
+      "name": "IsTXLevel2",
+      "type": "bool"
+    },
+    {
+      "name": "IsCompleteGuidePassStage2Level",
+      "type": "bool"
+    },
+    {
+      "name": "Level1Gold",
+      "type": "float"
+    },
+    {
+      "name": "Level2Gold",
+      "type": "float"
+    },
+    {
+      "name": "Level2TXTime",
+      "type": "long"
+    },
+    {
+      "name": "IsSyncSuccess",
+      "type": "bool"
+    },
+    {
+      "name": "IsGuideGold",
+      "type": "bool"
+    },
+    {
+      "name": "IsGuideGoldComplete",
+      "type": "bool"
+    },
+    {
+      "name": "IsGuideGoldTargetComplete",
+      "type": "bool"
+    },
+    {
+      "name": "LastGetEveryDayGift",
+      "type": "long"
+    },
+    {
+      "name": "VideoToolRewardIndex",
+      "type": "int"
+    },
+    {
+      "name": "TodayChallengeTimes",
+      "type": "int"
+    },
+    {
+      "name": "IsCompleteAppRatingPanel",
+      "type": "bool"
+    },
+    {
+      "name": "NormalGetTimes",
+      "type": "int"
+    },
+    {
+      "name": "InterAdTimes",
+      "type": "int"
+    },
+    {
+      "name": "IsCompleteRecordGuide",
+      "type": "bool"
+    },
+    {
+      "name": "IsCompleteShowCoinRewardHint",
+      "type": "bool"
+    },
+    {
+      "name": "IsCompleteExtraGoldGuide",
+      "type": "bool"
+    },
+    {
+      "name": "IsCompleteCoinNewPeopleReward",
+      "type": "bool"
+    },
+    {
+      "name": "IsShowCoin",
+      "type": "bool"
+    },
+    {
+      "name": "IsCompleteSignIn",
+      "type": "bool"
+    }
+  ],
+  "sourceRvas": {
+    "constructor": "0x9c1d28",
+    "initReset": "0x9c1d20",
+    "userInit": "0x9b3d48",
+    "saveEnvelope": "0x9b3108",
+    "audioToggle": "0x9e6458",
+    "levelReset": "0x9e8174"
+  },
+  "key": "UserLocalData",
+  "defaults": {
+    "Level": 1,
+    "LevelId": 1,
+    "RevokeCount": 5,
+    "IsAudio": true,
+    "IsVibrate": true
+  },
+  "implementation": "Explicit streaming field reader/writer with the official Unity Newtonsoft package; preconfigured shared state/defaults; no reflection, enum-name keys, SDK calls or Editor runtime fallback. Three nested documents are retained as opaque JObject data, not fully implemented original classes.",
+  "validated": [
+    "18 full regression groups",
+    "All 62 top-level fields round-trip through an authored synthetic fixture",
+    "Int64 values above 2^53 and Int64.MaxValue remain exact",
+    "Duplicate/case-varied property order, omitted defaults, null user and invalid input",
+    "Original Init resets only CurrentLevelAddScrewCount",
+    "No write during load or audio toggle",
+    "Original save key, LevelInfo string preservation/replacement and one flush per explicit save",
+    "Real scene loads persisted mute and blocks BGM/StageStart loading",
+    "Real PlayerPrefs explicit save/reload; previous preference restored and local backup removed",
+    "Actual replay Button clears CurrentLevelAddScrewCount, PassLevelTime and LuckyScrewDoneCount; existing modal/rebuild branch still passes"
+  ],
+  "logs": [
+    "unity-user-validation.log",
+    "unity-user-play.log",
+    "unity-user-replay-play.log"
+  ],
+  "pending": [
+    "Complete original LevelInfo serialization/resume and automatic gameplay SaveData callers",
+    "Persisted player progress binding to board selection",
+    "Settings panel and other original state consumers",
+    "Nested UserLSSInfo/server/payment behavior (SDK remains excluded)",
+    "Country/AB/GM and US rewarded-ad default flow",
+    "Original device-save compatibility and full lifecycle/visual comparison"
+  ]
+}

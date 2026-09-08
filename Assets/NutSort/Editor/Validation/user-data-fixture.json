@@ -1,0 +1,91 @@
+{
+  "IsVPN": false,
+  "IsTestedVPN": true,
+  "UserId": "2030-01-02T03:04:05Z / UserId",
+  "UserName": "2030-01-02T03:04:05Z / UserName",
+  "UserLevel": 35,
+  "Level": 36,
+  "LevelId": 37,
+  "LevelSeed": 38,
+  "PassLevelTime": 8.25,
+  "IsRandomLevelSeed": true,
+  "LoginDay": 41,
+  "TodayPassLevelCount": 42,
+  "LoginDayCoin": 43,
+  "Gold": 13.25,
+  "Coin": 14.25,
+  "AddScrewCount": 46,
+  "RevokeCount": 47,
+  "ExchangeCount": 48,
+  "CurrentLevelAddScrewCount": 49,
+  "IsAudio": true,
+  "IsVibrate": false,
+  "RegisterTime": 9007199254740993,
+  "LoginTime": 9223372036854775807,
+  "UserLssInfo": {
+    "opaque": [
+      "original",
+      null,
+      {
+        "n": 9007199254740993
+      }
+    ],
+    "flag": false
+  },
+  "ServerConfigData": {
+    "opaque": [
+      "original",
+      null,
+      {
+        "n": 9007199254740993
+      }
+    ],
+    "flag": false
+  },
+  "GoldRewardTargetS2CData": {
+    "opaque": [
+      "original",
+      null,
+      {
+        "n": 9007199254740993
+      }
+    ],
+    "flag": false
+  },
+  "ScrewDoneCount": 57,
+  "ScrewMoveCount": 58,
+  "LuckyDrawScrewDoneTimes": 59,
+  "LuckyDrawShowTimes": 60,
+  "NewGameplayUnlockIndex": 61,
+  "GuideIndex": 62,
+  "LevelInfo": "{ \"ScrewInfos\": [], \"OperatorInfos\": [] }",
+  "LuckyScrewDoneCount": 64,
+  "TXTargetGold": "2030-01-02T03:04:05Z / TXTargetGold",
+  "ComeOnGold": "2030-01-02T03:04:05Z / ComeOnGold",
+  "ComeOnAddGold": "2030-01-02T03:04:05Z / ComeOnAddGold",
+  "Level1TXTime": 9007199254741030,
+  "IsTXLevel1": false,
+  "IsGoldReduceLevel1": true,
+  "IsGoldReduceLevel2": false,
+  "IsTXLevel2": true,
+  "IsCompleteGuidePassStage2Level": false,
+  "Level1Gold": 43.25,
+  "Level2Gold": 44.25,
+  "Level2TXTime": 9007199254741038,
+  "IsSyncSuccess": false,
+  "IsGuideGold": true,
+  "IsGuideGoldComplete": false,
+  "IsGuideGoldTargetComplete": true,
+  "LastGetEveryDayGift": 9007199254741043,
+  "VideoToolRewardIndex": 82,
+  "TodayChallengeTimes": 83,
+  "IsCompleteAppRatingPanel": true,
+  "NormalGetTimes": 85,
+  "InterAdTimes": 86,
+  "IsCompleteRecordGuide": false,
+  "IsCompleteShowCoinRewardHint": true,
+  "IsCompleteExtraGoldGuide": false,
+  "IsCompleteCoinNewPeopleReward": true,
+  "IsShowCoin": false,
+  "IsCompleteSignIn": true
+}

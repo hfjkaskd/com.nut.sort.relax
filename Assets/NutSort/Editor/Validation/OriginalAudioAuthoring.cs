@@ -22,7 +22,7 @@ namespace NutSort.Validation
                     settings = ScriptableObject.CreateInstance<OriginalAudioSettings>();
                     AssetDatabase.CreateAsset(settings, config);
                 }
-                settings.DefaultEnabled = true; settings.ResourcePrefix = "Audio/";
+                settings.ResourcePrefix = "Audio/";
                 settings.BgmName = "BGM"; settings.SelectName = "Select"; settings.MoveNameFormat = "Move{0}";
                 EditorUtility.SetDirty(settings);
                 Directory.CreateDirectory("Assets/NutSort/Prefabs"); AssetDatabase.Refresh();
@@ -32,14 +32,15 @@ namespace NutSort.Validation
                 var voicePrefab = PrefabUtility.SaveAsPrefabAsset(voiceObject, "Assets/NutSort/Prefabs/AudioVoice.prefab");
                 UnityEngine.Object.DestroyImmediate(voiceObject);
                 var scene = EditorSceneManager.OpenScene("Assets/Scenes/LuoSiSortGame.unity");
-                OriginalAudioPlayer player = null; OriginalGameScene game = null; OriginalStartupFlow flow = null;
+                OriginalAudioPlayer player = null; OriginalGameScene game = null; OriginalStartupFlow flow = null; OriginalUserSession user = null;
                 foreach (var root in scene.GetRootGameObjects())
                 {
                     if (player == null) player = root.GetComponentInChildren<OriginalAudioPlayer>(true);
                     if (game == null) game = root.GetComponentInChildren<OriginalGameScene>(true);
+                    if (user == null) user = root.GetComponentInChildren<OriginalUserSession>(true);
                     if (flow == null) flow = root.GetComponentInChildren<OriginalStartupFlow>(true);
                 }
-                if (game == null || flow == null) throw new InvalidDataException("Original startup/game scene missing.");
+                if (game == null || flow == null || user == null) throw new InvalidDataException("Original startup/game scene missing.");
                 if (player == null)
                 {
                     var root = new GameObject("AudioMgr");
@@ -48,7 +49,7 @@ namespace NutSort.Validation
                     var bgm = child.AddComponent<AudioSource>(); bgm.playOnAwake = false; bgm.loop = true; bgm.spatialBlend = 0;
                     Set(player, "background", bgm);
                 }
-                Set(player, "settings", settings); Set(player, "voicePrefab", voicePrefab.GetComponent<AudioSource>());
+                Set(player, "userState", user); Set(player, "settings", settings); Set(player, "voicePrefab", voicePrefab.GetComponent<AudioSource>());
                 Set(game, "audioPlayer", player); Set(flow, "audioPlayer", player);
                 EditorSceneManager.SaveScene(scene); AssetDatabase.SaveAssets();
                 OriginalAudioValidation.Validate();
