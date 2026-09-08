@@ -138,6 +138,7 @@ namespace NutSort.Validation
                 OriginalTargetGuideReturnValidation.Validate();
                 OriginalGuideTargetRequestValidation.Validate();
                 OriginalWithdrawalPanelFlowValidation.Validate();
+                OriginalWithdrawalClaimValidation.Validate();
                 OriginalGuideBranchAdapterValidation.Validate();
                 OriginalNewbieGuideHostValidation.Validate();
                 OriginalNewbieInteractionValidation.Validate();

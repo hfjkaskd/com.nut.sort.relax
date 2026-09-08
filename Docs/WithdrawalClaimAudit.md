@@ -1,0 +1,11 @@
+# Withdrawal button routing
+
+GoldGetCallback 0x9c94e0 first reads bear_list[2].RealLevel. When live player Level is at or below this threshold and UserLssInfo is null, it reads LSS260820: new mode with incomplete task shows tip 13 without closing; otherwise it shows panel 20 with the captured panel level and closes. Missing reward/config objects are not replaced with fabricated defaults.
+
+Otherwise GetTXStage(captured level) controls the chain. Stage zero closes directly before online-hint lookup. Nonzero stages prioritize TXProgress0Panel.IsShowOnlineTimeHint: reset false, show panel 30, close. Stages one/two show panel 28 with captured level when input arguments are nonempty; empty arguments display the panel Tip without closing. Stage three shows text 6 without closing if IsCompletePassStage2Level, otherwise opens panel 23 with the original argument array and closes. Remaining stages prioritize target hint (panel 31). Stages five/six assign TXProgress2Panel guide state from argument-array nonemptiness, open panel 25 without arguments and close. Stage four opens 24; remaining stages open 26. Every panel dispatch precedes close and an exception prevents later actions.
+
+Tip conversion replaces LF with space and applies source StringUtil.ColorToWhite 0x9bc22c: case-sensitive regex `(<color\s*=\s*)(#?[0-9a-fA-F]{6,8})(\s*>)` -> `<color=#FFFFFF>`. Closing tags, CR and nonmatching/named color tags stay unchanged. This low-frequency click operation follows the original regex implementation, with no per-frame text work.
+
+OriginalWithdrawalClaimFlow uses the actual existing reward-stage evaluator and explicit view actions. It grants no balance, writes no user data and does not invoke an SDK. Actual TXPanel view/Refresh and its shared hint/guide-state binding remain pending.
+
+Verification: local Unity 2022.3.62f3 full regression passed 113 markers, including NUT_WITHDRAWAL_CLAIM_VALIDATION_PASS and NUT_CONTENT_VALIDATION_PASS in Library/withdrawal-claim-validation.log. Tests exercise actual OriginalRewardProgress for stages 0-7, both target-hint values, online-hint priority, first-user task conditions, original argument identity and color/newline conversion. No compiler-error or exception entries; stage-zero fixture intentionally emits the existing missing-target diagnostic. No visual asset changes or full visual parity claim.
