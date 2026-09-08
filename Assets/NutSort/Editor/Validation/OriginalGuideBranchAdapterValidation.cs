@@ -13,7 +13,7 @@ namespace NutSort.Validation
             public Button Target;
             public readonly List<string> Calls=new List<string>();
             public Action Activation;
-            public OriginalGuideButtonBinding GetSuccessMoreGet(){Calls.Add("successTarget");return new OriginalGuideButtonBinding(Target,Activation);}
+            public OriginalGuideSuccessBinding GetSuccessGuideTarget(){Calls.Add("successTarget");return new OriginalGuideSuccessBinding(Target,Activation);}
             public OriginalGuideButtonBinding GetWithdrawal(){Calls.Add("withdrawalTarget");return new OriginalGuideButtonBinding(Target,Activation);}
             public RectTransform GoldTarget {get{Calls.Add("goldTarget");return Target.GetComponent<RectTransform>();}}
             public RectTransform CoinTarget {get{Calls.Add("coinTarget");return Target.GetComponent<RectTransform>();}}
@@ -30,7 +30,7 @@ namespace NutSort.Validation
             public void RequestEntryGoldInfo(bool flag){Check(flag,"Entry request true");Calls.Add("entryRequest");}
             public void NewGameplayUnlock(bool flag)=>Calls.Add("unlock");
             public void DailyGift()=>Calls.Add("daily");
-            public void RefreshMainAfterTween()=>Calls.Add("refreshMain");
+            public void RefreshMain()=>Calls.Add("refreshMain");
             public void ShowTargetBanner(Action action)=>Calls.Add("banner");
         }
         public static void Validate()

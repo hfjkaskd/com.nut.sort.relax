@@ -10,9 +10,16 @@ namespace NutSort.UI
         public readonly Action Activate;
         public OriginalGuideButtonBinding(Button button,Action activate){Button=button;Activate=activate;}
     }
+    public readonly struct OriginalGuideSuccessBinding
+    {
+        public readonly Button MoreGetButton;
+        public readonly Action GetCallback;
+        public OriginalGuideSuccessBinding(Button moreGetButton,Action getCallback)
+        {MoreGetButton=moreGetButton;GetCallback=getCallback;}
+    }
     public interface IOriginalGuideUI
     {
-        OriginalGuideButtonBinding GetSuccessMoreGet();
+        OriginalGuideSuccessBinding GetSuccessGuideTarget();
         OriginalGuideButtonBinding GetWithdrawal();
         RectTransform GoldTarget { get; }
         RectTransform CoinTarget { get; }
@@ -29,7 +36,7 @@ namespace NutSort.UI
         void RequestEntryGoldInfo(bool showMask);
         void NewGameplayUnlock(bool showBanner);
         void DailyGift();
-        void RefreshMainAfterTween();
+        void RefreshMain();
         void ShowTargetBanner(Action completed);
     }
     // Connects every native ShowGuide branch to its recovered view implementation.
@@ -45,8 +52,8 @@ namespace NutSort.UI
         }
         public void ShowSuccess()
         {
-            var target=ui.GetSuccessMoreGet();
-            view.ShowSuccessGuide(user,target.Button,target.Activate,ui.SetMask,ui.Schedule,ui.ShowPanel);
+            var target=ui.GetSuccessGuideTarget();
+            view.ShowSuccessGuide(user,target.MoreGetButton,target.GetCallback,ui.SetMask,ui.Schedule,ui.ShowPanel);
         }
         public void ShowTargetCompletion()=>view.ShowTargetCompletion(user,ui.RequestTargetGoldInfo,ui.Save,ui.ShowTargetPanel);
         public void ShowWithdrawal()
@@ -59,7 +66,7 @@ namespace NutSort.UI
         public void ShowWithdrawalStage(int guideIndex)
         {
             var target=ui.GetWithdrawal();
-            view.ShowWithdrawalStageGuide(user,target.Button.GetComponent<RectTransform>(),target.Activate,ui.Save,ui.DailyGift,ui.RefreshMainAfterTween,ui.ShowTargetBanner);
+            view.ShowWithdrawalStageGuide(user,target.Button.GetComponent<RectTransform>(),target.Activate,ui.Save,ui.DailyGift,ui.RefreshMain,ui.ShowTargetBanner);
         }
     }
 }

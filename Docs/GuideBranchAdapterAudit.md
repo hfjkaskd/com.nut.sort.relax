@@ -11,3 +11,5 @@ Validation goes through the actual prefab's ShowGuide entry, this adapter and th
 Remaining work: implement the production UI context and panel host with actual success/withdrawal/main references and original lifecycle behavior, then verify full scene flows. Native evidence stays local.
 
 Unity 2022.3.62f3 regression: 88 PASS markers in Library/unity-guide-adapter-validation.log; no compiler-error or exception markers; test preferences restored.
+
+Corrected bindings: the success visual target is MoreGetBtn but its activation operation is GetCallback, represented explicitly by OriginalGuideSuccessBinding. RefreshMain selects MainPanel.RefreshLssPanel. Both identifications use the exported 0x138 vtable start.

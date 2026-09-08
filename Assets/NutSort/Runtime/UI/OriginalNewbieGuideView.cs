@@ -68,8 +68,8 @@ namespace NutSort.UI
         }
 
         // ShowGuide case 0 (0x9E28E4), click closure 0x9E3FB0.
-        // The supplied operation is SuccessPanel.MoreGetCallback (virtual slot 12).
-        public void ShowSuccessGuide(OriginalUserLocalData user,Button moreGetButton,Action moreGet,
+        // The supplied operation is SuccessPanel.GetCallback (virtual slot 11); the visual target is MoreGetBtn.
+        public void ShowSuccessGuide(OriginalUserLocalData user,Button moreGetButton,Action getCallback,
             Action<bool,float,string> setMask,Action<float,Action> schedule,Action<int> showPanel)
         {
             Hand.gameObject.SetActive(true);
@@ -79,7 +79,7 @@ namespace NutSort.UI
             SetTip(-1,0);
             ClickAction=()=>
             {
-                moreGet();
+                getCallback();
                 user.GuideIndex=unchecked(user.GuideIndex+1);
                 Close();
                 setMask(true,successGuideMaskDuration,string.Empty);
@@ -155,7 +155,7 @@ namespace NutSort.UI
 
         // Shared cases 11/13/15 (0x9E24AC), click 0x9E4750 and completion 0x9E3D98.
         public void ShowWithdrawalStageGuide(OriginalUserLocalData user,RectTransform target,Action goldGet,
-            Action save,Action dailyGift,Action refreshMainAfterTween,Action<Action> showTargetBanner)
+            Action save,Action dailyGift,Action refreshMain,Action<Action> showTargetBanner)
         {
             Hand.gameObject.SetActive(true);
             Button.gameObject.SetActive(true);
@@ -172,7 +172,7 @@ namespace NutSort.UI
             CallbackAction=parameter=>
             {
                 dailyGift();
-                refreshMainAfterTween();
+                refreshMain();
                 if(ShowBanner)showTargetBanner(CompleteWithdrawalBanner);
             };
         }
