@@ -87,6 +87,12 @@ namespace NutSort.Content
             return user.TodayPassLevelCount >= data.DailyLevels ? 6 : 5;
         }
 
+        // TXMgr.IsCompletePassStage2Level 0x9C1AD8: strict real-level boundary.
+        public bool IsCompletePassStage2Level()
+        {
+            return user.Level > OriginalRewardProgressData.Read(user.GoldRewardTargetS2CData).Stage2RealLevel;
+        }
+
         public bool IsGuidePassStage2Level()
         {
             if (user.IsCompleteGuidePassStage2Level) return false;

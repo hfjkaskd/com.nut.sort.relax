@@ -103,6 +103,7 @@ namespace NutSort.Validation
                 OriginalGameplayUnlockContinueValidation.Validate();
                 OriginalGameplayUnlockConfigValidation.Validate();
                 OriginalInitializationWaitValidation.Validate();
+                OriginalInitializationContinuationValidation.Validate();
                 OriginalInitializationFlowValidation.Validate();
                 OriginalDeadlockValidation.Validate();
                 OriginalRecordGuideValidation.Validate();
