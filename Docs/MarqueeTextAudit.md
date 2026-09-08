@@ -9,3 +9,5 @@ For levels at or below two, the amount comes from GoldRewardTargetS2CData.bear_l
 Validation: 34 Unity regression PASS markers, including NUT_MARQUEE_TEXT_VALIDATION_PASS and NUT_CONTENT_VALIDATION_PASS, in the local reverse-workspace log reconstruction-nut/logs/unity-marquee-text-validation.log. Cases cover both text IDs, localization, captured versus live level, early reward row selection, null item handling in early levels, callback/random order, missing reward data and unchanged JSON. The preference backup is absent after restoration.
 
 This is a text component prerequisite. The original display-name generator still requires recovery and is supplied explicitly; the fixed name exists only in validation. PMDItem prefab/icon/width timing, PMDBullet presentation and production Top binding remain incomplete. No SDK behavior or visual assets changed in this round, and no device visual parity is claimed.
+
+Follow-up: OriginalMarqueeName now supplies the production text constructor with the recovered name generator; see MarqueeNameAudit.md. The earlier name-generator gap is resolved, while presentation and production Top binding remain pending.

@@ -12,6 +12,9 @@ namespace NutSort.Content
         private readonly Func<string> playerName;
         private readonly Func<float,string> formatGold;
         private readonly Func<float,float,float> range;
+        public OriginalMarqueeText(OriginalUserLocalData user, OriginalTables tables, Func<float,string> formatGold)
+            : this(user,tables,OriginalMarqueeName.Generate,formatGold) { }
+
         public OriginalMarqueeText(OriginalUserLocalData user, OriginalTables tables,
             Func<string> playerName, Func<float,string> formatGold, Func<float,float,float> range=null)
         {

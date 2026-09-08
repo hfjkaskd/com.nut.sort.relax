@@ -104,6 +104,7 @@ namespace NutSort.Validation
                 OriginalCoinProgressValidation.Validate();
                 OriginalMarqueeDataValidation.Validate();
                 OriginalMarqueeTextValidation.Validate();
+                OriginalMarqueeNameValidation.Validate();
                 OriginalTargetRewardValidation.Validate();
                 OriginalRewardProgressViewValidation.Validate();
                 OriginalGoldItemValidation.Validate();
