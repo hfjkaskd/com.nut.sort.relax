@@ -28,4 +28,4 @@ Final Play log Library/success-guide-level-panel-final-play.log: PASS, zero C# e
 
 The first batch attempt encountered a user-opened instance of this same project; that verified instance was closed under the user's explicit authorization before testing. No other project was closed.
 
-These are explicit fixture-composition and structural/visual checks, not production initialization or original-device pixel-diff proof. Country/AB production routing, later withdrawal panels/results, panel 22 and full lifecycle composition are incomplete. Existing exit-time pooled-object reparent warnings remain outside this change. SDK behavior remains unchanged.
+These are explicit fixture-composition and structural/visual checks, not production initialization or original-device pixel-diff proof. Country/AB production routing, later withdrawal panels/results and full lifecycle composition are incomplete. Panel 22 is subsequently restored in the explicit fixture documented by WithdrawalChannelAudit.md. Existing exit-time pooled-object reparent warnings remain outside this change. SDK behavior remains unchanged.

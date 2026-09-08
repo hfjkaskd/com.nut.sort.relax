@@ -24,4 +24,4 @@ This test suite does not represent a successful real withdrawal. Production code
 
 ## Next integration
 
-The current TXLevelPanel prefab, PlayStepTween, real fields/Buttons and panel 28 host now extend the actual guide/confirmation Play fixture. GoldGet1 request handling, subsequent visual results, panel 22 and production startup/country/AB lifecycle composition remain incomplete.
+The current TXLevelPanel prefab, PlayStepTween, real fields/Buttons and panel 28 host now extend the actual guide/confirmation Play fixture. GoldGet1 request handling, subsequent visual results and production startup/country/AB lifecycle composition remain incomplete. The other-channel panel 22 fixture is now documented in WithdrawalChannelAudit.md.
