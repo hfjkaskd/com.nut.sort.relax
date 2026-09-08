@@ -16,6 +16,10 @@ namespace NutSort.UI
         [SerializeField] private OriginalPanelSettings panels;
         [SerializeField] private OriginalRecordGuideSettings settings;
         [SerializeField] private OriginalReplayPanel.Label[] labels;
+        [SerializeField] private float queueDelay;
+        private OriginalPanelActionQueue actionQueue;
+        private Action<float,Action> schedule;
+        private Action hidden;
         private Func<bool> beginClick;
         private Action started, closed, clickSound;
         private Material ownedMaterial;
@@ -30,21 +34,36 @@ namespace NutSort.UI
         public bool Closing => closing;
 
         public void Initialize(OriginalTables tables, string language, string country,
-            Func<bool> tryClick, Action onStarted, Action onClosed, Action playClick)
+            Func<bool> tryClick, Action onStarted, Action onClosed, Action playClick, bool refresh = true)
         {
             beginClick=tryClick ?? throw new ArgumentNullException(nameof(tryClick));
             started=onStarted ?? throw new ArgumentNullException(nameof(onStarted));
             closed=onClosed ?? throw new ArgumentNullException(nameof(onClosed));
             clickSound=playClick ?? throw new ArgumentNullException(nameof(playClick));
             foreach(var label in labels)label.Text.text=tables.Text.GetText(label.Id,language);
-            tip.text=tables.Text.GetText(163,language);
-            if(ownedMaterial==null)ownedMaterial=currencyParticles.material;
-            ownedMaterial.SetTexture("_MainTex",Resources.Load<Texture2D>(settings.GoldTexturePrefix+GoldCode(country)+"1"));
             backdrop.color=new Color(0,0,0,panels.BackdropAlpha);
             main.localScale=Vector3.zero;title.localScale=Vector3.zero;startContainer.localScale=Vector3.zero;
             elapsed=closeElapsed=0;closing=false;initialized=true;
             bodyOpening=titleOpening=startOpening=true;
             startButton.onClick.RemoveAllListeners();startButton.onClick.AddListener(StartClicked);
+            if(refresh)Refresh(tables,language,country);
+        }
+
+        public void Refresh(OriginalTables tables,string language,string country)
+        {
+            tip.text=tables.Text.GetText(163,language);
+            if(ownedMaterial==null)ownedMaterial=currencyParticles.material;
+            ownedMaterial.SetTexture("_MainTex",Resources.Load<Texture2D>(settings.GoldTexturePrefix+GoldCode(country)+"1"));
+        }
+
+        public void BindHide(OriginalPanelActionQueue queue,Action<float,Action> delay,Action onHidden)
+        {
+            actionQueue=queue;schedule=delay;hidden=onHidden;
+        }
+        public void Hide()
+        {
+            hidden?.Invoke();
+            schedule(queueDelay,actionQueue.Dequeue);
         }
 
         // CountryLssInfo.GoldCode 0x9F7538; exact case-sensitive original aliases.

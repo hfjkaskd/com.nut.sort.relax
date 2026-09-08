@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using NutSort.Content;
+using Newtonsoft.Json.Linq;
 using NutSort.UI;
 using NutSort.World;
 using TMPro;
@@ -23,6 +24,9 @@ namespace NutSort.Validation
         private static int phase;
         private static double timeout,deadline;
         private static bool started,closed;
+        private static OriginalRecordGuidePanelHost host;
+        private static OriginalSceneInitialization initialization;
+        private static int reentered,queued;
         private static string before;
         static OriginalRecordGuideValidation()
         {
@@ -76,13 +80,23 @@ namespace NutSort.Validation
                 {
                     Validate();
                     var startup=UnityEngine.Object.FindObjectOfType<OriginalStartupFlow>();
-                    panel=UnityEngine.Object.Instantiate(Resources.Load<GameObject>(PathName),startup.MainLevel.transform.parent,false).GetComponent<OriginalRecordGuidePanel>();
                     game.ModalInputBlocked=true;before=PlayerPrefs.GetString(OriginalUserStore.Key);
-                    panel.Initialize(game.Tables,"en","US",()=>true,()=>
-                    {
-                        Check(panel.Closing,"Close starts before completion callback");started=true;
-                        UnityEngine.Object.FindObjectOfType<OriginalUserSession>().Data.IsCompleteRecordGuide=true;
-                    },()=>{closed=true;UnityEngine.Object.Destroy(panel.gameObject);game.ModalInputBlocked=false;},()=>{});
+                    var user=game.User;user.IsCompleteRecordGuide=false;user.ComeOnGold="";
+                    user.GoldRewardTargetS2CData=JObject.Parse("{\"bear_list\":[null,null,{\"Stage2RealLevel\":20}]}");
+                    var progress=new OriginalRewardProgress(user,game.Tables,value=>value.ToString());
+                    initialization=new OriginalSceneInitialization(game,progress,new InitializationUI());
+                    var queue=new OriginalPanelActionQueue();queue.Add(()=>queued++);
+                    host=new OriginalRecordGuidePanelHost(startup.MainLevel.transform.parent,PathName,game.Tables,"en","US",()=>game.IsInitDone,
+                        ()=>{started=true;initialization.CompleteRecordGuide();},()=>{},queue,game.ScheduleDelay,
+                        ()=>{closed=true;game.ModalInputBlocked=false;});
+                    initialization.Bind(()=>startup.MainLevel);
+                    game.RestartLevel();phase=5;deadline=now+4;return;
+                }
+                if(phase==5)
+                {
+                    if(!host.IsOpen){Check(now<deadline,"Initialization reaches record guide");return;}
+                    panel=host.Panel;
+                    Check(game.IsInitDone && !game.User.IsCompleteRecordGuide,"Record branch enables gate before guide completion");
                     Check(panel.StartContainer.localScale==Vector3.zero,"Start parent is initially zero scale");
                     Check(panel.CurrencyParticles.sharedMaterial.GetTexture("_MainTex")==Resources.Load<Texture2D>("Atlas/Golds/US1"),"Current US texture applied to actual particle material");
                     panel.enabled=false;
@@ -105,6 +119,7 @@ namespace NutSort.Validation
                 }
                 if(phase==3)
                 {
+                    game.User.Level=2; // Explicit next-branch fixture; no reward grant.
                     Canvas.ForceUpdateCanvases();var button=panel.StartButton;var canvas=button.GetComponentInParent<Canvas>();
                     var data=new PointerEventData(EventSystem.current) {position=RectTransformUtility.WorldToScreenPoint(canvas.worldCamera,button.transform.position),button=PointerEventData.InputButton.Left};
                     var hits=new List<RaycastResult>();EventSystem.current.RaycastAll(data,hits);
@@ -117,10 +132,33 @@ namespace NutSort.Validation
                     panel.gameObject.SetActive(false);
                     phase=4;deadline=now+.4;return;
                 }
-                Check(closed && panel==null && !game.ModalInputBlocked,"Native close completes and releases isolated validation host");
+                Check(closed && panel==null && !host.IsOpen && !game.ModalInputBlocked,"Native close deregisters panel and releases validation host");
+                if(phase==4){phase=6;deadline=now+2.6;return;}
+                Check(queued==1 && reentered==1 && game.User.IsCompleteRecordGuide,"Record completion re-enters initialization immediately and later advances the queue");
                 Debug.Log("NUT_RECORD_GUIDE_PLAY_VALIDATION_PASS real canvas render, disabled component entry, hidden delayed Start and close, country particle texture, native Button raycast/dispatch, close callback order and no added save; full startup lifecycle still pending.");Finish(0);
             }
             catch(Exception error){Debug.LogException(error);Finish(1);}
+        }
+        private sealed class InitializationUI : IOriginalInitializationUI
+        {
+            public void ShowPanel(int id)
+            {
+                if(id==34){Check(game.IsInitDone,"Record branch sets completion before panel creation");host.Show();return;}
+                Check(id==7 && game.User.GuideIndex==1 && panel.Closing && game.User.IsCompleteRecordGuide,"Start re-enters level-two guide after close starts and completion is written");reentered++;
+            }
+            public void CloseRecordGuide()
+            {
+                Check(!game.User.IsCompleteRecordGuide && panel.Closing,"Close precedes completion write");
+                host.Close();
+            }
+            private static void Unexpected(){throw new InvalidDataException("Unexpected record fixture branch");}
+            public void SynchronizeCompletedStage(Action completed){Unexpected();}
+            public void ShowUnlockPanel(int id,int index,bool banner){Unexpected();}
+            public void CloseAllPanels(){Unexpected();}
+            public void ShowTargetRewardBanner(Action completed){Unexpected();}
+            public void HideLevelHint(){Unexpected();}
+            public void ShowEveryDayGift(){Unexpected();}
+            public void PushPlayerGoldHint(){Unexpected();}
         }
         private static void Check(bool value,string message){if(!value)throw new InvalidDataException(message);}
         private static void Finish(int code){OriginalPreferenceFixture.Restore();SessionState.SetBool(Key,false);EditorApplication.update-=Tick;EditorApplication.Exit(code);}

@@ -791,6 +791,7 @@ MonoBehaviour:
   backdrop: {fileID: 114672306508523268}
   panels: {fileID: 11400000, guid: 260844c2d6eb4850bc1d85de73f18dfb, type: 2}
   settings: {fileID: 11400000, guid: e00c88f31b7d45b7a7f0b9b00645a8f3, type: 2}
+  queueDelay: 2.5
   labels:
   - Text: {fileID: 114967328832014496}
     Id: 123
