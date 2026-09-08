@@ -41,6 +41,15 @@ namespace NutSort.UI
             return panel;
         }
 
+        public void Refresh(int id)
+        {
+            // RefreshLssPanel (0x9F7E54) resolves the name before lookup.
+            // Preserve its original missing-panel diagnostic, including wording.
+            string panelName=name(id);
+            if(!panels.ContainsKey(id)) {Debug.LogError("panel exist :"+panelName);return;}
+            refresh(panels[id]);
+        }
+
         public void CloseAll()
         {
             // Source snapshots IDs first. New panels opened by a hide callback
