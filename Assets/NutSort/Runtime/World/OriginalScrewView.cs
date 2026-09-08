@@ -22,6 +22,7 @@ namespace NutSort.World
         public Transform ReadyPosition => ReadyPos;
         public Transform InitialPosition => InitPos;
         public Transform Cap => ScrewCap.transform;
+        public Transform CompletionEffectRoot => DoneEffect.transform;
         public BoxCollider Bounds => BoxCollider;
         public OriginalScrewTypeView TypeView => ScrewTypeObj;
         public int TileCount => ScrewTiles.Count;

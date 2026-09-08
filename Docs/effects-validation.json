@@ -1,0 +1,23 @@
+{
+  "unity": "2022.3.62f3",
+  "result": "pass",
+  "regressionGroups": 13,
+  "nativeParticles": { "sparkSystems": 2, "completionSystems": 4 },
+  "lifetimesScaledSeconds": { "sparkPoolReturn": 1.5, "completionDestroy": 2.0 },
+  "checks": [
+    "Original effect Resources paths and all twelve effect colors",
+    "CenterGlow and MagicDust retain original particle colors",
+    "Actual first-board transfer triggers one landing spark and one completion effect",
+    "Completed rod triggers effect at cap animation peak",
+    "Timed expiration and zero-delta pause behavior",
+    "Spark instance reuse and local rotation reset",
+    "Level cleanup returns attached transient sparks before recycling gameplay objects"
+  ],
+  "currentCapture": "Library/ValidationCaptures/play-completion-effects.png",
+  "limitations": [
+    "Full source-versus-target particle frame comparison remains pending",
+    "Android/iOS device rendering and memory measurements remain pending",
+    "Later main-flow, UI, tutorial, reward and region branches remain incomplete"
+  ],
+  "rawEvidence": "Retained locally, not exported to repository"
+}

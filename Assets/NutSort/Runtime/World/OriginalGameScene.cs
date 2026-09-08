@@ -12,6 +12,7 @@ namespace NutSort.World
         [SerializeField] private OriginalPrefabPool pool;
         [SerializeField] private OriginalContentSettings content;
         [SerializeField] private OriginalSceneSession session;
+        [SerializeField] private OriginalGameplayEffects effects;
         private OriginalLevelView level;
         private int viewportWidth, viewportHeight;
         public OriginalLevelView Level => level;
@@ -36,6 +37,7 @@ namespace NutSort.World
             LevelSelection selection = selector.Select(progress, session.LSS260820, session.LSSSHSLV);
             level = pool.Rent(session.LevelPrefabPath, transform).GetComponent<OriginalLevelView>();
             level.Bind(repository.LoadBoard(selection.Loop, selection.Seed), pool, session.LongEntryDelay, session.LSSAB);
+            effects.Bind(level, pool);
             level.OperationApplied += ForwardOperation;
             ResizeCameras(Screen.width, Screen.height);
         }
@@ -77,6 +79,7 @@ namespace NutSort.World
         private void OnDestroy()
         {
             if (level == null) return;
+            effects.Clear();
             level.OperationApplied -= ForwardOperation;
             level.Clear();
             level = null;

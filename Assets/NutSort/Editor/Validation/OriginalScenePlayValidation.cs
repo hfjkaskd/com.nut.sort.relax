@@ -17,6 +17,9 @@ namespace NutSort.Validation
         private static int phase;
         private static double deadline, timeout;
         private static bool loadingCaptured;
+        private static int sparkCount, doneCount;
+        private static bool effectsCaptured;
+        private static OriginalGameplayEffects effects;
         static OriginalScenePlayValidation()
         {
             if(SessionState.GetBool(ActiveKey,false)){timeout=EditorApplication.timeSinceStartup+60;EditorApplication.update+=Tick;}
@@ -58,7 +61,19 @@ namespace NutSort.Validation
                 }
                 if(game==null)game=UnityEngine.Object.FindObjectOfType<OriginalGameScene>();
                 if(game==null||game.Level==null||!game.Level.AreNutsInitialized)return;
-                if(phase==0){phase=1;deadline=EditorApplication.timeSinceStartup+2;return;}
+                if(phase==0)
+                {
+                    effects=game.GetComponent<OriginalGameplayEffects>();
+                    if(effects==null)throw new Exception("Gameplay effects component missing.");
+                    game.Level.SparkRequested += nut => sparkCount++;
+                    game.Level.DoneEffectRequested += screw => doneCount++;
+                    phase=1;deadline=EditorApplication.timeSinceStartup+2;return;
+                }
+                if(phase==3 && doneCount>0 && !effectsCaptured)
+                {
+                    OriginalSceneValidation.Capture(game.WorldCamera,"play-completion-effects.png");
+                    effectsCaptured=true;
+                }
                 if(EditorApplication.timeSinceStartup<deadline)return;
                 if(phase==1)
                 {
@@ -76,10 +91,31 @@ namespace NutSort.Validation
                     if(game.TryOperateAtScreenPoint(point).Kind!=ScrewOperationKind.Moved)throw new Exception("Play mode target ray failed.");
                     phase=3;deadline=EditorApplication.timeSinceStartup+1.5;
                 }
-                else
+                else if(phase==3)
                 {
                     if(!game.Level.Board.IsSuccess||!game.Level.Board.Screws[0].IsCanOperator)throw new Exception("Runtime animation callbacks did not finish the board.");
+                    if(sparkCount!=1 || doneCount!=1 || effects.ActiveCount==0)throw new Exception("Original landing/completion effect chain failed: sparks="+sparkCount+", done="+doneCount+", active="+effects.ActiveCount);
                     OriginalSceneValidation.Capture(game.WorldCamera,"play-first-board-complete.png");
+                    phase=4;deadline=EditorApplication.timeSinceStartup+2.5;
+                }
+                else
+                {
+                    if(effects.ActiveCount!=0)throw new Exception("Effects did not expire.");
+                    Transform parent=game.Level.GetScrew(0).transform;
+                    GameObject first=effects.PlaySpark(parent);
+                    first.transform.localRotation=Quaternion.Euler(15f,30f,45f);
+                    effects.Advance(0f);
+                    if(!first.activeSelf)throw new Exception("Paused time expired a spark.");
+                    effects.Advance(1.49f);
+                    if(!first.activeSelf)throw new Exception("Spark expired early.");
+                    effects.Advance(.011f);
+                    if(first.activeSelf)throw new Exception("Spark failed to return to pool.");
+                    GameObject reused=effects.PlaySpark(parent);
+                    if(reused!=first)throw new Exception("Spark was not reused.");
+                    if(Quaternion.Angle(reused.transform.localRotation,Quaternion.identity)>.001f)throw new Exception("Pooled spark rotation was not reset.");
+                    game.Level.Clear();
+                    if(reused.activeSelf || effects.ActiveCount!=0)throw new Exception("Effect cleanup failed.");
+                    Debug.Log("NUT_EFFECTS_PLAY_VALIDATION_PASS original first-board landing spark and colored completion, timed cleanup, pause and spark reuse with rotation reset.");
                     Debug.Log("NUT_SCENE_PLAY_VALIDATION_PASS automatic Start, scaled runtime updates, camera-ray selection/transfer and actual animation completion verified in Play mode.");
                     Finish(0);
                 }

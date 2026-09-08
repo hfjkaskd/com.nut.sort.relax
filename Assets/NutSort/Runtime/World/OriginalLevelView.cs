@@ -26,6 +26,7 @@ namespace NutSort.World
         public event Action<OriginalNutView> SparkRequested;
         public event Action<OriginalScrewView> DoneEffectRequested;
         public event Action<ScrewState> ScrewCompleted;
+        public event Action Clearing;
 
         public void Bind(LevelData data, OriginalPrefabPool prefabPool, bool useLongEntryDelay, bool useLssab)
         {
@@ -132,6 +133,7 @@ namespace NutSort.World
 
         public void Clear()
         {
+            Clearing?.Invoke();
             pendingNuts = false;
             foreach (OriginalNutView nut in nuts.Values) { nut.ReleaseVisual(); pool.Return(nut.gameObject); }
             nuts.Clear();

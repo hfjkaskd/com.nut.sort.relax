@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25d3b2a19f5d479a952780f2b6235d99, type: 3}
+  m_Name: OriginalEffects
+  m_EditorClassIdentifier:
+  SparkPath: Prefabs/Effects/SparkEffect
+  DonePath: Prefabs/Effects/DoneEffect
+  SparkLifetime: 1.5
+  DoneLifetime: 2
+  NutColors:
+  - {r: 0.407843137, g: 0.62745098, b: 0.0745098039, a: 1}
+  - {r: 0.117647059, g: 0.482352941, b: 0.721568627, a: 1}
+  - {r: 0.698039216, g: 0.239215686, b: 0.125490196, a: 1}
+  - {r: 0.658823529, g: 0.458823529, b: 0.0274509804, a: 1}
+  - {r: 0.77254902, g: 0.235294118, b: 0.411764706, a: 1}
+  - {r: 0.509803922, g: 0.478431373, b: 0.549019608, a: 1}
+  - {r: 0.658823529, g: 0.407843137, b: 0.349019608, a: 1}
+  - {r: 0.215686275, g: 0.203921569, b: 0.203921569, a: 1}
+  - {r: 0.701960784, g: 0.101960784, b: 0.121568627, a: 1}
+  - {r: 0.141176471, g: 0.439215686, b: 0.384313725, a: 1}
+  - {r: 0.376470588, g: 0.211764706, b: 0.784313725, a: 1}
+  - {r: 0.376470588, g: 0.0549019608, b: 0.384313725, a: 1}
