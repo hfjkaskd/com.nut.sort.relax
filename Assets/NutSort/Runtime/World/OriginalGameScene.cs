@@ -69,6 +69,15 @@ namespace NutSort.World
             failure.Fail(session.FailPanelDelay, ScheduleDelay, () => showPanel(session.FailPanelId));
         }
 
+        public void BindMoveCompletion(Action<ScrewState,bool> doneEvent,Action hideGuide,Action pushHint,
+            Action<ScrewState> refreshTypes,Action<int> showPanel)
+        {
+            var completion=new OriginalMoveCompletionFlow(User,()=>level.Board.IsSuccess,level.IsCannotMove,
+                ScheduleDelay,doneEvent,hideGuide,pushHint,refreshTypes,()=>Fail(showPanel),
+                session.ScrewDoneEventDelay,session.SuccessDoneEventDelay);
+            level.BindMoveCompletion(completion.Run);
+        }
+
         private OriginalAddScrewFlow addScrewFlow;
         public void BindAddScrew(Func<int> maximum,Func<bool> singleTile,OriginalItemManager items,
             Action refreshBottom,Action<int,int> showToolPanel,Action<int> showTip)

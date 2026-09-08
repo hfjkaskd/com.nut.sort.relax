@@ -150,6 +150,7 @@ namespace NutSort.World
                         destination.ReadyPosition, i, transfer.WasReady, () => OnLanded(batch, moveIndex),
                         () => SparkRequested?.Invoke(view));
                 }
+                moveCompletion?.Invoke(batch.Destination);
                 foreach (NutSlot slot in batch.Source.Slots)
                     if (slot.Nut != null) nuts[slot.Nut].RefreshVisual();
             }
@@ -200,6 +201,9 @@ namespace NutSort.World
             if(Board.Screws.Length==0)return;
             screws[0].AddTile(singleTile());
         }
+
+        private Action<ScrewState> moveCompletion;
+        public void BindMoveCompletion(Action<ScrewState> callback) { moveCompletion=callback ?? throw new ArgumentNullException(nameof(callback)); }
 
         private Action addScrewRequested;
         public void BindAddScrew(Action addScrew) { addScrewRequested=addScrew ?? throw new ArgumentNullException(nameof(addScrew)); }

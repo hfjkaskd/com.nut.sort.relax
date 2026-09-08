@@ -11,6 +11,7 @@ namespace NutSort.World
         public float RestartDelay;
         public float MainPanelReadyDelay;
         public float FailPanelDelay;
+        public float ScrewDoneEventDelay, SuccessDoneEventDelay;
         public int FailPanelId;
         public string StageStartSound;
         public float FirstStageSoundDelay, RestartStageSoundDelay;

@@ -34,3 +34,5 @@ MonoBehaviour:
   - 61
   - 111
   MainPanelReadyDelay: 1.5
+  ScrewDoneEventDelay: 1
+  SuccessDoneEventDelay: 2
