@@ -27,6 +27,7 @@ namespace NutSort.UI
         {
             Prepare();
             Logo.SetNativeSize();
+            OriginalUIAnimationDriver.Register(this, AdvanceCompletion);
         }
         private void Prepare()
         {
@@ -50,16 +51,26 @@ namespace NutSort.UI
                 completionStart = value; elapsed = 0f; completionPhase = 1;
             }
         }
-        private void Update() { Advance(Time.deltaTime); }
+        private void Update() { AdvanceAutomatic(Time.deltaTime); }
+        private void OnDestroy() { OriginalUIAnimationDriver.Unregister(this); }
         public void Advance(float deltaTime)
         {
-            if (!IsVisible) return;
+            AdvanceAutomatic(deltaTime);
+            AdvanceCompletion(deltaTime);
+        }
+        private void AdvanceAutomatic(float deltaTime)
+        {
+            if (!isActiveAndEnabled) return;
             if (deltaTime < 0f) throw new ArgumentOutOfRangeException(nameof(deltaTime));
             if (showing)
             {
                 value = Mathf.Min(value + deltaTime * settings.AutomaticRate, settings.AutomaticLimit);
                 SetValue();
             }
+        }
+        public void AdvanceCompletion(float deltaTime)
+        {
+            if (deltaTime < 0f) throw new ArgumentOutOfRangeException(nameof(deltaTime));
             if (completionPhase == 0) return;
             elapsed += deltaTime;
             if (completionPhase == 1)

@@ -26,7 +26,20 @@ namespace NutSort.Validation
             Check(view.PercentageLabel.font.name=="zh_Custom SDF","Original font retained");
             Near(view.PercentageLabel.fontSize,44.5f,"Original percentage font size");
             view.SetState(false);view.Advance(.501f);view.Advance(.201f);
-            Debug.Log("NUT_LOADING_VALIDATION_PASS original 90-percent cap, half-second OutQuad completion, 0.2-second hold, marker position, F0 label, source font and repeated loading cycle.");
+            OriginalUIAnimationDriver.Register(view,view.AdvanceCompletion);
+            try
+            {
+                view.enabled=false;view.SetState(true);view.Advance(.2f);
+                Near(view.Value,0f,"Disabled component stops automatic progress");
+                view.SetState(false);OriginalUIAnimationDriver.Advance(.25f);
+                Near(view.Value,.75f,"Completion tween advances while disabled");
+                view.gameObject.SetActive(false);OriginalUIAnimationDriver.Advance(.25f);
+                Near(view.Value,1f,"Hidden completion still reaches one");
+                view.SetState(true);OriginalUIAnimationDriver.Advance(.201f);
+                Check(!view.IsVisible,"Previously scheduled hold still hides a reopened loading panel");
+            }
+            finally {view.enabled=true;OriginalUIAnimationDriver.Unregister(view);}
+            Debug.Log("NUT_LOADING_VALIDATION_PASS original 90-percent cap, half-second OutQuad completion, 0.2-second hold, marker position, F0 label, source font, repeated loading cycle, disabled automatic stop, global hidden completion and uncancelled hide hold.");
         }
         private static void Check(bool value,string message){if(!value)throw new InvalidDataException(message);}
         private static void Near(float a,float b,string message){Check(Mathf.Abs(a-b)<.00001f,message+": "+a);}
