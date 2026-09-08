@@ -1,0 +1,23 @@
+{
+  "unity": "2022.3.62f3",
+  "result": "pass",
+  "validator": "OriginalLevelViewValidation",
+  "regressionGroups": 10,
+  "checks": [
+    "Original Level prefab and configured position prefab hierarchy",
+    "Rods before 0.5 or 1.5 second scaled nut spawn",
+    "Four original first-board nut resources bound to fixed slots",
+    "Entry transforms reach native tile positions",
+    "Selection and transfer use actual model output",
+    "OutCirc cap rise and InCirc return with peak refresh",
+    "Last landing starts cap animation and return releases operation gate",
+    "Board clearing cancels delayed spawns and reuses pools"
+  ],
+  "limitations": [
+    "No startup scene or user input binding yet",
+    "Reward, guide, save, audio and spark consumers pending",
+    "Three skeletal effects still pending native conversion",
+    "Full rendered fidelity has not been verified"
+  ],
+  "rawEvidence": "Remains local outside repository"
+}

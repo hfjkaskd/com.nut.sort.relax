@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace NutSort.World
 {
-    public sealed class OriginalScrewView : MonoBehaviour
+    public sealed partial class OriginalScrewView : MonoBehaviour
     {
         [SerializeField] private List<OriginalScrewTileView> ScrewTiles = new List<OriginalScrewTileView>();
         [SerializeField] private Transform Tile;
@@ -78,6 +78,7 @@ namespace NutSort.World
 
         public void Release()
         {
+            CancelDone();
             for (int i = 0; i < ScrewTiles.Count; i++) pool.Return(ScrewTiles[i].gameObject);
             ScrewTiles.Clear();
             ScrewTypeObj.Release();

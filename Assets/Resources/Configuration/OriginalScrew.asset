@@ -18,6 +18,13 @@ MonoBehaviour:
   CapPosition: {x: 0, y: 1.5800000429153442, z: 0}
   ReadyPosition: {x: 0, y: 2.440000057220459, z: 0}
   InitialPosition: {x: 0, y: 1.940000057220459, z: 0}
+  ScrewPositionPath: Game/ScrewPosition
+  NutInitDelay: 0.5
+  NutInitLongDelay: 1.5
+  DoneRiseDuration: 0.3
+  DoneReturnDuration: 0.2
+  DonePeakScale: 1.5
+  DoneLiftHeight: 2
   maskNutPaths:
   - Game/Spirte/1
   - Game/Spirte/2

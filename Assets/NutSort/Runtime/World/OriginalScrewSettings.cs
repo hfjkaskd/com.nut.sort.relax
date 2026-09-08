@@ -12,6 +12,13 @@ namespace NutSort.World
         public Vector3 CapPosition;
         public Vector3 ReadyPosition;
         public Vector3 InitialPosition;
+        public string ScrewPositionPath;
+        public float NutInitDelay;
+        public float NutInitLongDelay;
+        public float DoneRiseDuration;
+        public float DoneReturnDuration;
+        public float DonePeakScale;
+        public float DoneLiftHeight;
         [SerializeField] private string[] maskNutPaths;
         public string MaskNutPath(int color)
         {
