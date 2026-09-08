@@ -11,3 +11,5 @@ Verification covers lazy reads, branch priority, null payload bypass, null table
 Remaining: b__2 ItemGetInfo construction, modal queue routing, actual coin-new-player panel and success panel, reward request transport composition, DoneEvent and default startup context remain incomplete. SDK handling is unchanged. Raw native evidence stays local.
 
 Results: Library/unity-success-response.log has 101 PASS markers including NUT_SUCCESS_RESPONSE_VALIDATION_PASS and terminal NUT_CONTENT_VALIDATION_PASS. Library/unity-success-response-play.log has NUT_SUCCESS_RESPONSE_PLAY_PASS for real delayed request composition, source-table intermediate InitLevel and success-flag reset, captured level-six routing after current-level changes, unchanged reward flag and deferred response identity. Final logs have no compiler-error or exception markers. Preferences were restored and backup is absent; existing application-exit reparent warnings remain unresolved.
+
+Follow-up: b__2 settlement item construction and panel-11 queue routing are restored in SuccessSettlementAudit.md. Actual panel rendering and global startup/transport composition remain pending.

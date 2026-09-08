@@ -102,6 +102,7 @@ namespace NutSort.Validation
                 OriginalMoveCompletionValidation.Validate(repository);
                 OriginalSuccessFlowValidation.Validate();
                 OriginalSuccessResponseValidation.Validate();
+                OriginalSuccessSettlementValidation.Validate();
                 OriginalEffectsValidation.Validate();
                 OriginalAudioValidation.Validate();
                 OriginalUserValidation.Validate();

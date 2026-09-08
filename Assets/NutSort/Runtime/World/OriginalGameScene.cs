@@ -79,6 +79,12 @@ namespace NutSort.World
                 hideGoldHint,hideProgress,()=>audioPlayer.PlaySound(session.StageCompleteSound),()=>effects.PlaySuccess(effectParent),
                 ScheduleDelay,session.SuccessRequestDelay,requestReward);
         }
+        public Action<JObject> CreateSuccessSettlement(Func<int,bool> isPanelOpen,Action<Action> enqueue,
+            Action closePanels,Action<int,OriginalItemGetInfo> showPanel)
+        {
+            return new OriginalSuccessSettlementFlow(User,SaveUserData,isPanelOpen,enqueue,closePanels,showPanel).Run;
+        }
+
         public void BindSuccessResponse(Func<bool> newLevelMode,Action refreshTeaching,Action hideGoldHint,Action hideProgress,
             Transform effectParent,Action<Action<JObject>> requestReward,Action<int,Action> showPanel,Action<JObject> settlement)
         {
