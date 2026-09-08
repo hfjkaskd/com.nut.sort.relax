@@ -1,0 +1,254 @@
+{
+  "meshes": [
+    {
+      "path": "Assets/Mesh/Element_Stand_00_base.asset",
+      "vertices": 162
+    },
+    {
+      "path": "Assets/Mesh/Element_Stand_00_tile.asset",
+      "vertices": 90
+    },
+    {
+      "path": "Assets/Mesh/Element_Stand_00_tip.asset",
+      "vertices": 178
+    },
+    {
+      "path": "Assets/Mesh/LuoMao.asset",
+      "vertices": 162
+    },
+    {
+      "path": "Assets/Mesh/pasted__pCylinder23.asset",
+      "vertices": 390
+    }
+  ],
+  "materials": [
+    {
+      "path": "Assets/Material/DiZuoMaterial.mat",
+      "baseColor": {
+        "r": 0.84276724,
+        "g": 0.84276724,
+        "b": 0.84276724,
+        "a": 1.0
+      },
+      "smoothness": 0.066,
+      "metallic": 0.722,
+      "surface": 1.0
+    },
+    {
+      "path": "Assets/Material/LuoMaoMaterial.mat",
+      "baseColor": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 1.0
+      },
+      "smoothness": 0.15,
+      "metallic": 0.827,
+      "surface": 1.0
+    },
+    {
+      "path": "Assets/Material/DiZuoLockedMaterial.mat",
+      "baseColor": {
+        "r": 0.57216877,
+        "g": 0.5830465,
+        "b": 0.69182384,
+        "a": 1.0
+      },
+      "smoothness": 0.0,
+      "metallic": 0.8,
+      "surface": 1.0
+    },
+    {
+      "path": "Assets/Material/ScrewTileLockedMaterial.mat",
+      "baseColor": {
+        "r": 0.57216877,
+        "g": 0.5830465,
+        "b": 0.69182384,
+        "a": 0.8235294
+      },
+      "smoothness": 0.0,
+      "metallic": 0.8,
+      "surface": 1.0
+    },
+    {
+      "path": "Assets/Material/ScrewTileLocked1Material.mat",
+      "baseColor": {
+        "r": 0.57216877,
+        "g": 0.5830465,
+        "b": 0.69182384,
+        "a": 1.0
+      },
+      "smoothness": 0.0,
+      "metallic": 0.8,
+      "surface": 1.0
+    },
+    {
+      "path": "Assets/Material/ScrewTileMaterial.mat",
+      "baseColor": {
+        "r": 0.9748427,
+        "g": 0.9748427,
+        "b": 0.9748427,
+        "a": 1.0
+      },
+      "smoothness": 0.0,
+      "metallic": 0.78,
+      "surface": 1.0
+    },
+    {
+      "path": "Assets/Material/NutMaterial1.mat",
+      "baseColor": {
+        "r": 0.5928288,
+        "g": 1.0,
+        "b": 0.05345905,
+        "a": 1.0
+      },
+      "smoothness": 0.3,
+      "metallic": 0.8,
+      "surface": 0.0
+    },
+    {
+      "path": "Assets/Material/NutMaterial10.mat",
+      "baseColor": {
+        "r": 0.30170873,
+        "g": 0.8490566,
+        "b": 0.7482294,
+        "a": 1.0
+      },
+      "smoothness": 0.345,
+      "metallic": 0.8,
+      "surface": 0.0
+    },
+    {
+      "path": "Assets/Material/NutMaterial11.mat",
+      "baseColor": {
+        "r": 0.5319707,
+        "g": 0.34276712,
+        "b": 1.0,
+        "a": 1.0
+      },
+      "smoothness": 0.354,
+      "metallic": 0.8,
+      "surface": 0.0
+    },
+    {
+      "path": "Assets/Material/NutMaterial12.mat",
+      "baseColor": {
+        "r": 0.64779866,
+        "g": 0.042779066,
+        "b": 0.6381182,
+        "a": 1.0
+      },
+      "smoothness": 0.288,
+      "metallic": 0.75,
+      "surface": 0.0
+    },
+    {
+      "path": "Assets/Material/NutMaterial2.mat",
+      "baseColor": {
+        "r": 0.14779866,
+        "g": 0.66243976,
+        "b": 1.0,
+        "a": 1.0
+      },
+      "smoothness": 0.225,
+      "metallic": 0.8,
+      "surface": 0.0
+    },
+    {
+      "path": "Assets/Material/NutMaterial3.mat",
+      "baseColor": {
+        "r": 1.0,
+        "g": 0.3346308,
+        "b": 0.17924517,
+        "a": 1.0
+      },
+      "smoothness": 0.4,
+      "metallic": 0.738,
+      "surface": 0.0
+    },
+    {
+      "path": "Assets/Material/NutMaterial4.mat",
+      "baseColor": {
+        "r": 1.0,
+        "g": 0.6728111,
+        "b": 0.0,
+        "a": 1.0
+      },
+      "smoothness": 0.347,
+      "metallic": 0.697,
+      "surface": 0.0
+    },
+    {
+      "path": "Assets/Material/NutMaterial5.mat",
+      "baseColor": {
+        "r": 0.99371064,
+        "g": 0.37810987,
+        "b": 0.57099825,
+        "a": 1.0
+      },
+      "smoothness": 0.358,
+      "metallic": 0.7,
+      "surface": 0.0
+    },
+    {
+      "path": "Assets/Material/NutMaterial6.mat",
+      "baseColor": {
+        "r": 0.68396217,
+        "g": 0.60796636,
+        "b": 0.72955966,
+        "a": 1.0
+      },
+      "smoothness": 0.209,
+      "metallic": 0.7,
+      "surface": 0.0
+    },
+    {
+      "path": "Assets/Material/NutMaterial7.mat",
+      "baseColor": {
+        "r": 0.98742133,
+        "g": 0.5755826,
+        "b": 0.41918817,
+        "a": 1.0
+      },
+      "smoothness": 0.239,
+      "metallic": 0.7,
+      "surface": 0.0
+    },
+    {
+      "path": "Assets/Material/NutMaterial8.mat",
+      "baseColor": {
+        "r": 0.22012573,
+        "g": 0.22012573,
+        "b": 0.22012573,
+        "a": 1.0
+      },
+      "smoothness": 0.398,
+      "metallic": 0.735,
+      "surface": 0.0
+    },
+    {
+      "path": "Assets/Material/NutMaterial9.mat",
+      "baseColor": {
+        "r": 0.98128307,
+        "g": 0.2453578,
+        "b": 0.27735436,
+        "a": 1.0
+      },
+      "smoothness": 0.41,
+      "metallic": 0.778,
+      "surface": 0.0
+    },
+    {
+      "path": "Assets/Material/NutMaterialHide.mat",
+      "baseColor": {
+        "r": 0.8553459,
+        "g": 0.841897,
+        "b": 0.841897,
+        "a": 1.0
+      },
+      "smoothness": 0.0,
+      "metallic": 0.583,
+      "surface": 0.0
+    }
+  ]
+}

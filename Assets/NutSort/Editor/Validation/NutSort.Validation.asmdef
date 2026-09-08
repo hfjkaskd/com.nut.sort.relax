@@ -1,6 +1,6 @@
 {
   "name": "NutSort.Validation",
-  "references": ["NutSort.Content", "NutSort.Gameplay"],
+  "references": ["NutSort.Content", "NutSort.Gameplay", "Unity.RenderPipelines.Universal.Runtime", "Unity.RenderPipelines.Core.Runtime"],
   "includePlatforms": ["Editor"],
   "autoReferenced": false
 }
