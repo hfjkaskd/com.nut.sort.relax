@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ebb31c393ae4916a56ff4fa974a63fa, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  PulseScale: 1.15
+  PulseDuration: 0.06
+  PulseDelay: 0.6
+  PulseLoops: 12
+  IconOffsetX: 140
+  TextOffsetX: 50
+  FloatTargetY: 80
+  FloatDuration: 2
+  FloatScale: 0.7
+  FloatColor: {r: 1, g: 1, b: 1, a: 0}
