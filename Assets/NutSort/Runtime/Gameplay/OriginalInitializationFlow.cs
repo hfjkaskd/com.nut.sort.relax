@@ -15,7 +15,8 @@ namespace NutSort.Gameplay
 
     // Required scene/UI operations, with no success defaults for missing systems.
     // This port is not yet bound to the production scene: those panels and the
-    // original deadlock/reward/unlock consumers must be restored before binding.
+    // reward/unlock consumers must be restored before binding. The level view
+    // now provides the original stateful deadlock check.
     public interface IOriginalInitializationActions
     {
         OriginalUserLocalData User { get; }

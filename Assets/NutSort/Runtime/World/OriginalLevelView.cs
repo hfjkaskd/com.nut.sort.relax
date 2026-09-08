@@ -16,6 +16,7 @@ namespace NutSort.World
         private OriginalScrewView[] screws;
         private readonly Dictionary<NutState, OriginalNutView> nuts = new Dictionary<NutState, OriginalNutView>();
         private OriginalScrewOperator operation;
+        private OriginalDeadlockRules deadlock;
         private ScrewState selected;
         private bool pendingNuts, lssab;
         private float spawnDelay, spawnTime;
@@ -30,6 +31,7 @@ namespace NutSort.World
         public event Action SelectionSoundRequested;
         public event Action<int> MoveSoundRequested;
         public event Action MoveAttempted;
+        public event Action SaveRequested;
 
         public void Bind(LevelData data, OriginalPrefabPool prefabPool, bool useLongEntryDelay, bool useLssab, bool addLockedScrew = false)
         {
@@ -61,6 +63,7 @@ namespace NutSort.World
             Board = board;
             pool = prefabPool; lssab = useLssab;
             operation = new OriginalScrewOperator();
+            if (deadlock == null) deadlock = new OriginalDeadlockRules(PlayHiddenBreak, ForwardSave);
             operation.SelectionSoundRequested += ForwardSelectionSound;
             operation.MoveSoundRequested += ForwardMoveSound;
             operation.MoveAttempted += ForwardMoveAttempt;
@@ -83,6 +86,12 @@ namespace NutSort.World
         private void ForwardSelectionSound() { SelectionSoundRequested?.Invoke(); }
         private void ForwardMoveSound(int count) { MoveSoundRequested?.Invoke(count); }
         private void ForwardMoveAttempt() { MoveAttempted?.Invoke(); }
+        private void ForwardSave() { SaveRequested?.Invoke(); }
+        private void PlayHiddenBreak(int index) { screws[index].TypeView.PlayHiddenBreak(); }
+
+        // This is stateful: hidden-rod transitions can request visual changes
+        // and immediate saves. Do not call it from an Update polling loop.
+        public bool IsCannotMove() => deadlock != null && deadlock.IsCannotMove(Board);
 
         public void AdvanceInitialization(float deltaTime)
         {

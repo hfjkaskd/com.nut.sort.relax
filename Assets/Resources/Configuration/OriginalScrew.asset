@@ -11,6 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 347dce6f0d5b4de29589c7b4e8b058c3, type: 3}
   m_Name: OriginalScrew
+  HiddenBreakHideDelay: 1
   m_EditorClassIdentifier:
   PrefabPath: Game/Screw
   ColliderCenter: {x: 0, y: 0.7200000286102295, z: 0}

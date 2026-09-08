@@ -36,6 +36,6 @@ Completing the record guide closes it first, sets IsCompleteRecordGuide, and re-
 
 - Restore the record-guide prefab, native panel animation and currency-particle material selection from the current export.
 - Restore the original newbie, assessment and reward panels, banner and unlock/daily-gift consumers, then bind the required action interface to real scene components.
-- Restore IsCannotMove including CheckDie/IsOnlyDontMove, hidden-mask effects and their save points. Whole-group capacity determines this check; it differs from the operator's partial-transfer allowance.
+- IsCannotMove, CheckDie/IsOnlyDontMove, native hidden-root delay and per-mask save points are now available through the level view (see DeadlockAudit.md). Bind this action when the higher-priority panels are restored; the skeletal break animation is still pending.
 - Connect the post-initialization main-panel wait and 1.5-second callback timing. The existing board initialization gate does not establish this lifecycle parity.
 - Validate actual UI interaction and current-render comparisons, regional AB/GM behavior and device parity. No visual parity claim follows from dispatch tests.

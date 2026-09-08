@@ -49,6 +49,7 @@ namespace NutSort.World
             audioPlayer.Bind(level);
             level.OperationApplied += ForwardOperation;
             level.MoveAttempted += CountMoveAttempt;
+            level.SaveRequested += SaveCurrentBoard;
             // LuoSiSortMgr.Init uses IsNullOrEmpty, not whitespace or a parse
             // exception fallback. Nonempty invalid saved data must stay visible.
             BeginInitialization(string.IsNullOrEmpty(audioPlayer.UserState.Data.LevelInfo), session.LongEntryDelay);
@@ -130,11 +131,16 @@ namespace NutSort.World
             {
                 // Original common save point follows the immediate data transfer
                 // or invalid-destination revert, before movement animations finish.
-                var store = audioPlayer.UserState.Store;
-                if (store.Data != null)
-                    store.SaveData(true, OriginalBoardSnapshotJson.Write(level.CaptureSnapshot()));
+                SaveCurrentBoard();
             }
             OperationApplied?.Invoke(result, target);
+        }
+
+        private void SaveCurrentBoard()
+        {
+            var store = audioPlayer.UserState.Store;
+            if (store.Data != null)
+                store.SaveData(true, OriginalBoardSnapshotJson.Write(level.CaptureSnapshot()));
         }
 
         public void ResizeCameras(int width, int height)
@@ -177,6 +183,7 @@ namespace NutSort.World
             audioPlayer.Unbind();
             level.OperationApplied -= ForwardOperation;
             level.MoveAttempted -= CountMoveAttempt;
+            level.SaveRequested -= SaveCurrentBoard;
             level.Clear();
             level = null;
         }
