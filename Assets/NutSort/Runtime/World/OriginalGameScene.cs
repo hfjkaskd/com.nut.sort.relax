@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 using NutSort.Content;
 using NutSort.Gameplay;
 using UnityEngine;
@@ -77,6 +78,14 @@ namespace NutSort.World
                 ()=>InitLevel(true,false,false),refreshTeaching,()=>Tables.GetLevelInfo(User.Level,User.Level),
                 hideGoldHint,hideProgress,()=>audioPlayer.PlaySound(session.StageCompleteSound),()=>effects.PlaySuccess(effectParent),
                 ScheduleDelay,session.SuccessRequestDelay,requestReward);
+        }
+        public void BindSuccessResponse(Func<bool> newLevelMode,Action refreshTeaching,Action hideGoldHint,Action hideProgress,
+            Transform effectParent,Action<Action<JObject>> requestReward,Action<int,Action> showPanel,Action<JObject> settlement)
+        {
+            var responseFlow=new OriginalSuccessResponseFlow(()=>User.IsCompleteCoinNewPeopleReward,
+                ()=>InitLevel(true,false,false),showPanel,settlement);
+            BindSuccess(newLevelMode,refreshTeaching,hideGoldHint,hideProgress,effectParent,
+                captured=>requestReward(response=>responseFlow.Run(captured,response)));
         }
         public void Success() => successFlow.Run();
 

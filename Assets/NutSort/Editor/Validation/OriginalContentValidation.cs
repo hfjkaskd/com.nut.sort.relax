@@ -101,6 +101,7 @@ namespace NutSort.Validation
                 OriginalLockedScrewDispatchValidation.Validate(repository);
                 OriginalMoveCompletionValidation.Validate(repository);
                 OriginalSuccessFlowValidation.Validate();
+                OriginalSuccessResponseValidation.Validate();
                 OriginalEffectsValidation.Validate();
                 OriginalAudioValidation.Validate();
                 OriginalUserValidation.Validate();

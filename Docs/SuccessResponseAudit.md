@@ -1,0 +1,13 @@
+# Success response routing
+
+Original callback Success b__1 at 0xA00684 first creates a continuation retaining the ClearanceRewardShow response, then reads the previously captured table entry. SubTotalRound > SubRound calls InitLevel(true,false,false) and returns without inspecting the response or the coin-new-player flag. A null captured table fails before those branches, matching the source dereference.
+
+When the captured Level is six, the live IsCompleteCoinNewPeopleReward flag (UserLocalData 0x11F) controls panel 43. False opens that panel with the continuation; true runs settlement directly. Other levels do not read the flag. The callback does not update it, advance the level, save, grant currency, or deduplicate repeated continuation calls. Over-complete subrounds also reach settlement because the first comparison is strictly greater.
+
+OriginalSuccessResponseFlow retains the opaque response JObject by reference, following the project's existing JSON transport representation without reflection. It deliberately does not parse or build ItemGetInfo here. OriginalGameScene.BindSuccessResponse composes this router with the existing success delay/request entry and real InitLevel. The request transport, special panel and settlement consumers are required external bindings, with no fabricated production response.
+
+Verification covers lazy reads, branch priority, null payload bypass, null table failure, exact response reference and repeated continuation semantics. The Play fixture uses actual level-table rows and scene InitLevel while changing the user's current level during the request, proving that routing uses the captured table. Panel 43 itself and the settlement builder are not claimed implemented by callback tests.
+
+Remaining: b__2 ItemGetInfo construction, modal queue routing, actual coin-new-player panel and success panel, reward request transport composition, DoneEvent and default startup context remain incomplete. SDK handling is unchanged. Raw native evidence stays local.
+
+Results: Library/unity-success-response.log has 101 PASS markers including NUT_SUCCESS_RESPONSE_VALIDATION_PASS and terminal NUT_CONTENT_VALIDATION_PASS. Library/unity-success-response-play.log has NUT_SUCCESS_RESPONSE_PLAY_PASS for real delayed request composition, source-table intermediate InitLevel and success-flag reset, captured level-six routing after current-level changes, unchanged reward flag and deferred response identity. Final logs have no compiler-error or exception markers. Preferences were restored and backup is absent; existing application-exit reparent warnings remain unresolved.
