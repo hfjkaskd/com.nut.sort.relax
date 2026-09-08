@@ -19,6 +19,7 @@ namespace NutSort.Validation
         private static bool loadingCaptured;
         private static int sparkCount, doneCount;
         private static bool effectsCaptured;
+        private static int selectSounds, moveSounds;
         private static OriginalGameplayEffects effects;
         static OriginalScenePlayValidation()
         {
@@ -66,6 +67,9 @@ namespace NutSort.Validation
                     if(game.Tables==null || game.Tables.LevelCount!=51 || game.ShowLevel!=1)throw new Exception("Startup did not bind the original stage table.");
                     var startup=UnityEngine.Object.FindObjectOfType<OriginalStartupFlow>();
                     if(startup.MainLevel==null || startup.MainLevel.Group.gameObject.activeSelf || startup.MainLevel.transform.parent.name!="UICanvas")throw new Exception("Main level prefab startup or first-level visibility differs.");
+                    var audio=UnityEngine.Object.FindObjectOfType<OriginalAudioPlayer>();
+                    if(audio==null || !audio.Background.isPlaying)throw new Exception("Startup BGM did not start.");
+                    audio.SoundStarted += name => { if(name=="Select") selectSounds++; if(name=="Move1") moveSounds++; };
                     effects=game.GetComponent<OriginalGameplayEffects>();
                     if(effects==null)throw new Exception("Gameplay effects component missing.");
                     game.Level.SparkRequested += nut => sparkCount++;
@@ -96,6 +100,7 @@ namespace NutSort.Validation
                 }
                 else if(phase==3)
                 {
+                    if(selectSounds!=2 || moveSounds!=1)throw new Exception("First-board sound chain: Select="+selectSounds+", Move1="+moveSounds);
                     if(!game.Level.Board.IsSuccess||!game.Level.Board.Screws[0].IsCanOperator)throw new Exception("Runtime animation callbacks did not finish the board.");
                     if(sparkCount!=1 || doneCount!=1 || effects.ActiveCount==0)throw new Exception("Original landing/completion effect chain failed: sparks="+sparkCount+", done="+doneCount+", active="+effects.ActiveCount);
                     OriginalSceneValidation.Capture(game.WorldCamera,"play-first-board-complete.png");

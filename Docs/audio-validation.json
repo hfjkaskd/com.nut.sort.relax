@@ -1,0 +1,100 @@
+{
+  "scope": "Original audio core and startup/first-board integration; not full settings or lifecycle parity",
+  "sourceRvas": {
+    "playSound": "0x9e7ae8",
+    "loadClip": "0x9f7118",
+    "playBgm": "0x9f45a8",
+    "pauseBgm": "0x9f47b8",
+    "audioToggle": "0x9e6458",
+    "screwOperator": "0xa09430",
+    "scaledDelay": "0x9bd0e8"
+  },
+  "implementationDifference": "Preconfigured AudioSource prefab pool replaces source per-effect GameObject/AddComponent/Destroy, per project prefab/performance requirements. Playback semantics preserved.",
+  "clips": [
+    {
+      "name": "BGM",
+      "sha256": "7b7247d2f67f65df6e08643928143a5e22faa8f82476a2778888674bc640d3b3",
+      "bytes": 540859,
+      "channels": 2,
+      "frequency": 11000,
+      "samples": 1386161,
+      "seconds": 126.01463636363637,
+      "loadType": "DecompressOnLoad"
+    },
+    {
+      "name": "Select",
+      "sha256": "7e963a4de691806c3b2a5bcc35aa508c7f8f50f45c59824445df621f070798f0",
+      "bytes": 6382,
+      "channels": 2,
+      "frequency": 16000,
+      "samples": 9792,
+      "seconds": 0.612,
+      "loadType": "DecompressOnLoad"
+    },
+    {
+      "name": "Move1",
+      "sha256": "7e963a4de691806c3b2a5bcc35aa508c7f8f50f45c59824445df621f070798f0",
+      "bytes": 6382,
+      "channels": 2,
+      "frequency": 16000,
+      "samples": 9792,
+      "seconds": 0.612,
+      "loadType": "DecompressOnLoad"
+    },
+    {
+      "name": "Move2",
+      "sha256": "e8be660f260bff7d6c41eb076696085338f5fea12a5adeee42a3552243aec86f",
+      "bytes": 11470,
+      "channels": 2,
+      "frequency": 16000,
+      "samples": 17280,
+      "seconds": 1.08,
+      "loadType": "DecompressOnLoad"
+    },
+    {
+      "name": "Move3",
+      "sha256": "567b68eab792bdabb4f1a48275328686abf72f0502b7599683259f046fab7456",
+      "bytes": 15547,
+      "channels": 2,
+      "frequency": 16000,
+      "samples": 23616,
+      "seconds": 1.476,
+      "loadType": "DecompressOnLoad"
+    },
+    {
+      "name": "Click",
+      "sha256": "e590eafb960c827d36c29f93a8ea86568591161c20c00c6572683ac7f979eb06",
+      "bytes": 4959,
+      "channels": 2,
+      "frequency": 16000,
+      "samples": 4608,
+      "seconds": 0.288,
+      "loadType": "CompressedInMemory"
+    }
+  ],
+  "validated": [
+    "All six source files and importer metadata byte-identical",
+    "Original clip frequency, channels, samples and importer mode in Unity",
+    "Original 2D source defaults and serialized lazy-loading references",
+    "Real Play BGM and effect nonzero PCM output",
+    "Pause/re-enable and active one-shot preservation",
+    "Disabled requests do not load clips",
+    "Delay checks setting at callback time and obeys scaled time",
+    "Voice pool reuse, overlapping effects and cleanup",
+    "Complete existing content regression passed, including scene and loading checks",
+    "Actual first-board camera-ray operation emits two Select and one Move1",
+    "Existing runtime transfer/cap/effect chain still passes; latest target frame inspected"
+  ],
+  "pending": [
+    "Settings panel and code-bound buttons",
+    "Original UserLocalData persistence",
+    "StageStart/StageComplete and further lifecycle callers",
+    "Android/iOS audio validation",
+    "Full current source/target audiovisual comparison"
+  ],
+  "logs": [
+    "unity-audio-validation-fixed.log",
+    "unity-audio-play.log",
+    "unity-audio-scene-play.log"
+  ]
+}

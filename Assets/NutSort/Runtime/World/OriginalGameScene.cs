@@ -14,6 +14,7 @@ namespace NutSort.World
         [SerializeField] private OriginalSceneSession session;
         [SerializeField] private OriginalGameplayEffects effects;
         [SerializeField] private OriginalTableSettings tableSettings;
+        [SerializeField] private OriginalAudioPlayer audioPlayer;
         private OriginalLevelView level;
         private int viewportWidth, viewportHeight;
         public OriginalLevelView Level => level;
@@ -43,6 +44,7 @@ namespace NutSort.World
             level = pool.Rent(session.LevelPrefabPath, transform).GetComponent<OriginalLevelView>();
             level.Bind(repository.LoadBoard(selection.Loop, selection.Seed), pool, session.LongEntryDelay, session.LSSAB);
             effects.Bind(level, pool);
+            audioPlayer.Bind(level);
             level.OperationApplied += ForwardOperation;
             ResizeCameras(Screen.width, Screen.height);
         }
@@ -85,6 +87,7 @@ namespace NutSort.World
         {
             if (level == null) return;
             effects.Clear();
+            audioPlayer.Unbind();
             level.OperationApplied -= ForwardOperation;
             level.Clear();
             level = null;

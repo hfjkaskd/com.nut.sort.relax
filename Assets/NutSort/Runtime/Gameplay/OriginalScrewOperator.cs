@@ -83,6 +83,8 @@ namespace NutSort.Gameplay
         private readonly List<NutSlot> sourceGroup = new List<NutSlot>();
         public readonly List<NutMoveBatch> MoveHistory = new List<NutMoveBatch>();
         public int ScrewMoveCount;
+        public event Action SelectionSoundRequested;
+        public event Action<int> MoveSoundRequested;
 
         public ScrewOperation Operate(ScrewState target, ScrewState source, bool isExchanging = false)
         {
@@ -93,6 +95,7 @@ namespace NutSort.Gameplay
             if (target.IsLocked) return new ScrewOperation(ScrewOperationKind.AddScrewRequested);
 
             target.GetTopSame(targetGroup);
+            if (targetGroup.Count > 0) SelectionSoundRequested?.Invoke();
             if (targetGroup.Count == 0 && (source == null || source.IsDone)) return default;
             if (source == null || !source.IsReadyMove)
             {
@@ -119,6 +122,7 @@ namespace NutSort.Gameplay
             int room = targetGroup.Count == 0 ? target.Capacity : target.Capacity - targetGroup[0].Coordinate.y - 1;
             if (room <= 0) throw new InvalidOperationException("Original target has no coordinate capacity.");
             int count = Math.Min(room, sourceGroup.Count);
+            MoveSoundRequested?.Invoke(count);
             var batch = new NutMoveBatch(source, target, count);
             MoveHistory.Add(batch);
             target.IsCanOperator = false;

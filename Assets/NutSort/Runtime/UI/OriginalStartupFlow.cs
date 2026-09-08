@@ -10,6 +10,7 @@ namespace NutSort.UI
         [SerializeField] private OriginalGameScene game;
         [SerializeField] private Transform panelCanvas;
         [SerializeField] private OriginalMainLevelSettings mainLevelSettings;
+        [SerializeField] private OriginalAudioPlayer audioPlayer;
         public OriginalMainLevelView MainLevel { get; private set; }
         public OriginalLoadingView Loading => loading;
 
@@ -18,6 +19,7 @@ namespace NutSort.UI
             game.InputBlocked = true;
             loading.SetState(true);
             yield return null;
+            audioPlayer.PlayBgm();
             // Current local boot has no SDK/server wait to retain. Their future
             // real completion belongs before this signal, never a fake grant.
             loading.SetState(false);
