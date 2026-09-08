@@ -16,11 +16,12 @@ namespace NutSort.Validation
             private bool done;
             public bool IsInitDone { get => done; set { done=value; Trace.Add("done"); } }
             public bool Deadlocked, StageGuide, Unlock;
+            public OriginalGameplayUnlock ActualUnlock;
             public Action BannerCallback;
             public readonly List<string> Trace = new List<string>();
             public bool IsCannotMove() { Trace.Add("deadlock"); return Deadlocked; }
             public bool IsGuidePassStage2Level() { Trace.Add("stage-guide"); return StageGuide; }
-            public bool NewGameplayUnlock(bool showBanner) { Trace.Add(showBanner ? "unlock:banner" : "unlock:no-banner"); return Unlock; }
+            public bool NewGameplayUnlock(bool showBanner) { Trace.Add(showBanner ? "unlock:banner" : "unlock:no-banner"); return ActualUnlock==null ? Unlock : ActualUnlock.Run(showBanner); }
             public void Fail() { Trace.Add("fail"); }
             public void ShowPanel(OriginalInitializationPanel panel) { Trace.Add("panel:"+(int)panel+":"+User.GuideIndex); }
             public void CloseAllPanels() { Trace.Add("close-all"); }
@@ -63,6 +64,14 @@ namespace NutSort.Validation
                 Expect(p,"show-level,deadlock,stage-guide,close-all,panel:42:14,done");
                 flow.Run(false);
                 Expect(p,"deadlock,stage-guide,unlock:no-banner,done");
+
+                p=New(defaults);
+                p.ActualUnlock=new OriginalGameplayUnlock(p.User,()=>new[]{p.User.Level+4},
+                    (id,index,banner)=>p.Trace.Add("unlock-panel:"+id+":"+index+":"+(banner?1:0)));
+                flow=new OriginalInitializationFlow(p);flow.Run();
+                Expect(p,"show-level,deadlock,stage-guide,unlock:banner,unlock-panel:13:0:1,done");
+                flow.Run(false);
+                Expect(p,"deadlock,stage-guide,unlock:no-banner,unlock-panel:13:0:0,done");
 
                 p=New(defaults); p.Unlock=true; flow=new OriginalInitializationFlow(p); flow.Run();
                 Expect(p,"show-level,deadlock,stage-guide,unlock:banner,done");
