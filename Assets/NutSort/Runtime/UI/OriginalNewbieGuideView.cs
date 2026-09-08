@@ -116,6 +116,29 @@ namespace NutSort.UI
             CallbackAction=parameter=>newGameplayUnlock(false);
         }
 
+        // Shared ShowGuide cases 10/12/14 (0x9E2234), closure 0x9E44CC.
+        // SDK analytics remain excluded; the supplied request retains its response boundary.
+        public void ShowGoldEntryGuide(OriginalUserLocalData user,RectTransform target,Action<bool> requestGoldInfo)
+        {
+            Hand.gameObject.SetActive(true);
+            Button.gameObject.SetActive(true);
+            Pos.position=target.position;
+            Button.image.rectTransform.sizeDelta=target.sizeDelta;
+            SetTip(126,0);
+            if(InitialGuideIndex==14)SetTip(187,0);
+            ShowMask(target);
+            int guideIndex=InitialGuideIndex;
+            ClickAction=()=>
+            {
+                if(guideIndex==12)user.IsGuideGoldComplete=true;
+                else if(guideIndex==14)user.IsGuideGoldTargetComplete=true;
+                user.IsGuideGold=false;
+                requestGoldInfo(true);
+                user.GuideIndex=unchecked(user.GuideIndex+1);
+                Close();
+            };
+        }
+
         public void BindGuide(OriginalUserLocalData user,Func<bool> skipTeaching,IOriginalGuideBranches branches)
         {
             teachingFlow=new OriginalTeachingFlow(user,this,skipTeaching);
