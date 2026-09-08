@@ -2,6 +2,7 @@
   "name": "NutSort.UI",
   "references": [
     "NutSort.World",
+    "NutSort.Gameplay",
     "Unity.ugui",
     "Unity.TextMeshPro",
     "NutSort.Content"
