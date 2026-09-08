@@ -41,7 +41,7 @@ namespace NutSort.Validation
                 Expect(flow.Continue);Check(user.IsCompleteRecordGuide && OriginalNewbieGuideView.CallbackAction==retained,"Initialization failure retains completed flag and pending global callback");
             }
             finally{OriginalNewbieGuideView.CallbackAction=previous;}
-            Debug.Log("NUT_GUIDE_TARGET_COMPLETION_VALIDATION_PASS live stage amounts, formatter, close/flag/init/global ordering, post-init callback replacement and exception boundaries; prefab binding pending.");
+            Debug.Log("NUT_GUIDE_TARGET_COMPLETION_VALIDATION_PASS live stage amounts, formatter, close/flag/init/global ordering, post-init callback replacement and exception boundaries; panel binding covered separately.");
         }
         private static void Expect(Action action){bool failed=false;try{action();}catch(InvalidOperationException){failed=true;}Check(failed,"Expected native failure propagation");}
         private static void Check(bool value,string message){if(!value)throw new InvalidOperationException(message);}
