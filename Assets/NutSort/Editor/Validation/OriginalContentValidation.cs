@@ -125,6 +125,7 @@ namespace NutSort.Validation
                 OriginalPunchPathValidation.Validate();
                 OriginalPunchRotationValidation.Validate();
                 OriginalFailurePanelValidation.Validate();
+                OriginalPanelRegistryValidation.Validate();
                 OriginalPlayerGoldHintScheduleValidation.Validate();
                 OriginalPlayerGoldHintTextValidation.Validate();
                 OriginalHintIconsValidation.Validate();
