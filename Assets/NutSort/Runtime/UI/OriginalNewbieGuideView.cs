@@ -24,6 +24,30 @@ namespace NutSort.UI
         private Func<bool> beginClick;
         private Action clickSound;
         public Action ClickAction { get; set; }
+        public static Action<object> CallbackAction { get; set; }
+
+        // 0x9CF328 executes immediately and returns null, despite returning Action.
+        // Do not clear before invocation or in finally: native exception and
+        // replacement-during-callback behavior depends on this exact ordering.
+        public static Action CallbackActionInvoke(object parameter)
+        {
+            CallbackAction?.Invoke(parameter);
+            CallbackAction=null;
+            return null;
+        }
+
+        // ShowGuide case 1, 0x9E2AE8. The supplied completion is the existing
+        // request/application boundary, not a fabricated server response.
+        public void ShowTargetCompletion(OriginalUserLocalData user,Action<object> completed,
+            Action<int,int> showPanel)
+        {
+            if(completed==null)throw new ArgumentNullException(nameof(completed));
+            if(showPanel==null)throw new ArgumentNullException(nameof(showPanel));
+            CallbackAction=completed;
+            Close();
+            showPanel(35,unchecked(user.Level-1));
+        }
+
         public bool IsOpen { get; private set; }
         public bool ShowBanner { get; private set; } = true;
         public int InitialGuideIndex { get; private set; }
