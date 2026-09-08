@@ -104,6 +104,7 @@ namespace NutSort.Validation
                 OriginalSuccessResponseValidation.Validate();
                 OriginalSuccessSettlementValidation.Validate();
                 OriginalRewardItemValidation.Validate();
+                OriginalSuccessPanelFlowValidation.Validate();
                 OriginalEffectsValidation.Validate();
                 OriginalAudioValidation.Validate();
                 OriginalUserValidation.Validate();

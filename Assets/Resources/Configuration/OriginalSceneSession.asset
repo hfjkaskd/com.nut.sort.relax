@@ -37,4 +37,5 @@ MonoBehaviour:
   ScrewDoneEventDelay: 1
   SuccessDoneEventDelay: 2
   StageCompleteSound: StageComplete
+  SuccessPanelSound: Pass_level
   SuccessRequestDelay: 0.6000000238418579
