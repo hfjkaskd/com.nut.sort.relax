@@ -88,6 +88,10 @@ namespace NutSort.World
         {
             flow.Hide(baseHide,newLevelMode,progress.IsCompletePassStage2Level,synchronizeCompletedStage,()=>InitLevel(true,true,false));
         }
+        public Action<bool> CreateSuccessReward(Action<bool,Action<JObject>> request,Action<int,OriginalItemGetInfo> showPanel,Action close)
+        {
+            return new OriginalSuccessRewardFlow(request,showPanel,close).GetReward;
+        }
         public Action<JObject> CreateSuccessSettlement(Func<int,bool> isPanelOpen,Action<Action> enqueue,
             Action closePanels,Action<int,OriginalItemGetInfo> showPanel)
         {
