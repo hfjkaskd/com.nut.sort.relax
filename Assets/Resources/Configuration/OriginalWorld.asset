@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee98d92ea13f44b38bd0bdde18ef9130, type: 3}
+  m_Name: OriginalWorld
+  m_EditorClassIdentifier:
+  slotHeight: 0.36
+  fullScrewCapacity: 4
+  screwTilePath: Game/ScrewTile
+  hiddenNutPath: Game/Nuts/Nut_Hide
+  nutPaths:
+  - Game/Nuts/Nut_1
+  - Game/Nuts/Nut_2
+  - Game/Nuts/Nut_3
+  - Game/Nuts/Nut_4
+  - Game/Nuts/Nut_5
+  - Game/Nuts/Nut_6
+  - Game/Nuts/Nut_7
+  - Game/Nuts/Nut_8
+  - Game/Nuts/Nut_9
+  - Game/Nuts/Nut_10
+  - Game/Nuts/Nut_11
+  - Game/Nuts/Nut_12

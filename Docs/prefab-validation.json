@@ -1,0 +1,13 @@
+{
+  "unity": "2022.3.62f3",
+  "native_prefabs": 14,
+  "prefab_references_pass": true,
+  "hidden_reveal_pool_pass": true,
+  "tile_geometry_pass": true,
+  "gray_gpu_samples": 12,
+  "gray_gpu_tolerance": 0.003,
+  "full_regression_pass": true,
+  "scene_integrated": false,
+  "animation_chain_complete": false,
+  "raw_extraction_evidence": "retained locally"
+}

@@ -1,0 +1,5 @@
+{
+  "name": "NutSort.World",
+  "references": ["NutSort.Content", "NutSort.Gameplay"],
+  "autoReferenced": true
+}
