@@ -120,6 +120,7 @@ namespace NutSort.Validation
                 OriginalBoardRevokeIntegrationValidation.Validate(repository);
                 OriginalFailureFlowValidation.Validate();
                 OriginalFailureRestartValidation.Validate();
+                OriginalFailurePanelDataValidation.Validate();
                 OriginalPlayerGoldHintScheduleValidation.Validate();
                 OriginalPlayerGoldHintTextValidation.Validate();
                 OriginalHintIconsValidation.Validate();
