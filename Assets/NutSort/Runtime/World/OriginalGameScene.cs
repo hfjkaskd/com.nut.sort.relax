@@ -57,6 +57,10 @@ namespace NutSort.World
         public event Action<ScrewOperation, ScrewState> OperationApplied;
 
         // TimeLSSUtil.DelayCallback runs on the main LuoSiSort MonoBehaviour.
+        public void ScheduleAfterMainPanel(Func<UnityEngine.Object> mainPanel,Action continuation)
+        {
+            StartCoroutine(OriginalInitializationWait.Run(mainPanel,session.MainPanelReadyDelay,continuation));
+        }
         public void ScheduleDelay(float seconds,Action callback)
         {
             StartCoroutine(DelayCallback(seconds,callback));

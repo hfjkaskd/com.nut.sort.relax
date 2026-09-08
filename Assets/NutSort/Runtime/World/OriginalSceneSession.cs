@@ -9,6 +9,7 @@ namespace NutSort.World
         public int LockedScrewStartLevel;
         public bool LongEntryDelay;
         public float RestartDelay;
+        public float MainPanelReadyDelay;
         public float FailPanelDelay;
         public int FailPanelId;
         public string StageStartSound;

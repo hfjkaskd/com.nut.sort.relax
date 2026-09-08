@@ -18,7 +18,8 @@ namespace NutSort.Validation
         private static OriginalGameplayUnlockPanelHost host;
         private static OriginalUserLocalData user;
         private static OriginalTargetRewardBanner rewardBanner;
-        private static int goldHints,progressDisplays;
+        private static int goldHints,progressDisplays,readyCallbacks;
+        private static bool earlyReady;
         private static string stored;
         private static int phase,index,banners,queued,hidden;
         private static double timeout,deadline;
@@ -56,6 +57,18 @@ namespace NutSort.Validation
                     user=UnityEngine.Object.FindObjectOfType<OriginalUserSession>().Data;user.NewGameplayUnlockIndex=index;
                     if(index==0)
                     {
+                        bool available=false;float seen=-1f;
+                        Func<UnityEngine.Object> mainProvider=()=>
+                        {
+                            if(!available)return null;
+                            if(seen<0f)seen=Time.time;
+                            return startup.MainLevel;
+                        };
+                        Action ready=()=>{if(seen<0f || Time.time-seen<1.49f)earlyReady=true;readyCallbacks++;};
+                        game.ScheduleAfterMainPanel(mainProvider,ready);
+                        game.ScheduleAfterMainPanel(mainProvider,ready);
+                        Check(readyCallbacks==0,"Main-panel wait is not synchronous");
+                        game.ScheduleDelay(.2f,()=>available=true);
                         rewardBanner=startup.TargetReward;
                         stored=PlayerPrefs.GetString(OriginalUserStore.Key);
                         var formatter=new OriginalGoldFormatter(()=>"en-US");
@@ -100,6 +113,7 @@ namespace NutSort.Validation
                     phase=4;deadline=now+2.6;return;
                 }
                 Check(queued==4,"Every scene-owned delay dispatches after its panel is destroyed");
+                Check(readyCallbacks==2 && !earlyReady,"Both independent scene waits respect panel appearance and scaled delay");
                 Check(banners==4 && goldHints==4 && progressDisplays==4 && !rewardBanner.IsAnimating,"All four real banner animations finish and invoke both top callbacks");
                 Check(PlayerPrefs.GetString(OriginalUserStore.Key)==stored,"Unlock and first-level banner add no save");
                 Debug.Log("NUT_GAMEPLAY_UNLOCK_PANEL_PLAY_PASS scene-configured unlock routing, four current rendered variants, actual Continue Button gate/banner/index/close ordering, hidden close and post-destruction queue dispatch; actual target banner completes to both top callbacks; destination and top consumers remain fixture boundaries.");Finish(0);
