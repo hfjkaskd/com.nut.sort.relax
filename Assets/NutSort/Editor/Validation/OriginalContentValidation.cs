@@ -116,6 +116,7 @@ namespace NutSort.Validation
                 OriginalMainPanelValidation.Validate();
                 OriginalItemManagerValidation.Validate();
                 OriginalRevokeFlowValidation.Validate();
+                OriginalRecordRevokeValidation.Validate(repository);
                 OriginalPlayerGoldHintScheduleValidation.Validate();
                 OriginalPlayerGoldHintTextValidation.Validate();
                 OriginalHintIconsValidation.Validate();

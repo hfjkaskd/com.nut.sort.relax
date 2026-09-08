@@ -159,6 +159,40 @@ namespace NutSort.World
             return result;
         }
 
+        // Record operation only; history removal, failure dispatch and tool cost
+        // remain owned by their respective manager flows.
+        public bool RevokeRecord(OriginalMoveRecord record)
+        {
+            return new OriginalRecordRevoke(FindScrew, RevertScrew, ReverseMove,
+                state => screws[Array.IndexOf(Board.Screws, state)].RefreshCap()).Revoke(record);
+        }
+
+        private ScrewState FindScrew(int index)
+        {
+            foreach (ScrewState state in Board.Screws)
+                if (state.Index == index) return state;
+            return null;
+        }
+
+        private readonly List<NutSlot> revokeGroup = new List<NutSlot>();
+        private void RevertScrew(ScrewState state)
+        {
+            state.GetTopSame(revokeGroup);
+            if (revokeGroup.Count == 0) { Debug.LogError("nutInfos.NutMaxCount == 0"); return; }
+            NutSlot slot = revokeGroup[0];
+            if (!nuts.TryGetValue(slot.Nut, out OriginalNutView view) || view == null) return;
+            slot.IsReady = false;
+            view.PlayRevert(null, () => SparkRequested?.Invoke(view));
+        }
+
+        private void ReverseMove(ScrewState target, NutTransfer transfer, int index, Action completed)
+        {
+            if (!nuts.TryGetValue(transfer.Nut, out OriginalNutView view) || view == null) return;
+            OriginalScrewView destination = screws[Array.IndexOf(Board.Screws, target)];
+            view.PlayTransfer(transfer.Destination, destination.GetTile(transfer.Destination.Coordinate.y).transform,
+                destination.ReadyPosition, index, transfer.WasReady, completed, () => SparkRequested?.Invoke(view));
+        }
+
         private void OnLanded(NutMoveBatch batch, int index)
         {
             batch.CompleteMovement(index);
