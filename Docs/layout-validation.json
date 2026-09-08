@@ -1,0 +1,16 @@
+{
+  "unity": "2022.3.62f3",
+  "layout_pass": true,
+  "content_resources": 1476,
+  "boards": 1474,
+  "selection_pass": true,
+  "playable_scene": false,
+  "visual_comparison_complete": false,
+  "evidence": [
+    "a05324.asm",
+    "a05440.asm",
+    "a059f0.asm",
+    "a05d2c.asm",
+    "layout-constants.json"
+  ]
+}

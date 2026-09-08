@@ -1,0 +1,44 @@
+{
+  "cameraAspectOffset": {
+    "rva": "0x201793c",
+    "file_offset": "0x201793c",
+    "bytes": "4260d5bf",
+    "float": -1.6670000553131104
+  },
+  "cameraAspectRange": {
+    "rva": "0x2017940",
+    "file_offset": "0x2017940",
+    "bytes": "480c223f",
+    "float": 0.6329998970031738
+  },
+  "evenRowsBaseZ": {
+    "rva": "0x2017944",
+    "file_offset": "0x2017944",
+    "bytes": "343353c0",
+    "float": -3.3000001907348633
+  },
+  "oddRowsBaseStepZ": {
+    "rva": "0x2017948",
+    "file_offset": "0x2017948",
+    "bytes": "3433d3c0",
+    "float": -6.600000381469727
+  },
+  "rowSpacingZ": {
+    "rva": "0x201794c",
+    "file_offset": "0x201794c",
+    "bytes": "3433d340",
+    "float": 6.600000381469727
+  },
+  "wideRowSpacingX": {
+    "rva": "0x201796c",
+    "file_offset": "0x201796c",
+    "bytes": "3433d33f",
+    "float": 1.6500000953674316
+  },
+  "shortRowSpacingX": {
+    "rva": "0x2017970",
+    "file_offset": "0x2017970",
+    "bytes": "cdcc0c40",
+    "float": 2.200000047683716
+  }
+}

@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cba149379ee4d9caf617834b5e379d2, type: 3}
+  m_Name: OriginalLayout
+  m_EditorClassIdentifier:
+  twoRowsThreshold: 6
+  threeRowsThreshold: 11
+  wideRowThreshold: 4
+  evenRowsBaseZ: -3.3000001907348633
+  oddRowsBaseStepZ: -6.600000381469727
+  rowSpacingZ: 6.600000381469727
+  wideRowSpacingX: 1.6500000953674316
+  shortRowSpacingX: 2.200000047683716
+  cameraAspectOffset: -1.6670000553131104
+  cameraAspectRange: 0.6329998970031738
+  cameraBaseSize: 7.5
+  cameraAspectSizeDelta: 3
+  cameraBaseColumnCount: 5
