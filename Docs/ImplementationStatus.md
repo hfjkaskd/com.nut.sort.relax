@@ -133,3 +133,5 @@
 - 已恢复主游戏对象上的 WaitForSeconds 延迟回调入口，并在实际 Play 中连接 PMDBullet/PMDItem 验证真实 Update 发射和宽度布局。暂停、隐藏后移动/回调继续、停用发射器后不新增提示及终点复用状态均通过；最新 marquee-play.png 已检查。38 组完整回归通过，测试存档已恢复。正式 Top/provider 接线与完整生命周期仍未完成；SDK 未改动。详见 Docs/MarqueePlayAudit.md。
 
 - 已恢复 Top 初始化/刷新调度，连接真实组件验证 Gold 初始化内的交叉进度刷新、随后隐藏但保留 IsShow，以及金额/阶段进度/普通关卡标签刷新顺序。明确保留 Refresh 不主动 Show 收益进度条的原行为。39 组完整回归通过，测试存档恢复。调度尚未绑定生产启动，正式 Top 组装、GM 和生命周期 Show 仍待接入。详见 Docs/MainTopFlowAudit.md。
+
+- 已恢复 Top 原 GM 标准按钮、文字/布局、按压反馈及原面板 3 路由，监听通过代码绑定，按调用方测试标记显隐，点击门槛通过后先打开面板再播放音效；SDK 振动跳过。接入 Top 联动验证后 39 组回归通过。GM 面板和地区 AB 切换尚未实现；Top 的 PlayerGoldGetHint 动态分支仍待恢复，不能作为静态节点跳过。详见 Docs/GMButtonAudit.md。

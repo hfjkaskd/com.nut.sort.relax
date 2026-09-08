@@ -28,7 +28,10 @@ namespace NutSort.Validation
                 user.GoldRewardTargetS2CData=JObject.Parse("{\"cal_cfg\":5,\"bear_rates\":\"100\",\"bear_list\":[null,null,{\"StartLevel\":7,\"RealLevel\":22,\"Stage2StartShowLevel\":30,\"Stage2StartRealLevel\":47,\"Stage2RealLevel\":51,\"psi_value\":\"100\",\"caliper_logs\":3,\"caliper_rank\":20}],\"bear_zs_list\":[{\"caliper_psi\":\"1000\",\"psi_value\":\"10\",\"caliper_logs\":3,\"caliper_rank\":20}]}");
                 var formatter=new OriginalGoldFormatter(()=>"en-US");
                 int gm=0,reentrant=0;
-                var flow=new OriginalMainTopFlow(gold,coin,hidden,progress,marquee,level,user,tables,"en",()=>{gm++;Check(gold.Value.text=="sentinel","GM initialization precedes currency initialization");});
+                var gmButton=make("Prefabs/Panels/GMButton").GetComponent<OriginalGMButton>();
+                var gmTrace=new List<string>();bool testMode=false,allowClick=false;
+                gmButton.Bind(()=>{gm++;Check(gold.Value.text=="sentinel","GM setup precedes currency initialization");return testMode;},()=>allowClick,id=>gmTrace.Add("panel:"+id),()=>gmTrace.Add("audio"));
+                var flow=new OriginalMainTopFlow(gold,coin,hidden,progress,marquee,level,user,tables,"en",gmButton.Init);
                 progress.Bind(user,tables,"en",n=>formatter.Format(n));hidden.Bind(user,tables,"en");
                 gold.Bind(user,tables,"en",n=>formatter.Format(n),()=>"US",()=>true,done=>{},id=>{},()=>{},()=>{reentrant++;Check(gm==1,"Reentrant refresh follows GM setup");flow.RefreshRewardAndLevel();});
                 coin.Bind(user,tables,"en",formatter,()=>true,done=>{},id=>{},()=>{});
@@ -36,6 +39,9 @@ namespace NutSort.Validation
                 marquee.Bind(()=>user.Level,()=>null,item=>item.Bind(text,tables.PayChannels,"en",()=>"US",(delay,done)=>{}));
                 gold.Value.text="sentinel";coin.Value.text="coin sentinel";hidden.gameObject.SetActive(false);
                 flow.Init();
+                Check(!gmButton.gameObject.activeSelf && gmButton.Button.onClick.GetPersistentEventCount()==0 && gmButton.GetComponent<OriginalButtonFeedback>()!=null,"Configured GM Button has code listener, feedback and test visibility");
+                gmButton.Button.onClick.Invoke();Check(gmTrace.Count==0,"GM click gate rejects without panel or audio");
+                allowClick=true;gmButton.Button.onClick.Invoke();Check(string.Join(",",gmTrace)=="panel:3,audio","Original GM panel then audio order");
                 Check(reentrant==1 && progress.IsShow && !progress.gameObject.activeSelf,"Gold Init refreshes progress before Top Init hides it without resetting IsShow");
                 Check(level.Group.anchoredPosition.x==374 && level.Group.gameObject.activeSelf,"Reentrant label uses progress eligibility");
                 Check(gold.Value.text=="sentinel" && coin.Value.text=="coin sentinel" && !hidden.SubRoundTemplate.activeSelf,"Init retains amounts and hides sub-round template");

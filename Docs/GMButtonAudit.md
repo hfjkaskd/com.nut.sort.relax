@@ -1,0 +1,9 @@
+# Main Top GM button recovery
+
+Recovered the original two-transform GM button subtree from current MainPanel, keeping its standard Button, target Image, TMP label, layout and styling. The authored OriginalGMButton component references the original Button and serialized panel ID 3. OriginalButtonFeedback is configured in the prefab with the existing source panel settings, rather than dynamically adding static UI components.
+
+MainPanelTop.Init (0x9DE464) binds the listener before applying the supplied IsTest result to button visibility. OriginalGMButton.Init preserves this order and replaces existing runtime listeners. On click, the supplied gate implements the existing input/mask boundary; a rejected click does nothing. A successful click calls the original panel route 3 (GMCallback 0x9DF72C), then the click audio callback, matching AddLSSListener's thunk (0x9C04A8). The original final vibration is SDK behavior and remains excluded.
+
+OriginalMainTopFlowValidation now uses this actual prefab's Init as the first Top initialization action. It checks test-hidden visibility, absence of persistent dragged events, configured feedback, blocked clicks and panel-before-audio order, alongside existing reentrant currency/progress initialization and level visibility checks. All 39 complete Unity regression PASS markers appear in reverse-workspace reconstruction-nut/logs/unity-gm-button-validation.log, with no compiler or validation exceptions.
+
+This restores the entry, not the GM panel or region AB switching. IsTest and click gating are caller-supplied boundaries; no SDK test state or reward data is fabricated. Production Top assembly/provider binding remains pending. The remaining PlayerGoldGetHint subtree has Update, Push/NextPush, Show and ShowSelf logic and must not be treated as an inert static node during Top assembly. No original-device visual parity is claimed.
