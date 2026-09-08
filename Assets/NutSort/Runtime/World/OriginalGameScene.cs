@@ -69,6 +69,17 @@ namespace NutSort.World
             failure.Fail(session.FailPanelDelay, ScheduleDelay, () => showPanel(session.FailPanelId));
         }
 
+        private OriginalSuccessFlow successFlow;
+        public void BindSuccess(Func<bool> newLevelMode,Action refreshTeaching,Action hideGoldHint,Action hideProgress,
+            Transform effectParent,Action<OriginalLevelInfo> requestReward)
+        {
+            successFlow=new OriginalSuccessFlow(User,()=>IsSucceed,()=>IsSucceed=true,newLevelMode,
+                ()=>InitLevel(true,false,false),refreshTeaching,()=>Tables.GetLevelInfo(User.Level,User.Level),
+                hideGoldHint,hideProgress,()=>audioPlayer.PlaySound(session.StageCompleteSound),()=>effects.PlaySuccess(effectParent),
+                ScheduleDelay,session.SuccessRequestDelay,requestReward);
+        }
+        public void Success() => successFlow.Run();
+
         public void BindMoveCompletion(Action<ScrewState,bool> doneEvent,Action hideGuide,Action pushHint,
             Action<ScrewState> refreshTypes,Action<int> showPanel)
         {

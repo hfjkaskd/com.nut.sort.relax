@@ -36,3 +36,5 @@ MonoBehaviour:
   MainPanelReadyDelay: 1.5
   ScrewDoneEventDelay: 1
   SuccessDoneEventDelay: 2
+  StageCompleteSound: StageComplete
+  SuccessRequestDelay: 0.6000000238418579

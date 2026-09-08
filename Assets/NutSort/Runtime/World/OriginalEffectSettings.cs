@@ -8,6 +8,8 @@ namespace NutSort.World
         public string SparkPath;
         public string DonePath;
         public string UnlockPath;
+        public string SuccessPath;
+        public float SuccessLifetime;
         public float UnlockLifetime;
         public float SparkLifetime;
         public float DoneLifetime;

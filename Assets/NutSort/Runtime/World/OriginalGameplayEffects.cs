@@ -10,12 +10,13 @@ namespace NutSort.World
         [SerializeField] private OriginalEffectSettings settings;
         private OriginalLevelView level;
         private OriginalPrefabPool pool;
-        private GameObject donePrefab,unlockPrefab;
+        private GameObject donePrefab,unlockPrefab,successPrefab;
         private struct ActiveEffect
         {
             public GameObject Instance;
             public float Remaining;
             public bool Pooled;
+            public bool KeepOnBoardClear;
         }
         private readonly List<ActiveEffect> active = new List<ActiveEffect>();
         public int ActiveCount => active.Count;
@@ -30,6 +31,17 @@ namespace NutSort.World
             level.DoneEffectRequested += ShowDone;
             level.UnlockRequested += ShowUnlock;
             level.Clearing += ClearActive;
+        }
+
+        public GameObject PlaySuccess(Transform parent)
+        {
+            if(successPrefab==null)successPrefab=Resources.Load<GameObject>(settings.SuccessPath);
+            if(successPrefab==null){Debug.LogError("InstanceGameObject not find path: "+settings.SuccessPath);return null;}
+            var instance=Instantiate(successPrefab,parent,false);
+            instance.transform.localPosition=Vector3.zero;
+            active.Add(new ActiveEffect{Instance=instance,Remaining=settings.SuccessLifetime,KeepOnBoardClear=true});
+            // Source relies on the prefab particle system's playOnAwake.
+            return instance;
         }
 
         private void ShowUnlock(OriginalScrewView screw) { PlayUnlock(screw.transform); }
@@ -104,13 +116,17 @@ namespace NutSort.World
                 level.UnlockRequested -= ShowUnlock;
                 level.Clearing -= ClearActive;
             }
-            ClearActive(); level = null; pool = null;
+            for(int i=active.Count-1;i>=0;i--)Release(active[i]);
+            active.Clear(); level = null; pool = null;
         }
 
         private void ClearActive()
         {
-            for (int i = active.Count - 1; i >= 0; i--) Release(active[i]);
-            active.Clear();
+            for (int i = active.Count - 1; i >= 0; i--)
+            {
+                if(active[i].KeepOnBoardClear)continue;
+                Release(active[i]);active.RemoveAt(i);
+            }
         }
     }
 }

@@ -14,6 +14,8 @@ namespace NutSort.World
         public float ScrewDoneEventDelay, SuccessDoneEventDelay;
         public int FailPanelId;
         public string StageStartSound;
+        public string StageCompleteSound;
+        public float SuccessRequestDelay;
         public float FirstStageSoundDelay, RestartStageSoundDelay;
         public bool LSS260820;
         public int LSSSHSLV;
