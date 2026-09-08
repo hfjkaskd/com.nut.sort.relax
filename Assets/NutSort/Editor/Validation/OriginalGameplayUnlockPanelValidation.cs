@@ -14,6 +14,7 @@ namespace NutSort.Validation
         private const string PathName="prefabs/panels/UnlockGameplayPanel",Key="NutSort.UnlockPanelPlay";
         private static OriginalGameScene game;
         private static OriginalGameplayUnlockPanel panel;
+        private static OriginalGameplayUnlockPanelHost host;
         private static OriginalUserLocalData user;
         private static OriginalTargetRewardBanner rewardBanner;
         private static int goldHints,progressDisplays;
@@ -50,7 +51,7 @@ namespace NutSort.Validation
                 if(phase==0)
                 {
                     Validate();var startup=UnityEngine.Object.FindObjectOfType<OriginalStartupFlow>();
-                    panel=UnityEngine.Object.Instantiate(Resources.Load<GameObject>(PathName),startup.MainLevel.transform.parent,false).GetComponent<OriginalGameplayUnlockPanel>();
+
                     user=UnityEngine.Object.FindObjectOfType<OriginalUserSession>().Data;user.NewGameplayUnlockIndex=index;
                     if(index==0)
                     {
@@ -64,9 +65,9 @@ namespace NutSort.Validation
                     gate=false;game.ModalInputBlocked=true;
                     var audio=UnityEngine.Object.FindObjectOfType<OriginalAudioPlayer>();
                     var queue=new OriginalPanelActionQueue();queue.Add(()=>queued++);
-                    panel.BindHide(queue,game.ScheduleDelay,()=>hidden++);
-                    panel.Initialize(user,index,true,game.Tables,"en",()=>gate,s=>audio.PlaySound(s),callback=>{Check(callback==null && user.NewGameplayUnlockIndex==index,"Banner called before index mutation without completion callback");banners++;rewardBanner.Show(callback);Check(rewardBanner.IsAnimating && rewardBanner.Tip.text.Length>0,"Actual target banner refreshes and starts before index mutation");},()=>{panel.Hide();UnityEngine.Object.Destroy(panel.gameObject);game.ModalInputBlocked=false;});
-                    panel.Refresh();
+
+                    host=new OriginalGameplayUnlockPanelHost(startup.MainLevel.transform.parent,PathName,user,game.Tables,"en",()=>gate,s=>audio.PlaySound(s),callback=>{Check(callback==null && user.NewGameplayUnlockIndex==index,"Banner called before index mutation without completion callback");banners++;rewardBanner.Show(callback);Check(rewardBanner.IsAnimating && rewardBanner.Tip.text.Length>0,"Actual target banner refreshes and starts before index mutation");},queue,game.ScheduleDelay,()=>{hidden++;game.ModalInputBlocked=false;});
+                    panel=host.Show(index,true);Check(host.IsOpen,"Runtime host registers panel");
                     for(int i=0;i<4;i++)Check(panel.Icons[i].activeSelf==(i==index),"Actual icon visibility");
                     phase=1;deadline=now+.7;return;
                 }
@@ -82,7 +83,7 @@ namespace NutSort.Validation
                     gate=true;panel.ContinueButton.onClick.Invoke();Check(panel.Closing && user.NewGameplayUnlockIndex==index+1,"Continue updates index before delayed close");
                     panel.gameObject.SetActive(false);phase=3;deadline=now+.4;return;
                 }
-                Check(panel==null && !game.ModalInputBlocked,"Global close completes for hidden panel");
+                Check(panel==null && !host.IsOpen && !game.ModalInputBlocked,"Runtime host deregisters and destroys hidden panel after close");
                 if(phase!=4)
                 {
                     if(++index<4){phase=0;return;}

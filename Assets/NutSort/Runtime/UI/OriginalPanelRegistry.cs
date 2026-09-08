@@ -31,12 +31,14 @@ namespace NutSort.UI
             this.destroy=destroy ?? throw new ArgumentNullException(nameof(destroy));
         }
 
-        public T Show(int id)
+        public T Show(int id) => Show(id, null);
+
+        public T Show(int id, Action<T> initializePanel)
         {
             if(panels.ContainsKey(id)) {Debug.LogError("panel exist :"+name(id));return null;}
             T panel=create(id);
             panels.Add(id,panel);
-            initialize(id,panel);
+            if(initializePanel==null)initialize(id,panel);else initializePanel(panel);
             refresh(panel);
             return panel;
         }
