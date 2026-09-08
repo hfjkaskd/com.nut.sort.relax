@@ -1,6 +1,7 @@
 using System;
 using NutSort.UI;
 using UnityEngine;
+using UnityEngine.UI;
 namespace NutSort.Validation
 {
     public static class OriginalHollowMaskGeometryValidation
@@ -21,6 +22,37 @@ namespace NutSort.Validation
                 geometry.CalculateBounds(outer,inner);
                 Check(Near(geometry.InnerMin,new Vector2(-30,10)) && Near(geometry.InnerMax,new Vector2(70,50)),"Translated relative inner bounds");
                 Check(Near(geometry.OuterMin,new Vector2(-100,-600)) && Near(geometry.OuterMax,new Vector2(300,200)),"Noncentral outer pivot retained");
+                using(var helper=new VertexHelper())
+                {
+                    float meshRadius=25;int meshCount=6;
+                    geometry.PopulateMesh(helper,new Color32(1,2,3,128),ref meshRadius,ref meshCount,true);
+                    Check(helper.currentVertCount==40 && helper.currentIndexCount==96,"Eight base vertices plus four native six-segment fans");
+                    var vertex=new UIVertex();helper.PopulateUIVertex(ref vertex,0);
+                    Check((Vector2)vertex.position==geometry.OuterMin && vertex.uv0==Vector4.zero && vertex.color.a==128,"Base vertex keeps simpleVert UV and Graphic tint");
+                    helper.PopulateUIVertex(ref vertex,8);
+                    Check(Near(vertex.position,geometry.InnerMin) && Near(vertex.uv0,new Vector2(.2f,.75f)),"First fan anchors at inner lower left with inner-size UV mapping");
+                    helper.PopulateUIVertex(ref vertex,15);
+                    Check(Near(vertex.position,new Vector2(-26,10)),"First corner ends at its lower tangent");
+                    helper.PopulateUIVertex(ref vertex,23);
+                    Check(Near(vertex.position,new Vector2(-30,46)),"Second corner ends at its left tangent");
+                    var rendered=new Mesh();
+                    try
+                    {
+                        helper.FillMesh(rendered);var points=rendered.vertices;var indices=rendered.triangles;
+                        Check(indices[0]==0 && indices[1]==1 && indices[2]==4 && indices[24]==8 && indices[25]==9 && indices[26]==10,"Source base and fan triangle order");
+                        double area=0;
+                        for(int i=0;i<indices.Length;i+=3)
+                        {
+                            Vector3 a=points[indices[i]],b=points[indices[i+1]],c=points[indices[i+2]];
+                            area+=Math.Abs((b.x-a.x)*(c.y-a.y)-(b.y-a.y)*(c.x-a.x))*.5;
+                        }
+                        double expected=400*800-100*40+4*(16-3*16*Math.Sin(Math.PI/12));
+                        Check(Math.Abs(area-expected)<.02,"Mesh covers outer rectangle excluding native polygonal rounded hole");
+                    }
+                    finally{UnityEngine.Object.DestroyImmediate(rendered);}
+                    geometry.PopulateMesh(helper,Color.white,ref meshRadius,ref meshCount,false);
+                    Check(helper.currentVertCount==8 && helper.currentIndexCount==6,"Solid mode clears former fans and retains unused inner vertices as source");
+                }
                 float radius=25;int triangles=6;
                 Check(geometry.PrepareCornerRadius(ref radius,ref triangles)==4 && radius==25 && triangles==6,"Native prefab divisor and six segments");
                 radius=0;triangles=0;

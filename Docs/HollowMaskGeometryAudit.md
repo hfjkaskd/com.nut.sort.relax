@@ -11,3 +11,5 @@ The per-vertex UV calculation avoids the source temporary one-element input/outp
 Validation uses real RectTransforms with translation, noncentral outer pivot, a descendant extending beyond its target, rotation and destroyed targets. It also checks native radius/count mutations, the serialized radius divisor, UV out-of-range and zero-dimension behavior. This is geometry verification, not screenshot proof of full visual parity.
 
 Unity 2022.3.62f3: 74 full regression PASS markers in Library/unity-hollow-geometry-validation.log, no compile or validation exceptions.
+
+Subsequent work: HollowMaskMeshAudit.md documents the restored full mesh and runtime Graphic. NewbieGuidePanel prefab binding and rendered comparison remain outstanding.
