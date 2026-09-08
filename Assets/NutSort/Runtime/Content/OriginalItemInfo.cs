@@ -11,6 +11,8 @@ namespace NutSort.Content
         public int CountInt => RoundNative(Count);
         public int MoreCountInt => RoundNative(MoreCount);
         public int IntCount => IsMore?MoreCountInt:CountInt;
+        public float FloatCount => IsMore?MoreCount:Count;
+        public double DoubleCount => (double)FloatCount;
         private static int RoundNative(float value)
         {
             double rounded=Math.Round((double)value,MidpointRounding.ToEven);
