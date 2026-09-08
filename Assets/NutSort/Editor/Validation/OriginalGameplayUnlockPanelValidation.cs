@@ -15,6 +15,9 @@ namespace NutSort.Validation
         private static OriginalGameScene game;
         private static OriginalGameplayUnlockPanel panel;
         private static OriginalUserLocalData user;
+        private static OriginalTargetRewardBanner rewardBanner;
+        private static int goldHints,progressDisplays;
+        private static string stored;
         private static int phase,index,banners,queued,hidden;
         private static double timeout,deadline;
         private static bool gate;
@@ -49,11 +52,20 @@ namespace NutSort.Validation
                     Validate();var startup=UnityEngine.Object.FindObjectOfType<OriginalStartupFlow>();
                     panel=UnityEngine.Object.Instantiate(Resources.Load<GameObject>(PathName),startup.MainLevel.transform.parent,false).GetComponent<OriginalGameplayUnlockPanel>();
                     user=UnityEngine.Object.FindObjectOfType<OriginalUserSession>().Data;user.NewGameplayUnlockIndex=index;
+                    if(index==0)
+                    {
+                        rewardBanner=startup.TargetReward;
+                        stored=PlayerPrefs.GetString(OriginalUserStore.Key);
+                        var formatter=new OriginalGoldFormatter(()=>"en-US");
+                        rewardBanner.Bind(user,game.Tables,"en",value=>formatter.Format(value),
+                            ()=>rewardBanner.transform.parent.TransformPoint(new Vector3(-250,760,0)),
+                            ()=>goldHints++,()=>progressDisplays++,()=>{throw new InvalidOperationException("First-level fixture must not save");});
+                    }
                     gate=false;game.ModalInputBlocked=true;
                     var audio=UnityEngine.Object.FindObjectOfType<OriginalAudioPlayer>();
                     var queue=new OriginalPanelActionQueue();queue.Add(()=>queued++);
                     panel.BindHide(queue,game.ScheduleDelay,()=>hidden++);
-                    panel.Initialize(user,index,true,game.Tables,"en",()=>gate,s=>audio.PlaySound(s),callback=>{Check(callback==null && user.NewGameplayUnlockIndex==index,"Banner called before index mutation without completion callback");banners++;},()=>{panel.Hide();UnityEngine.Object.Destroy(panel.gameObject);game.ModalInputBlocked=false;});
+                    panel.Initialize(user,index,true,game.Tables,"en",()=>gate,s=>audio.PlaySound(s),callback=>{Check(callback==null && user.NewGameplayUnlockIndex==index,"Banner called before index mutation without completion callback");banners++;rewardBanner.Show(callback);Check(rewardBanner.IsAnimating && rewardBanner.Tip.text.Length>0,"Actual target banner refreshes and starts before index mutation");},()=>{panel.Hide();UnityEngine.Object.Destroy(panel.gameObject);game.ModalInputBlocked=false;});
                     panel.Refresh();
                     for(int i=0;i<4;i++)Check(panel.Icons[i].activeSelf==(i==index),"Actual icon visibility");
                     phase=1;deadline=now+.7;return;
@@ -78,8 +90,9 @@ namespace NutSort.Validation
                     phase=4;deadline=now+2.6;return;
                 }
                 Check(queued==4,"Every scene-owned delay dispatches after its panel is destroyed");
-                Check(banners==4,"Every variant invokes banner once");
-                Debug.Log("NUT_GAMEPLAY_UNLOCK_PANEL_PLAY_PASS four current rendered variants, actual Continue Button gate/banner/index/close ordering, hidden close and post-destruction queue dispatch; banner callback is a fixture boundary.");Finish(0);
+                Check(banners==4 && goldHints==4 && progressDisplays==4 && !rewardBanner.IsAnimating,"All four real banner animations finish and invoke both top callbacks");
+                Check(PlayerPrefs.GetString(OriginalUserStore.Key)==stored,"Unlock and first-level banner add no save");
+                Debug.Log("NUT_GAMEPLAY_UNLOCK_PANEL_PLAY_PASS four current rendered variants, actual Continue Button gate/banner/index/close ordering, hidden close and post-destruction queue dispatch; actual target banner completes to both top callbacks; destination and top consumers remain fixture boundaries.");Finish(0);
             }
             catch(Exception e){Debug.LogException(e);Finish(1);}
         }
