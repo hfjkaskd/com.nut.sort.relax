@@ -110,6 +110,7 @@ namespace NutSort.Validation
                 OriginalMarqueeLauncherValidation.Validate();
                 OriginalMainTopFlowValidation.Validate();
                 OriginalMainTopViewValidation.Validate();
+                OriginalToolItemDisplayValidation.Validate();
                 OriginalPlayerGoldHintScheduleValidation.Validate();
                 OriginalPlayerGoldHintTextValidation.Validate();
                 OriginalHintIconsValidation.Validate();
