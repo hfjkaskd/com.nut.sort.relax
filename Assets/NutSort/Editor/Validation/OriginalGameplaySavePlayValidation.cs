@@ -13,7 +13,7 @@ namespace NutSort.Validation
     public static class OriginalGameplaySavePlayValidation
     {
         private const string Active = "NutSort.GameplaySavePlayValidation";
-        private const string Fixture = "{\"ScrewMoveCount\":40,\"LevelInfo\":\"untouched-before-operation\",\"IsAudio\":false,\"RevokeCount\":3}";
+        private const string Fixture = "{\"ScrewMoveCount\":40,\"LevelInfo\":\"\",\"IsAudio\":false,\"RevokeCount\":3}";
         private static OriginalGameScene game;
         private static int phase;
         private static double deadline, timeout;
@@ -45,7 +45,7 @@ namespace NutSort.Validation
                 double now=EditorApplication.timeSinceStartup;
                 Check(now<timeout,"Gameplay save validation timeout phase="+phase);
                 if (game==null) game=UnityEngine.Object.FindObjectOfType<OriginalGameScene>();
-                if (game==null || game.Level==null || !game.Level.AreNutsInitialized || game.InputBlocked || now<deadline) return;
+                if (game==null || game.Level==null || !game.Level.AreNutsInitialized || game.IsRestarting || game.InputBlocked || now<deadline) return;
                 var user=UnityEngine.Object.FindObjectOfType<OriginalUserSession>().Data;
                 if (phase==0)
                 {

@@ -54,7 +54,7 @@ namespace NutSort.Validation
                 if(game==null||game.Level==null)return;
                 if(phase==0)
                 {
-                    if(!game.Level.AreNutsInitialized||game.InputBlocked)return;
+                    if(!game.Level.AreNutsInitialized||game.InputBlocked||game.IsRestarting)return;
                     replay=UnityEngine.Object.FindObjectOfType<OriginalStartupFlow>().Replay;
                     Check(replay!=null&&EventSystem.current!=null,"Native replay entry and EventSystem");
                     UnityEngine.Object.FindObjectOfType<OriginalAudioPlayer>().SoundStarted += name => { if(name=="StageStart")stageStarts++; };

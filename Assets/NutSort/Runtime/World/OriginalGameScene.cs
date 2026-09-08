@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using NutSort.Content;
 using NutSort.Gameplay;
 using UnityEngine;
@@ -19,15 +18,16 @@ namespace NutSort.World
         private OriginalLevelView level;
         private OriginalLevelRepository repository;
         private OriginalLevelSelector selector;
-        private LevelProgressState progress;
+        private bool pendingBoard, resetBoard, longEntry;
+        private float rebuildElapsed;
         public bool ModalInputBlocked { get; set; }
         public bool IsRestarting { get; private set; }
         private int viewportWidth, viewportHeight;
         public OriginalLevelView Level => level;
         public Camera WorldCamera => GameCamera;
         public OriginalTables Tables { get; private set; }
-        public int PlayerLevel => session.Level;
-        public int ShowLevel => Tables.GetShowLevel(session.Level);
+        public int PlayerLevel => audioPlayer.UserState.Data.Level;
+        public int ShowLevel => Tables.GetShowLevel(PlayerLevel);
         public bool InputBlocked { get; set; }
         public bool IsExchanging { get; set; }
         public event Action<ScrewOperation, ScrewState> OperationApplied;
@@ -42,45 +42,79 @@ namespace NutSort.World
             Tables = new OriginalTables(tableSettings);
             repository = new OriginalLevelRepository(content);
             repository.Initialize();
-            // Session data is explicit configuration until original save and
-            // region/server initialization are connected. No fabricated grants.
-            progress = new LevelProgressState { Level = session.Level, LevelSeed = session.Seed };
+            audioPlayer.Initialize();
             selector = new OriginalLevelSelector(repository, content, UnityLevelRandom.Instance);
-            LevelSelection selection = selector.Select(progress, session.LSS260820, session.LSSSHSLV);
             level = pool.Rent(session.LevelPrefabPath, transform).GetComponent<OriginalLevelView>();
-            level.Bind(repository.LoadBoard(selection.Loop, selection.Seed), pool, session.LongEntryDelay, session.LSSAB,
-                PlayerLevel >= session.LockedScrewStartLevel);
             effects.Bind(level, pool);
             audioPlayer.Bind(level);
-            audioPlayer.PlaySound(session.StageStartSound, session.LongEntryDelay ? session.FirstStageSoundDelay : session.RestartStageSoundDelay);
             level.OperationApplied += ForwardOperation;
             level.MoveAttempted += CountMoveAttempt;
-            ResizeCameras(Screen.width, Screen.height);
+            // LuoSiSortMgr.Init uses IsNullOrEmpty, not whitespace or a parse
+            // exception fallback. Nonempty invalid saved data must stay visible.
+            BeginInitialization(string.IsNullOrEmpty(audioPlayer.UserState.Data.LevelInfo), session.LongEntryDelay);
         }
 
         public void RestartLevel()
         {
             if (IsRestarting) return;
+            BeginInitialization(true, false);
+        }
+
+        private void BeginInitialization(bool reset, bool useLongEntry)
+        {
             IsRestarting = true;
             var user = audioPlayer.UserState.Data;
             user.LuckyScrewDoneCount = 0;
-            user.PassLevelTime = 0;
-            user.Init();
+            if (reset) { user.PassLevelTime = 0; user.Init(); }
             level.Clear();
-            StartCoroutine(RebuildLevel());
+            IsExchanging = false;
+            pendingBoard = true; resetBoard = reset; longEntry = useLongEntry; rebuildElapsed = 0f;
         }
-        private IEnumerator RebuildLevel()
+
+        // Same scaled-time state machine in Editor and on device. Explicit time
+        // advancement also lets validation inspect the original callback boundary.
+        public void AdvanceInitialization(float deltaTime)
         {
-            // Original InitLevel reset path clears immediately, then reconstructs
-            // after the local callback delay; SDK/server calls remain excluded.
-            yield return new WaitForSeconds(session.RestartDelay);
-            LevelSelection selection = selector.Select(progress, session.LSS260820, session.LSSSHSLV);
-            level.Bind(repository.LoadBoard(selection.Loop, selection.Seed), pool, false, session.LSSAB,
-                PlayerLevel >= session.LockedScrewStartLevel);
-            audioPlayer.PlaySound(session.StageStartSound, session.RestartStageSoundDelay);
+            if (deltaTime < 0f) throw new ArgumentOutOfRangeException(nameof(deltaTime));
+            if (!IsRestarting || level == null) return;
+            if (!pendingBoard)
+            {
+                if (level.AreNutsInitialized) IsRestarting = false;
+                return;
+            }
+            rebuildElapsed += deltaTime;
+            if (rebuildElapsed < session.RestartDelay) return;
+            pendingBoard = false;
+            if (resetBoard) BindFreshBoard();
+            else
+            {
+                OriginalBoardSnapshot snapshot = OriginalBoardSnapshotJson.Read(audioPlayer.UserState.Data.LevelInfo);
+                if (snapshot == null) throw new InvalidOperationException("Original saved LevelInfo deserialized to null.");
+                level.BindSaved(snapshot, pool, longEntry, session.LSSAB);
+            }
+            audioPlayer.PlaySound(session.StageStartSound, longEntry ? session.FirstStageSoundDelay : session.RestartStageSoundDelay);
             ResizeCameras(Screen.width, Screen.height);
-            while (!level.AreNutsInitialized) yield return null;
-            IsRestarting = false;
+            // Original resume initializes its view, then resets complete/empty
+            // boards through InitLevel(true) with another reconstruction delay.
+            if (!resetBoard && (level.Board.IsSuccess || level.Board.Screws.Length == 0))
+                BeginInitialization(true, longEntry);
+        }
+
+        private void BindFreshBoard()
+        {
+            var user = audioPlayer.UserState.Data;
+            var progress = new LevelProgressState
+            { Level = user.Level, LevelId = user.LevelId, LevelSeed = user.LevelSeed, IsRandomLevelSeed = user.IsRandomLevelSeed };
+            LevelSelection selection;
+            try { selection = selector.Select(progress, session.LSS260820, session.LSSSHSLV); }
+            finally
+            {
+                // Source selection writes these user fields; random selection
+                // deliberately does not replace the persisted LevelSeed.
+                user.LevelId = progress.LevelId; user.IsRandomLevelSeed = progress.IsRandomLevelSeed;
+            }
+            level.Bind(repository.LoadBoard(selection.Loop, selection.Seed), pool, longEntry, session.LSSAB,
+                user.Level >= session.LockedScrewStartLevel);
         }
 
         private void CountMoveAttempt()
@@ -111,6 +145,7 @@ namespace NutSort.World
 
         private void Update()
         {
+            AdvanceInitialization(Time.deltaTime);
             if (level == null || IsRestarting) return;
             if (viewportWidth != Screen.width || viewportHeight != Screen.height) ResizeCameras(Screen.width, Screen.height);
             // Use the same input policy on every platform. A single touch ends

@@ -6,8 +6,6 @@ namespace NutSort.World
     public sealed class OriginalSceneSession : ScriptableObject
     {
         public string LevelPrefabPath;
-        public int Level;
-        public int Seed;
         public int LockedScrewStartLevel;
         public bool LongEntryDelay;
         public float RestartDelay;

@@ -11,7 +11,7 @@ namespace NutSort.Validation
     public static class OriginalUserPlayValidation
     {
         private const string Active="NutSort.UserPlayValidation";
-        private const string Fixture="{\"IsAudio\":false,\"IsVibrate\":false,\"RevokeCount\":3,\"LevelInfo\":\"preserve-original-board-string\",\"UserName\":\"2030-01-02T03:04:05Z\"}";
+        private const string Fixture="{\"IsAudio\":false,\"IsVibrate\":false,\"RevokeCount\":3,\"LevelInfo\":\"\",\"UserName\":\"2030-01-02T03:04:05Z\"}";
         private static string Backup=>Path.GetFullPath(Path.Combine(Application.dataPath,"../Library/ValidationBackups/UserLocalData.bin"));
         private static int phase;
         private static double deadline,timeout;
@@ -50,7 +50,7 @@ namespace NutSort.Validation
                 if(phase==1)
                 {
                     var user=audio.UserState.Data;
-                    Check(!audio.AudioEnabled&&!user.IsVibrate&&user.RevokeCount==3&&user.LevelInfo=="preserve-original-board-string"&&user.UserName=="2030-01-02T03:04:05Z","Actual scene loads source user preference fields");
+                    Check(!audio.AudioEnabled&&!user.IsVibrate&&user.RevokeCount==3&&user.LevelInfo==""&&user.UserName=="2030-01-02T03:04:05Z","Actual scene loads source user preference fields");
                     Check(!audio.Background.isPlaying&&audio.Background.clip==null&&audio.CachedClipCount==0,"Persisted mute prevents BGM and StageStart from loading or playing");
                     audio.SetAudioEnabled(true);
                     Check(user.IsAudio&&ReferenceEquals(user,audio.UserState.Store.Data),"Audio toggles shared user object");
@@ -61,7 +61,7 @@ namespace NutSort.Validation
                 audio.SetAudioEnabled(false);Check(!audio.UserState.Data.IsAudio&&!audio.Background.isPlaying,"Disable mutates shared state and pauses BGM");
                 audio.UserState.Store.SaveData(false,null);
                 var restored=new OriginalUserStore(Resources.Load<OriginalUserDefaults>("Configuration/OriginalUserDefaults"),new UnityUserPreferences());
-                Check(!restored.Data.IsAudio&&!restored.Data.IsVibrate&&restored.Data.RevokeCount==3&&restored.Data.LevelInfo=="preserve-original-board-string","Actual PlayerPrefs full-envelope save/reload preserves board and settings");
+                Check(!restored.Data.IsAudio&&!restored.Data.IsVibrate&&restored.Data.RevokeCount==3&&restored.Data.LevelInfo=="","Actual PlayerPrefs full-envelope save/reload preserves board and settings");
                 Restore();
                 Debug.Log("NUT_USER_PLAY_VALIDATION_PASS actual source-key load, persisted mute gates BGM/StageStart, shared state, no toggle autosave, explicit whole-envelope PlayerPrefs save/reload; original preference restored.");
                 Finish(0);

@@ -1,0 +1,30 @@
+{
+  "scope": "Actual local startup resume, persisted level selection and completed/empty-save rebuild; remaining original lifecycle events are incomplete",
+  "sourceRvas": {
+    "startupSelection": "0x9FB994",
+    "initResetScope": "0x9E8174",
+    "reconstructionDelay": "0x9FF7CC",
+    "deserializeAndCompletedReset": "0x9FFA28",
+    "freshSelection": "0x9FCE64",
+    "boardInitialization": "0x9F9AC8"
+  },
+  "behavior": [
+    "UserLocalData.Level drives board selection and main level label; temporary scene Level/Seed fields removed",
+    "Null/empty LevelInfo requests fresh board; nonempty values deserialize without silent fallback",
+    "Both startup and replay retain original 0.3-second scaled reconstruction delay",
+    "Unfinished saved board restores occupancy, coordinates, masks, locks and move history without reselecting seed or appending a fresh lock",
+    "Completed/empty restored board initializes then clears and schedules fresh reconstruction through the reset path",
+    "Fresh selection updates shared LevelId and random flag while preserving original LevelSeed semantics",
+    "Resume retains current-level elapsed time/tool additions; reset clears them; initialization resets lucky count",
+    "Existing automatic operation save writes continued history and cumulative counts"
+  ],
+  "validation": {
+    "fullRegressionGroups": 21,
+    "actualSceneCases": ["Original callback delay and second reset delay", "Saved occupancy and reversed coordinates", "Preserved selection identity, time and additions on resume", "Continued operation writes prior plus new history", "Completed and empty saved boards", "Level two offset and level three lock insertion", "Random seed overflow updates user fields", "Malformed/nonempty-null/whitespace preserves stored envelope"],
+    "actualPlayCases": ["Start restores saved board and level badge", "Actual camera-ray move auto-saves", "Scene reload restores moved positions/history/counters", "Continued operation completes restored board", "Completed-save reload constructs current level-three content with original lock"],
+    "regressionCases": ["Replay Button test waits for the complete initialization gate before interaction; cancel/rebuild/sound/effect assertions retained and passed", "Real persisted mute/user envelope load and explicit save/reload passed with the valid empty-board startup fixture", "Rejected and successful operation saves, preserved user fields and cumulative counts across replay passed under the new initialization timing"],
+    "logs": ["unity-resume-validation.log", "unity-resume-play.log", "unity-resume-replay-play.log", "unity-resume-user-play.log", "unity-resume-save-play.log"]
+  },
+  "pending": ["Original InitDoneEvent and full tutorial/unlock/reward event graph", "Other original lifecycle save points", "Device-originated save compatibility", "Country/AB/GM and US default routing", "Full current-source visual/device comparison"],
+  "sdk": "Unchanged"
+}

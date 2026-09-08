@@ -32,9 +32,11 @@ namespace NutSort.Validation
             Check(Mathf.Abs(RenderSettings.ambientIntensity-5f)<.0001f,"Original ambient intensity");
             Check(LightmapSettings.lightmaps.Length==0,"Source has no baked lightmap textures");
             game.Initialize();
+            game.AdvanceInitialization(.301f);
             game.ResizeCameras(480,854);
             var level=game.Level;
             level.AdvanceInitialization(1.501f);
+            game.AdvanceInitialization(0f);
             Check(level.NutViewCount==4,"Configured original first level loads through scene startup");
             foreach (ScrewState screw in level.Board.Screws)
                 foreach (NutSlot slot in screw.Slots)
