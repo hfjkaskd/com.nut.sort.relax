@@ -93,6 +93,29 @@ namespace NutSort.UI
             CallbackAction=completion.Complete;
         }
 
+        // ShowGuide case 3, 0x9E2C1C. Request operation retains its existing
+        // response binding; this view neither invents a payload nor grants coins.
+        public void ShowCoinGuide(OriginalUserLocalData user,RectTransform target,Action refreshCoin,
+            Action save,Action<bool> requestGoldInfo,Action<bool> newGameplayUnlock)
+        {
+            Hand.gameObject.SetActive(true);
+            Button.gameObject.SetActive(true);
+            Pos.position=target.position;
+            Button.image.rectTransform.sizeDelta=target.sizeDelta;
+            SetTip(127,0);
+            ShowMask(target);
+            user.IsShowCoin=true;
+            refreshCoin();
+            save();
+            ClickAction=()=>
+            {
+                requestGoldInfo(false);
+                user.GuideIndex=unchecked(user.GuideIndex+1);
+                Close();
+            };
+            CallbackAction=parameter=>newGameplayUnlock(false);
+        }
+
         public void BindGuide(OriginalUserLocalData user,Func<bool> skipTeaching,IOriginalGuideBranches branches)
         {
             teachingFlow=new OriginalTeachingFlow(user,this,skipTeaching);
