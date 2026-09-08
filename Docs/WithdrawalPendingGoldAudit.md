@@ -1,0 +1,9 @@
+# Withdrawal pending gold application
+
+TXPanel.Refresh 0x9cbfcc-0x9cc130 processes UserLocalData.ComeOnGold (offset 0xc8) only if not null/empty and static IsPlayGoldTween is true. It sets the panel target-hint flag true, captures old Gold, parses ComeOnGold with the existing native-style float helper and calls SetGold(value,true,true). It then clears ComeOnGold, saves, rereads Gold and starts DOVirtual.Float(old,new,1.5,callback). Callback 0x9cd93c formats its float through GoldLSSFormat and assigns GoldCount; it does not change balance. IsPlayGoldTween is not reset in this block, and an ineligible refresh does not reset the panel target-hint flag.
+
+OriginalWithdrawalPendingGold restores this order and accepts the balance setter, save, tween consumer, shared formatter and configured duration. It does not synthesize pending data or grant a reward independently. Literal zero remains eligible; whitespace/malformed numeric handling stays with the existing ToFloat helper. Failures retain native partial effects instead of rolling back or skipping errors.
+
+Regression verifies gating without unnecessary flag reads, hint-before-set, clear-before-save, post-save live animation destination, display-only tween callback, repeated consumed refresh, literal zero and setter/save failure boundaries. Actual TXPanel visual tween, scene balance/HUD setter composition, tasks/progress and complete prefab remain pending. This change alone is not an end-to-end payout or visual parity claim.
+
+Verification: Unity 2022.3.62f3 full regression passed 115 markers including NUT_WITHDRAWAL_PENDING_GOLD_VALIDATION_PASS and NUT_CONTENT_VALIDATION_PASS in Library/withdrawal-pending-gold-validation-3.log. No compiler errors or exception entries in the successful log. Validation uses the existing formatter output for fractional values and confirms balance remains unchanged during animation callbacks. Preference fixture restored and backup removed.
