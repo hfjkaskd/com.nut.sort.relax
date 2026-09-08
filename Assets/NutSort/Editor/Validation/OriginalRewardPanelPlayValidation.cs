@@ -18,6 +18,8 @@ namespace NutSort.Validation
         private static int phase,flies,queued,hidden,revoke,exchange;
         private static OriginalRewardPanelHost host;
         private static OriginalGameScene game;
+        private static OriginalToolRewardFlight flight;
+        private static OriginalMainBottomView bottom;
         static OriginalRewardPanelPlayValidation(){if(SessionState.GetBool(Key,false)){timeout=EditorApplication.timeSinceStartup+60;EditorApplication.update+=Tick;}}
         public static void Run(){OriginalPreferenceFixture.Begin();EditorSceneManager.OpenScene("Assets/Scenes/LuoSiSortGame.unity");SessionState.SetBool(Key,true);EditorApplication.EnterPlaymode();}
         private static void Tick()
@@ -33,13 +35,19 @@ namespace NutSort.Validation
                     Transform parent=null;foreach(var c in UnityEngine.Object.FindObjectsOfType<Canvas>())if(c.name=="UICanvas")parent=c.transform;
                     Check(parent!=null,"Actual scene UI canvas");
                     revoke=game.User.RevokeCount;exchange=game.User.ExchangeCount;
+                    Transform top=null;foreach(var c in UnityEngine.Object.FindObjectsOfType<Canvas>())if(c.name=="TopUICanvas")top=c.transform;
+                    Check(top!=null,"Actual top canvas");
+                    bottom=UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Prefabs/Panels/MainPanelBottom"),parent,false).GetComponent<OriginalMainBottomView>();
+                    foreach(var tool in bottom.Items){tool.Display.Bind(game.User,()=>false,()=>0);tool.Display.Refresh();}
+                    flight=UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Prefabs/Effects/ToolRewardFlight"),game.transform,false).GetComponent<OriginalToolRewardFlight>();
+                    flight.Bind(top,()=>bottom,game.ScheduleDelay);
                     var items=new OriginalItemManager(game.User,game.SaveUserData,()=>{},(v,a,b)=>throw new InvalidOperationException("Unexpected cash"),(v,a)=>throw new InvalidOperationException("Unexpected coin"));
                     var factory=new OriginalRewardItemFactory(Resources.Load<OriginalRewardItemSettings>("Configuration/OriginalRewardItem"),new OriginalGoldFormatter(()=>"en-US"),()=>"US");
                     var queue=new OriginalPanelActionQueue();queue.Add(()=>queued++);
                     host=new OriginalRewardPanelHost(parent,"Prefabs/Panels/RewardPanel",factory,items,(type,icon)=>
                     {
                         Check(host.IsOpen&&icon!=null&&Time.time-start>=.99f,"Actual panel/icon alive at delayed fly dispatch");
-                        Check(type==2?game.User.RevokeCount==revoke+2:game.User.ExchangeCount==exchange+3,"Inventory addition precedes fly dispatch");flies++;
+                        Check(type==2?game.User.RevokeCount==revoke+2:game.User.ExchangeCount==exchange+3,"Inventory addition precedes fly dispatch");flies++;flight.Fly(type,icon);
                     },game.ScheduleDelay,queue,()=>hidden++);
                     start=Time.time;
                     host.Show(new OriginalItemGetInfo{ItemInfos=new List<OriginalItemInfo>{new OriginalItemInfo{ItemType=2,Count=2},new OriginalItemInfo{ItemType=3,Count=3}}});
@@ -56,14 +64,17 @@ namespace NutSort.Validation
                 if(phase==2)
                 {
                     if(elapsed<1.8f)return;
+                    Check(flight.ActiveCount==2,"Clones survive RewardPanel destruction and continue flying");
+                    ScreenCapture.CaptureScreenshot("Library/ValidationCaptures/tool-reward-flight-current.png");
                     Check(flies==2&&hidden==1&&!host.IsOpen&&queued==0,"Actual timers grant and hide then wait for base queue delay");
                     var saved=OriginalUserDataJson.Read(PlayerPrefs.GetString(OriginalUserStore.Key),Resources.Load<OriginalUserDefaults>("Configuration/OriginalUserDefaults"));
                     Check(saved.RevokeCount==revoke+2&&saved.ExchangeCount==exchange+3,"Actual item manager persists tool rewards through scene save");phase=3;return;
                 }
                 if(queued==0)return;
+                Check(flight.ActiveCount==0&&bottom.GetOtherItem(2).Display.Value.text==(revoke+2).ToString()&&bottom.GetOtherItem(3).Display.Value.text==(exchange+3).ToString(),"Actual flight landing refreshes HUD counts");
                 Check(queued==1&&elapsed>=3.99f,"Queue continuation follows one plus half plus two-and-half seconds");
                 Check(File.Exists("Library/ValidationCaptures/reward-panel-current.png"),"Latest actual panel capture exists");
-                Debug.Log("NUT_REWARD_PANEL_PLAY_PASS actual RewardPanel prefab/registry, configured layout, one-second item-manager tool grants and saves, fly dispatch with live icons, half-second close/destruction and 2.5-second queue continuation; explicit tool fixture and flight consumer, actual flight implementation/default startup pending.");Finish(0);
+                Debug.Log("NUT_REWARD_PANEL_PLAY_PASS actual RewardPanel prefab/registry, configured layout, one-second item-manager tool grants and saves, fly dispatch with live icons, half-second close/destruction and 2.5-second queue continuation; explicit tool fixture with actual top-canvas flights and HUD refresh; cash/coin flights and default startup pending.");Finish(0);
             }
             catch(Exception error){Debug.LogException(error);Finish(1);}
         }
