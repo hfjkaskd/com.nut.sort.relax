@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Newtonsoft.Json.Linq;
 using NutSort.Content;
 using NutSort.UI;
 using NutSort.World;
@@ -67,7 +68,15 @@ namespace NutSort.Validation
                     var queue=new OriginalPanelActionQueue();queue.Add(()=>queued++);
 
                     host=new OriginalGameplayUnlockPanelHost(startup.MainLevel.transform.parent,PathName,user,game.Tables,"en",()=>gate,s=>audio.PlaySound(s),callback=>{Check(callback==null && user.NewGameplayUnlockIndex==index,"Banner called before index mutation without completion callback");banners++;rewardBanner.Show(callback);Check(rewardBanner.IsAnimating && rewardBanner.Tip.text.Length>0,"Actual target banner refreshes and starts before index mutation");},queue,game.ScheduleDelay,()=>{hidden++;game.ModalInputBlocked=false;});
-                    panel=host.Show(index,true);Check(host.IsOpen,"Runtime host registers panel");
+                    // Fixture configuration selects each icon without fabricating
+                    // server rewards for the first-level banner consumer.
+                    var levels=new JArray(900,901,902,903);levels[index]=user.Level+4;
+                    user.ServerConfigData=new JObject(new JProperty("LSSGPUL",levels));
+                    user.NewGameplayUnlockIndex=index+1;
+                    Check(!host.TryShow(game,true) && !host.IsOpen && host.Panel==null,"No eligible scene decision creates no panel");
+                    user.NewGameplayUnlockIndex=index;
+                    Check(host.TryShow(game,true) && host.IsOpen,"Scene config decision opens through runtime host");
+                    panel=host.Panel;
                     for(int i=0;i<4;i++)Check(panel.Icons[i].activeSelf==(i==index),"Actual icon visibility");
                     phase=1;deadline=now+.7;return;
                 }
@@ -93,7 +102,7 @@ namespace NutSort.Validation
                 Check(queued==4,"Every scene-owned delay dispatches after its panel is destroyed");
                 Check(banners==4 && goldHints==4 && progressDisplays==4 && !rewardBanner.IsAnimating,"All four real banner animations finish and invoke both top callbacks");
                 Check(PlayerPrefs.GetString(OriginalUserStore.Key)==stored,"Unlock and first-level banner add no save");
-                Debug.Log("NUT_GAMEPLAY_UNLOCK_PANEL_PLAY_PASS four current rendered variants, actual Continue Button gate/banner/index/close ordering, hidden close and post-destruction queue dispatch; actual target banner completes to both top callbacks; destination and top consumers remain fixture boundaries.");Finish(0);
+                Debug.Log("NUT_GAMEPLAY_UNLOCK_PANEL_PLAY_PASS scene-configured unlock routing, four current rendered variants, actual Continue Button gate/banner/index/close ordering, hidden close and post-destruction queue dispatch; actual target banner completes to both top callbacks; destination and top consumers remain fixture boundaries.");Finish(0);
             }
             catch(Exception e){Debug.LogException(e);Finish(1);}
         }

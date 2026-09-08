@@ -1,5 +1,6 @@
 using System;
 using NutSort.Content;
+using NutSort.World;
 using UnityEngine;
 namespace NutSort.UI
 {
@@ -17,6 +18,7 @@ namespace NutSort.UI
         private readonly Action<float,Action> schedule;
         private readonly Action hidden;
         public bool IsOpen=>registry.Contains(13);
+        public OriginalGameplayUnlockPanel Panel=>IsOpen ? registry.Get(13) : null;
         public OriginalGameplayUnlockPanelHost(Transform parent,string prefabPath,OriginalUserLocalData user,
             OriginalTables tables,string language,Func<bool> gate,Action<string> audio,Action<Action> banner,
             OriginalPanelActionQueue queue,Action<float,Action> schedule,Action hidden=null)
@@ -28,6 +30,11 @@ namespace NutSort.UI
                 (id,p)=>{throw new InvalidOperationException("Unlock panel requires index and banner arguments.");},
                 p=>p.Refresh(),p=>p.Hide(),p=>UnityEngine.Object.Destroy(p.gameObject));
         }
+        public bool TryShow(OriginalGameScene game,bool showBanner)
+        {
+            return game.NewGameplayUnlock(showBanner,ShowRequested);
+        }
+        private void ShowRequested(int id,int index,bool showBanner){Show(index,showBanner);}
         public OriginalGameplayUnlockPanel Show(int index,bool showBanner)
         {
             return registry.Show(13,p=>
