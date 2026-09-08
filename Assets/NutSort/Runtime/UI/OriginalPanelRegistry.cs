@@ -15,6 +15,8 @@ namespace NutSort.UI
         private readonly Action<int,T> initialize;
         private readonly Action<T> refresh,hide,destroy;
         public int Count => panels.Count;
+        // Source IsExistPanel counts registrations, including MainPanel.
+        public bool IsExistPanel => panels.Count > 1;
         public bool Contains(int id) => panels.ContainsKey(id);
         public T Get(int id) => panels[id];
 
@@ -37,6 +39,16 @@ namespace NutSort.UI
             initialize(id,panel);
             refresh(panel);
             return panel;
+        }
+
+        public void CloseAll()
+        {
+            // Source snapshots IDs first. New panels opened by a hide callback
+            // are not part of this pass; MainPanel (UIName 1) stays registered.
+            var pending = new List<int>();
+            foreach (var entry in panels)
+                if (entry.Key != 1) pending.Add(entry.Key);
+            foreach (int id in pending) Hide(id);
         }
 
         public void Hide(int id)
