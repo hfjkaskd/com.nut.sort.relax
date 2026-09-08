@@ -109,6 +109,7 @@ namespace NutSort.Validation
                 OriginalMarqueeItemValidation.Validate();
                 OriginalMarqueeLauncherValidation.Validate();
                 OriginalMainTopFlowValidation.Validate();
+                OriginalPlayerGoldHintScheduleValidation.Validate();
                 OriginalTargetRewardValidation.Validate();
                 OriginalRewardProgressViewValidation.Validate();
                 OriginalGoldItemValidation.Validate();

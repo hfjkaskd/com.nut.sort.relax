@@ -1,0 +1,13 @@
+# PlayerGoldGetHint push scheduling
+
+OriginalPlayerGoldHintSchedule restores the scheduling portion of PlayerGoldGetHint: constructor/Init set LastShowTime=-1, Push (0x9D43AC) stores the current integer second, NextPush (0x9DFE14) reads ServerConfigData.LSSUPT, Update (0x9DFF18) checks its deadline, and Show's gate (0x9DFFBC) decides whether to defer or prepare presentation. It is a dependency for the view, not a complete view implementation.
+
+TimeLSSUtil's constructor (0x9BD048) stores 1970-01-01. Time (0x9BC6C8) subtracts those ticks from DateTime.UtcNow ticks and divides by 10000, then TimeSeconds (0x9BC76C) divides by 1000, both truncating signed values toward zero. The recovered default clock uses that rule and has no Time.timeScale dependency. A clock provider supports deterministic validation without an Editor-only runtime branch.
+
+Update skips all queries for -1, otherwise attempts Show once per call when now reaches the deadline. Show first checks for an existing panel, then queries marquee data only if no panel blocks it. Either rejection adds three to the existing deadline, not to the current time. After a long suspension it can therefore retry on successive updates until the deadline catches up. It neither adds a new throttle nor consumes a random interval on rejection.
+
+On success, NextPush runs before presentation. It obtains the LSSUPT reference, reads the current clock, then uses the first two array values as integer Unity Random.Range bounds, adds the signed result to the long timestamp, and only then invokes the presentation consumer with the selected item. Extra interval values are ignored. Missing/short intervals retain failure behavior and do not synthesize defaults or modify the source JObject. Unknown server fields are preserved.
+
+40 complete Unity regression PASS markers in reverse-workspace reconstruction-nut/logs/unity-player-gold-hint-schedule-validation.log, including NUT_PLAYER_GOLD_HINT_SCHEDULE_VALIDATION_PASS and NUT_CONTENT_VALIDATION_PASS. Checks cover disabled sentinel, inclusive deadline, early queries, overdue retry, panel short circuit, missing data, successful callback order, short-interval failure order, unchanged configuration and pre-epoch signed truncation. No compiler/validation exceptions; gameplay preference backup absent after restoration.
+
+Remaining view work includes Init's local position (0,500,0), the original prefab/font/icon/particle references, text branches, Show/ShowSelf motion and completion callbacks, and binding Update to the actual component lifecycle. Production Top is still incomplete. SDK behavior is unchanged, and no visual parity claim is made for this scheduling-only change.
