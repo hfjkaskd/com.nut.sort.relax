@@ -12,18 +12,19 @@ namespace NutSort.UI
         private Transform canvas;
         private GameObject clickMask;
         private string language;
-        private float maskRemaining;
+        private OriginalCountedMask maskState;
         public OriginalReplayPanel Panel { get; private set; }
         public Button ReplayButton=>replayButton;
         public void Bind(OriginalGameScene scene, OriginalAudioPlayer audio, Transform panelCanvas, string languageCode, GameObject mask)
         {
             clickMask=mask;game=scene;audioPlayer=audio;canvas=panelCanvas;language=languageCode;
+            maskState=new OriginalCountedMask(SetClickMask,game.ScheduleDelay);
             replayButton.onClick.RemoveAllListeners();replayButton.onClick.AddListener(Open);
         }
         public bool BeginClick()
         {
-            if(game==null || game.InputBlocked || game.IsRestarting || !game.Level.AreNutsInitialized || maskRemaining>0)return false;
-            maskRemaining=settings.ClickMaskDuration;clickMask.SetActive(true);game.ModalInputBlocked=true;return true;
+            if(game==null || game.InputBlocked || game.IsRestarting || !game.Level.AreNutsInitialized)return false;
+            maskState.SetMask(true,settings.ClickMaskDuration);return true;
         }
         public void EndClick() { audioPlayer.PlaySound(settings.ClickSound); }
         private void Open()
@@ -37,14 +38,12 @@ namespace NutSort.UI
         public void PanelClosed(OriginalReplayPanel panel)
         {
             if(Panel!=panel)return;Panel=null;Destroy(panel.gameObject);
-            game.ModalInputBlocked=maskRemaining>0;
+            game.ModalInputBlocked=maskState.Count>0;
         }
-        private void Update()
+        private void SetClickMask(bool active)
         {
-            if(maskRemaining<=0)return;
-            maskRemaining=Mathf.Max(0,maskRemaining-Time.deltaTime);
-            if(maskRemaining==0)clickMask.SetActive(false);
-            if(game!=null)game.ModalInputBlocked=Panel!=null||maskRemaining>0;
+            clickMask.SetActive(active);
+            game.ModalInputBlocked=Panel!=null || active;
         }
         private void OnDestroy() { if(Panel!=null)Destroy(Panel.gameObject); }
     }
