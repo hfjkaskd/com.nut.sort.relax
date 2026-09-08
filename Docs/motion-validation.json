@@ -1,0 +1,13 @@
+{
+  "unity": "2022.3.62f3",
+  "native_prefab_motion_pass": true,
+  "ready_revert_samples_pass": true,
+  "entry_samples_pass": true,
+  "wobble_samples_pass": true,
+  "callback_interruption_pass": true,
+  "pooled_release_pass": true,
+  "regression_pass": true,
+  "cross_screw_motion_complete": false,
+  "spark_rendering_complete": false,
+  "complete_scene_verified": false
+}

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace NutSort.World
 {
-    public sealed class OriginalNutView : MonoBehaviour
+    public sealed partial class OriginalNutView : MonoBehaviour
     {
         // Original prefab field names retained so geometry references survive.
         [SerializeField] private MeshRenderer MeshRenderer;
@@ -51,6 +51,7 @@ namespace NutSort.World
 
         public void ReleaseVisual()
         {
+            StopMotion();
             if (hiddenInstance != null) pool.Return(hiddenInstance);
             hiddenInstance = null;
             slot = null;

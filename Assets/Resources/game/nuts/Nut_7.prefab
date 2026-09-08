@@ -81,6 +81,7 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   MeshRenderer: {fileID: 23061268324235159}
   Root: {fileID: 4884547391421755}
+  motionSettings: {fileID: 11400000, guid: 485cc05e43bd4e66b839ce6eec1b5d1d, type: 2}
 --- !u!4 &4884547391421755
 Transform:
   m_ObjectHideFlags: 0
