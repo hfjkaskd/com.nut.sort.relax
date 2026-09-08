@@ -11,5 +11,7 @@ namespace NutSort.UI
         public float CloseDuration, BackOvershoot, BackdropAlpha, ClickMaskDuration;
         public float ButtonDownScale, ButtonDownDuration, ButtonUpDuration;
         public string ClickSound, ReplayPath;
+        public int WithdrawalEarlyTotal;
+        public float WithdrawalProgressTravel,WithdrawalProgressOffset,WithdrawalCompleteThreshold;
     }
 }

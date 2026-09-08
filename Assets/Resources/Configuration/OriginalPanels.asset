@@ -99,3 +99,7 @@ MonoBehaviour:
   ButtonUpDuration: 0.15
   ClickSound: Click
   ReplayPath: Prefabs/Panels/ReplayPanel
+  WithdrawalEarlyTotal: 5
+  WithdrawalProgressTravel: 800
+  WithdrawalProgressOffset: -400
+  WithdrawalCompleteThreshold: 0.999
