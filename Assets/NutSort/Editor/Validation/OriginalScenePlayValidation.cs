@@ -63,6 +63,7 @@ namespace NutSort.Validation
                 if(game==null||game.Level==null||!game.Level.AreNutsInitialized)return;
                 if(phase==0)
                 {
+                    if(game.Tables==null || game.Tables.LevelCount!=51 || game.ShowLevel!=1)throw new Exception("Startup did not bind the original stage table.");
                     effects=game.GetComponent<OriginalGameplayEffects>();
                     if(effects==null)throw new Exception("Gameplay effects component missing.");
                     game.Level.SparkRequested += nut => sparkCount++;

@@ -13,10 +13,13 @@ namespace NutSort.World
         [SerializeField] private OriginalContentSettings content;
         [SerializeField] private OriginalSceneSession session;
         [SerializeField] private OriginalGameplayEffects effects;
+        [SerializeField] private OriginalTableSettings tableSettings;
         private OriginalLevelView level;
         private int viewportWidth, viewportHeight;
         public OriginalLevelView Level => level;
         public Camera WorldCamera => GameCamera;
+        public OriginalTables Tables { get; private set; }
+        public int ShowLevel => Tables.GetShowLevel(session.Level);
         public bool InputBlocked { get; set; }
         public bool IsExchanging { get; set; }
         public event Action<ScrewOperation, ScrewState> OperationApplied;
@@ -28,6 +31,7 @@ namespace NutSort.World
             if (level != null) return;
             if (pool == null || content == null || session == null || GameCamera == null || TopGameCamera == null)
                 throw new InvalidOperationException("Original game scene references are incomplete.");
+            Tables = new OriginalTables(tableSettings);
             var repository = new OriginalLevelRepository(content);
             repository.Initialize();
             // Session data is explicit configuration until original save and

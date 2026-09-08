@@ -80,6 +80,7 @@ namespace NutSort.Validation
                 Expect<FileNotFoundException>(() => repository.ReadJson("LevelConfig/missing-evidence"));
                 Expect<ArgumentException>(() => repository.LoadBoard(false, "../invalid"));
                 OriginalSelectionValidation.Validate(repository, settings);
+                OriginalTablesValidation.Validate();
                 OriginalLayoutValidation.Validate();
                 OriginalGameplayValidation.Validate(repository);
                 OriginalRenderingValidation.Validate();
