@@ -129,7 +129,14 @@ namespace NutSort.World
             closePanel();
         }
 
-        private void BeginInitialization(bool reset, bool useLongEntry)
+        // Public counterpart of InitLevel(reset, showBanner, firstInit).
+        // Uses the same established local initialization boundary as restart.
+        public void InitLevel(bool reset=true,bool showBanner=true,bool firstInit=false)
+        {
+            BeginInitialization(reset,firstInit,showBanner);
+        }
+
+        private void BeginInitialization(bool reset, bool useLongEntry, bool showBanner=true)
         {
             IsInitDone = false;
             IsSucceed = false;
@@ -145,7 +152,7 @@ namespace NutSort.World
                 // The successful local initialization boundary schedules these
                 // independently of board reconstruction, as in 0x9FF7CC.
                 var continuation = initializationContinuation;
-                ScheduleAfterMainPanel(initializationMainPanel, () => continuation.Run(true, useLongEntry));
+                ScheduleAfterMainPanel(initializationMainPanel, () => continuation.Run(showBanner, useLongEntry));
             }
 
         }
