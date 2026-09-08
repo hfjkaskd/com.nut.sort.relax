@@ -11,6 +11,8 @@ namespace NutSort.UI
         [SerializeField] private Transform panelCanvas;
         [SerializeField] private OriginalMainLevelSettings mainLevelSettings;
         [SerializeField] private OriginalAudioPlayer audioPlayer;
+        [SerializeField] private GameObject clickMask;
+        public OriginalReplayController Replay { get; private set; }
         public OriginalMainLevelView MainLevel { get; private set; }
         public OriginalLoadingView Loading => loading;
 
@@ -30,6 +32,8 @@ namespace NutSort.UI
             game.Initialize();
             var mainPrefab = Resources.Load<GameObject>(mainLevelSettings.PrefabPath);
             MainLevel = Instantiate(mainPrefab, panelCanvas, false).GetComponent<OriginalMainLevelView>();
+            Replay = MainLevel.GetComponent<OriginalReplayController>();
+            Replay.Bind(game, audioPlayer, panelCanvas, mainLevelSettings.LanguageCode, clickMask);
             MainLevel.Refresh(game.Tables, game.PlayerLevel, mainLevelSettings.LanguageCode, false, false);
             while (loading.IsVisible) yield return null;
             game.InputBlocked = false;

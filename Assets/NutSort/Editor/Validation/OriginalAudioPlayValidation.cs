@@ -14,7 +14,7 @@ namespace NutSort.Validation
         private static AudioSource voice;
         private static readonly float[] pcm = new float[1024];
         private static int phase, started, beforeDelay;
-        private static double deadline, timeout;
+        private static double deadline, timeout, startAfter;
         private static bool bgmOutput, voiceOutput;
         static OriginalAudioPlayValidation()
         {
@@ -43,6 +43,9 @@ namespace NutSort.Validation
                 if (phase == 0)
                 {
                     if (!player.Background.isPlaying) return;
+                    // Let the real startup StageStart finish before isolated voice tests.
+                    if (startAfter == 0) startAfter = now + 3;
+                    if (now < startAfter) return;
                     bgmOutput |= HasOutput(player.Background);
                     if (!bgmOutput) return;
                     Check(player.AudioEnabled && player.Background.loop && player.Background.spatialBlend == 0, "Startup BGM source");

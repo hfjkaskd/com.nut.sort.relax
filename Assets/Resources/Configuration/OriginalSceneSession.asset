@@ -23,3 +23,7 @@ MonoBehaviour:
   GameplayLayers:
     serializedVersion: 2
     m_Bits: 4294967291
+  RestartDelay: 0.3
+  StageStartSound: StageStart
+  FirstStageSoundDelay: 1.5
+  RestartStageSoundDelay: 0.5

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using NutSort.Content;
 using NutSort.Gameplay;
 using UnityEngine;
@@ -16,6 +17,11 @@ namespace NutSort.World
         [SerializeField] private OriginalTableSettings tableSettings;
         [SerializeField] private OriginalAudioPlayer audioPlayer;
         private OriginalLevelView level;
+        private OriginalLevelRepository repository;
+        private OriginalLevelSelector selector;
+        private LevelProgressState progress;
+        public bool ModalInputBlocked { get; set; }
+        public bool IsRestarting { get; private set; }
         private int viewportWidth, viewportHeight;
         public OriginalLevelView Level => level;
         public Camera WorldCamera => GameCamera;
@@ -34,19 +40,40 @@ namespace NutSort.World
             if (pool == null || content == null || session == null || GameCamera == null || TopGameCamera == null)
                 throw new InvalidOperationException("Original game scene references are incomplete.");
             Tables = new OriginalTables(tableSettings);
-            var repository = new OriginalLevelRepository(content);
+            repository = new OriginalLevelRepository(content);
             repository.Initialize();
             // Session data is explicit configuration until original save and
             // region/server initialization are connected. No fabricated grants.
-            var progress = new LevelProgressState { Level = session.Level, LevelSeed = session.Seed };
-            var selector = new OriginalLevelSelector(repository, content, UnityLevelRandom.Instance);
+            progress = new LevelProgressState { Level = session.Level, LevelSeed = session.Seed };
+            selector = new OriginalLevelSelector(repository, content, UnityLevelRandom.Instance);
             LevelSelection selection = selector.Select(progress, session.LSS260820, session.LSSSHSLV);
             level = pool.Rent(session.LevelPrefabPath, transform).GetComponent<OriginalLevelView>();
             level.Bind(repository.LoadBoard(selection.Loop, selection.Seed), pool, session.LongEntryDelay, session.LSSAB);
             effects.Bind(level, pool);
             audioPlayer.Bind(level);
+            audioPlayer.PlaySound(session.StageStartSound, session.LongEntryDelay ? session.FirstStageSoundDelay : session.RestartStageSoundDelay);
             level.OperationApplied += ForwardOperation;
             ResizeCameras(Screen.width, Screen.height);
+        }
+
+        public void RestartLevel()
+        {
+            if (IsRestarting) return;
+            IsRestarting = true;
+            level.Clear();
+            StartCoroutine(RebuildLevel());
+        }
+        private IEnumerator RebuildLevel()
+        {
+            // Original InitLevel reset path clears immediately, then reconstructs
+            // after the local callback delay; SDK/server calls remain excluded.
+            yield return new WaitForSeconds(session.RestartDelay);
+            LevelSelection selection = selector.Select(progress, session.LSS260820, session.LSSSHSLV);
+            level.Bind(repository.LoadBoard(selection.Loop, selection.Seed), pool, false, session.LSSAB);
+            audioPlayer.PlaySound(session.StageStartSound, session.RestartStageSoundDelay);
+            ResizeCameras(Screen.width, Screen.height);
+            while (!level.AreNutsInitialized) yield return null;
+            IsRestarting = false;
         }
 
         private void ForwardOperation(ScrewOperation result, ScrewState target) { OperationApplied?.Invoke(result, target); }
@@ -59,7 +86,7 @@ namespace NutSort.World
 
         private void Update()
         {
-            if (level == null) return;
+            if (level == null || IsRestarting) return;
             if (viewportWidth != Screen.width || viewportHeight != Screen.height) ResizeCameras(Screen.width, Screen.height);
             // Use the same input policy on every platform. A single touch ends
             // or a mouse button releases; no Application.isEditor alternate path.
@@ -74,7 +101,7 @@ namespace NutSort.World
 
         public ScrewOperation TryOperateAtScreenPoint(Vector2 position)
         {
-            if (InputBlocked || level == null || !level.AreNutsInitialized) return default;
+            if (InputBlocked || ModalInputBlocked || IsRestarting || level == null || !level.AreNutsInitialized) return default;
             Ray ray = GameCamera.ScreenPointToRay(position);
             // These are 3D gameplay objects, not UI controls. UI panels use
             // standard Buttons and set InputBlocked through their lifecycle.

@@ -9,6 +9,9 @@ namespace NutSort.World
         public int Level;
         public int Seed;
         public bool LongEntryDelay;
+        public float RestartDelay;
+        public string StageStartSound;
+        public float FirstStageSoundDelay, RestartStageSoundDelay;
         public bool LSS260820;
         public int LSSSHSLV;
         public bool LSSAB;

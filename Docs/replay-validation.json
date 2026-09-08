@@ -1,0 +1,61 @@
+{
+  "scope": "Original replay branch from main-panel entry; settings entry and other lifecycle branches remain incomplete",
+  "sourceRvas": {
+    "mainReplay": "0x9df628",
+    "panelBinding": "0x9e52d4",
+    "confirmReplay": "0x9e5424",
+    "basePanelOpen": "0x9c4a78",
+    "basePanelClose": "0x9c4f78",
+    "panelTween": "0x9e968c",
+    "clickWrapper": "0x9c04a8",
+    "mask": "0x9f8694",
+    "initLevel": "0x9e8174",
+    "rebuildDelay": "0x9ff7cc",
+    "newBoard": "0x9ffa28",
+    "buttonFrame": "0x9ba040"
+  },
+  "prefab": {
+    "objects": 9,
+    "buttons": 2,
+    "closeAndReplayAlias": true,
+    "bodySize": [
+      819,
+      841
+    ],
+    "textIds": [
+      149,
+      50,
+      148,
+      147
+    ]
+  },
+  "nativeImplementation": "Original serialized panel/curve resources with official UGUI, TMP and configured native feedback components replacing DOTween and runtime AddComponent. No reflection or enum-name paths.",
+  "stageStartSha256": "bf336232bea9791574b79310beb5930edf8019ee138fe7a84fac96d66f15e7bb",
+  "pending": [
+    "Settings opening branch and nested panel manager",
+    "UserLocalData persistence and original level reset counters",
+    "Region/AB, server initialization and US default profile",
+    "Complete victory/tutorial/reward and other peripheral flows",
+    "Source-to-target full visual/frame comparison and Android/iOS device validation"
+  ],
+  "validated": [
+    "17 complete existing content/prefab/configuration regression groups",
+    "Actual standard UGUI graphic raycast and pointer dispatch to main entry and both panel Buttons",
+    "Shared CloseBtn/ReplayBtn resolves to the final restart callback",
+    "Native opening/closing, source label text, current target screenshot inspected",
+    "Original top-canvas transparent Mask actually intercepts UI rays after canvas render update",
+    "Cancel preserves board identity and selected nut",
+    "Confirm clears immediately and keeps board empty before the source 0.3 second delay",
+    "Restart keeps player level, rebuilds original three-plus-one board, clears old selection/animation/effects",
+    "One delayed StageStart after restart",
+    "Repeated open/cancel releases modal input",
+    "Actual BGM/effect PCM, toggle, delay and voice pooling regression",
+    "Existing actual first-board camera-ray selection/transfer, cap, particles and audio integration still pass"
+  ],
+  "logs": [
+    "unity-replay-validation-fixed.log",
+    "unity-replay-play-mask.log",
+    "unity-replay-audio-play.log",
+    "unity-replay-scene-play.log"
+  ]
+}
