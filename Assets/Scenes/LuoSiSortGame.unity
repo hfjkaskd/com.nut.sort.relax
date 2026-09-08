@@ -796,6 +796,7 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   GameCamera: {fileID: 241}
   TopGameCamera: {fileID: 243}
+  background: {fileID: 7}
   pool: {fileID: 900001}
   effects: {fileID: 900002}
   tableSettings: {fileID: 11400000, guid: 6699583347f445c688aa5b9a6c25d904, type: 2}

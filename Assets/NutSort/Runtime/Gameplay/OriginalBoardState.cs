@@ -112,6 +112,17 @@ namespace NutSort.Gameplay
             }
         }
 
+        // IsNutColorSame 0xA07E50 skips empty slots from index one onward.
+        public bool IsNutColorSame
+        {
+            get
+            {
+                for(int i=1;i<Slots.Length;i++)
+                    if(Slots[i].Nut!=null && Slots[i].Nut.Color!=Slots[0].Nut.Color)return false;
+                return true;
+            }
+        }
+
         public bool IsReadyMove
         {
             get { for (int i = 0; i < Slots.Length; i++) if (Slots[i].IsReady) return true; return false; }

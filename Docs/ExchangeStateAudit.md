@@ -1,0 +1,13 @@
+# Exchange mode state and visuals
+
+Native SetExchangeState (0x9FE8B4) compares the requested state with MainPanel.ExchangeMask.gameObject.activeSelf first. Matching states return without repairing IsExchanging or refreshing visuals. A positive delay schedules only the IsExchanging assignment; zero/negative delay assigns immediately. Both paths then activate TopGameCamera, inversely activate GameScene.BG, activate the main exchange mask, and apply SetScrewState(!enabled) to the board in order. The captured delayed callback (0xA021F4) only assigns the flag and is not cancelled by subsequent changes.
+
+OriginalGameScene.SetExchangeState now implements that sequence. The scene serializes background fileID 7, matching the current reverse-export GameScene.BG reference; TopGameCamera remains fileID 243. OriginalMainPanelView.SetExchangeState forwards its actual configured mask. The existing mask Button supplies its serialized 0.5-second cancel delay. No runtime-created static UI, Editor fallback, inventory consumption or SDK response is added.
+
+ScrewInfo.SetScrewState (0xA08930) checks each screw root's activeSelf before any eligibility work. Restoring visibility activates it without reverting selection. Exchange filtering hides empty, color-masked, hidden and uniform-color rods. Mixed rods stay active and revert a selected top nut through the existing motion/spark path. Matching inactive state skips that work. IsNutColorSame (0xA07E50) starts at slot one, skips empty later slots and compares filled ones with slot zero; it does not require fullness or normalize malformed leading holes.
+
+The regression uses actual level/nut/screw prefabs for uniform versus mixed rods, activeSelf behavior under an inactive parent, top-nut reversion and landing callback. The Play fixture invokes the real tool and mask Buttons, verifies scene camera/background/rod visibility, delayed cancellation, later entry followed by the retained older callback, and unchanged inventory. Its full-main UI data and unrelated actions are explicitly isolated fixtures; no exchange transfer or successful reward is simulated.
+
+Remaining: default startup still uses the partial main panel. Full main-panel binding, actual exchange transfer/consumption and complete lifecycle parity remain pending. Native evidence is local only.
+
+Verification: `Library/unity-exchange-state-validation.log` has 91 full-regression PASS markers. `Library/unity-exchange-state-play.log` has NUT_EXCHANGE_STATE_PLAY_PASS. Neither final log has compiler-error or exception markers. Validation preferences restored and backup absent. These checks prove the state/visibility sequence, not full exchange gameplay or whole-game visual parity.

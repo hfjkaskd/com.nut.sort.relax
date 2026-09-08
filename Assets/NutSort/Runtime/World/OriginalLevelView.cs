@@ -159,6 +159,25 @@ namespace NutSort.World
             return result;
         }
 
+        // SetExchangeState applies ScrewInfo.SetScrewState(!isExchanging) in list order.
+        public void SetScrewState(bool visible)
+        {
+            for(int i=0;i<Board.Screws.Length;i++)
+            {
+                ScrewState state=Board.Screws[i];
+                GameObject target=screws[i].gameObject;
+                // Native checks activeSelf, not effective hierarchy visibility.
+                if(target.activeSelf==visible)continue;
+                if(!visible && (state.IsNull||state.IsColorMask||state.IsHidden||state.IsNutColorSame))
+                {
+                    target.SetActive(false);
+                    continue;
+                }
+                target.SetActive(true);
+                if(!visible && state.IsReadyMove)RevertScrew(state);
+            }
+        }
+
         public int MoveHistoryCount => operation.MoveHistory.Count;
 
         // LuoSiSortMgr.Revoke acts on live history, then checks the resulting

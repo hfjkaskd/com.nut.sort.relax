@@ -10,6 +10,7 @@ namespace NutSort.World
     {
         [SerializeField] private Camera GameCamera;
         [SerializeField] private Camera TopGameCamera;
+        [SerializeField] private GameObject background;
         [SerializeField] private OriginalPrefabPool pool;
         [SerializeField] private OriginalContentSettings content;
         [SerializeField] private OriginalSceneSession session;
@@ -79,6 +80,18 @@ namespace NutSort.World
         public void ScheduleAfterMainPanel(Func<UnityEngine.Object> mainPanel,Action continuation)
         {
             StartCoroutine(OriginalInitializationWait.Run(mainPanel,session.MainPanelReadyDelay,continuation));
+        }
+        // SetExchangeState 0x9FE8B4: activeSelf is the early-return authority.
+        // Visuals change now; only IsExchanging may be deferred (0xA021F4).
+        public void SetExchangeState(GameObject exchangeMask,bool enabled,float delay=0)
+        {
+            if(exchangeMask.activeSelf==enabled)return;
+            if(delay>0)ScheduleDelay(delay,()=>IsExchanging=enabled);
+            else IsExchanging=enabled;
+            TopGameCamera.gameObject.SetActive(enabled);
+            background.SetActive(!enabled);
+            exchangeMask.SetActive(enabled);
+            level.SetScrewState(!enabled);
         }
         public void ShowEveryDayGift(Func<bool> hasPanel,Action<int> showPanel)
         {

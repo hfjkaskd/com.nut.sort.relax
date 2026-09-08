@@ -47,6 +47,10 @@ namespace NutSort.UI
             exchangeMask.onClick.RemoveAllListeners();exchangeMask.onClick.AddListener(MaskClicked);
             exchangeMask.gameObject.SetActive(false);
         }
+        public void SetExchangeState(NutSort.World.OriginalGameScene game,bool enabled,float delay=0)
+        {
+            game.SetExchangeState(exchangeMask.gameObject,enabled,delay);
+        }
         public void Refresh() { top.Refresh();bottom.Refresh(); }
         private void MaskClicked()
         {
