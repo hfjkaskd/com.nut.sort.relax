@@ -27,7 +27,7 @@ namespace NutSort.Validation
                 var target=new OriginalGuideTargetCompletion(user,1,value=>"",()=>trace.Add("targetClose"),
                     (banner,first)=>{Check(banner && !first && user.IsCompleteRecordGuide,"Native InitDone flags");trace.Add("init");});
                 target.Continue();
-                Check(string.Join(",",trace)=="guideClose,show,targetClose,init,request,save,guideClose" && OriginalNewbieGuideView.CallbackAction==null,"Target completion reaches original return sequence after guide destruction");
+                Check(string.Join(",",trace)=="guideClose,show,targetClose,init,request,save" && OriginalNewbieGuideView.CallbackAction==null,"Target completion requests and saves after guide destruction without stale close dispatch");
                 root=UnityEngine.Object.Instantiate(Resources.Load<GameObject>("prefabs/panels/NewbieGuidePanel"));view=root.GetComponent<OriginalNewbieGuideView>();
                 int closes=0;view.BindTeaching(tables,"en",v=>{},()=>closes++);
                 view.ShowTargetCompletion(user,flag=>throw new InvalidOperationException("request"),()=>throw new Exception("unexpected save"),(a,b)=>{});

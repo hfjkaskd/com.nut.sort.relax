@@ -280,6 +280,12 @@ namespace NutSort.UI
             scheduleMask(maskRevealDelay,RevealMask);
         }
         private void RevealMask()=>hollowMask.gameObject.SetActive(true);
-        public void Close()=>close();
+        public void Close()
+        {
+            // BaseLSSPanel.CloseLssPanel returns for a destroyed owned object.
+            // Case-one completion can retain this view after its panel is gone.
+            if(this==null)return;
+            close();
+        }
     }
 }

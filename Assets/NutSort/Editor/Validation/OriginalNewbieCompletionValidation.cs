@@ -28,6 +28,7 @@ namespace NutSort.Validation
                     Check(id==35 && arg==2 && closed==1 && called==0,"Panel argument reads current level after close, without dispatching completion");shown++;
                 });
                 UnityEngine.Object.DestroyImmediate(instance);instance=null;
+                v.Close();Check(closed==1,"Destroyed guide close must not dispatch its stale registry closure");
                 Check(OriginalNewbieGuideView.CallbackActionInvoke(payload)==null && called==1 && shown==1,"Callback outlives guide and returns null after immediate execution");
                 Check(OriginalNewbieGuideView.CallbackAction==null && OriginalNewbieGuideView.CallbackActionInvoke(payload)==null && called==1,"Subsequent empty invocation has no action");
                 OriginalNewbieGuideView.CallbackAction=value=>OriginalNewbieGuideView.CallbackAction=other=>called+=100;
