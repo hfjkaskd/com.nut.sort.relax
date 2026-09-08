@@ -565,6 +565,7 @@ MonoBehaviour:
   hollowMask: {fileID: 114918264173551851}
   emptyMarkerPath: Atlas/NewbieGuidePanel/dian
   filledMarkerPath: Atlas/NewbieGuidePanel/dian1
+  maskRevealDelay: 0.2
 --- !u!224 &224946936116752871
 RectTransform:
   m_ObjectHideFlags: 0

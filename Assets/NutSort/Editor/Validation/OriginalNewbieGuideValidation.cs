@@ -54,19 +54,22 @@ namespace NutSort.Validation
                     Validate();view=UnityEngine.Object.Instantiate(Resources.Load<GameObject>(PathName),startup.MainLevel.transform.parent,false).GetComponent<OriginalNewbieGuideView>();
                     user=game.User;view.BindTeaching(game.Tables,"en",v=>canOperate=v,()=>throw new InvalidOperationException("Unexpected teaching close"));
                     teaching=new OriginalTeachingFlow(user,view,()=>false);
+                    view.SetHollowMaskVisible(false);view.BindMask(game.ScheduleDelay);
+                    view.ShowMask(view.ContinueButton.GetComponent<RectTransform>());
                     phase=1;deadline=now+.7;return;
                 }
                 if(now<deadline)return;
                 if(phase==1)
                 {
+                    Check(view.HollowMask.gameObject.activeSelf,"Actual scene timer reveals placed mask");
                     var mesh=view.HollowMask.canvasRenderer.GetMesh();Check(mesh!=null && mesh.vertexCount==40,"Actual Graphic renders the native six-segment mesh");
-                    Capture("newbie-mask");phase=2;deadline=now+.3;return;
+                    Capture("newbie-mask-placed");phase=2;deadline=now+.3;return;
                 }
                 if(phase==2){user.Level=1;user.LevelSeed=0;Check(teaching.Run() && canOperate,"Real view receives first teaching branch");phase=3;deadline=now+.3;return;}
                 if(phase==3){Check(!view.HollowMask.gameObject.activeSelf,"Teaching hides actual hollow mask");Capture("newbie-teach-0");phase=4;deadline=now+.3;return;}
                 if(phase==4){user.LevelSeed=3;teaching.Run();phase=5;deadline=now+.3;return;}
                 if(phase==5){Capture("newbie-teach-3");phase=6;deadline=now+.3;return;}
-                Debug.Log("NUT_NEWBIE_GUIDE_PLAY_PASS actual Graphic mesh and original prefab teaching display at seeds zero/three; full ShowGuide, Button routing and production binding remain pending.");Finish(0);
+                Debug.Log("NUT_NEWBIE_GUIDE_PLAY_PASS actual delayed mask placement, Graphic mesh and original prefab teaching display at seeds zero/three; full ShowGuide, Button routing and production binding remain pending.");Finish(0);
             }
             catch(Exception e){Debug.LogException(e);Finish(1);}
         }

@@ -17,6 +17,8 @@ namespace NutSort.UI
         [SerializeField] private Image[] TeachLevels;
         [SerializeField] private OriginalHollowMaskGraphic hollowMask;
         [SerializeField] private string emptyMarkerPath,filledMarkerPath;
+        [SerializeField] private float maskRevealDelay;
+        private Action<float,Action> scheduleMask;
         private OriginalTables tables;
         private string language;
         private Action<bool> canOperate;
@@ -108,6 +110,21 @@ namespace NutSort.UI
             TipValue.transform.parent.gameObject.SetActive(true);
             TipValue.text=tables.Text.GetText(textId,language);
         }
+        public void BindMask(Action<float,Action> schedule)
+        {
+            scheduleMask=schedule ?? throw new ArgumentNullException(nameof(schedule));
+        }
+        // ShowMask 0x9E3564: source sizeDelta, world position, bounds, delayed reveal.
+        // Null targets reveal immediately without changing or refreshing the hole.
+        public void ShowMask(RectTransform target)
+        {
+            if(target==null){RevealMask();return;}
+            MaskRect.sizeDelta=target.sizeDelta;
+            MaskRect.position=target.position;
+            hollowMask.RefreshBounds();
+            scheduleMask(maskRevealDelay,RevealMask);
+        }
+        private void RevealMask()=>hollowMask.gameObject.SetActive(true);
         public void Close()=>close();
     }
 }
