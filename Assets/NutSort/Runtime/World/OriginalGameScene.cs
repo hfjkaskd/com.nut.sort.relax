@@ -42,6 +42,7 @@ namespace NutSort.World
         }
         private readonly List<PendingInitialization> pendingInitializations = new List<PendingInitialization>();
         public bool ModalInputBlocked { get; set; }
+        public bool IsCanOperatorScrew { get; set; }
         public bool IsRestarting { get; private set; }
         private int viewportWidth, viewportHeight;
         public OriginalLevelView Level => level;
@@ -279,7 +280,7 @@ namespace NutSort.World
 
         public ScrewOperation TryOperateAtScreenPoint(Vector2 position)
         {
-            if (InputBlocked || ModalInputBlocked || IsRestarting || level == null || !level.AreNutsInitialized) return default;
+            if (InputBlocked || (ModalInputBlocked && !IsCanOperatorScrew) || IsRestarting || level == null || !level.AreNutsInitialized) return default;
             Ray ray = GameCamera.ScreenPointToRay(position);
             // These are 3D gameplay objects, not UI controls. UI panels use
             // standard Buttons and set InputBlocked through their lifecycle.

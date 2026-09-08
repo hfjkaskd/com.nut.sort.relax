@@ -51,10 +51,13 @@ namespace NutSort.Validation
             if(capture) Capture(game.WorldCamera,"scene-first-board.png");
             Vector3 sourcePoint=level.GetScrew(1).Bounds.bounds.center;
             Vector2 sourceScreen=game.WorldCamera.WorldToScreenPoint(sourcePoint);
-            game.InputBlocked=true;
-            Check(game.TryOperateAtScreenPoint(sourceScreen).Kind==ScrewOperationKind.Ignored,"Panel gate blocks world input");
-            game.InputBlocked=false;
-            Check(game.TryOperateAtScreenPoint(sourceScreen).Kind==ScrewOperationKind.Ready,"Camera ray selects source collider");
+            game.IsCanOperatorScrew=true;game.InputBlocked=true;
+            Check(game.TryOperateAtScreenPoint(sourceScreen).Kind==ScrewOperationKind.Ignored,"Teaching does not bypass startup input blocking");
+            game.InputBlocked=false;game.IsCanOperatorScrew=false;game.ModalInputBlocked=true;
+            Check(game.TryOperateAtScreenPoint(sourceScreen).Kind==ScrewOperationKind.Ignored,"Modal blocks ordinary screw operation");
+            game.IsCanOperatorScrew=true;
+            Check(game.TryOperateAtScreenPoint(sourceScreen).Kind==ScrewOperationKind.Ready,"Native teaching override allows source collider selection through modal");
+            game.ModalInputBlocked=false;game.IsCanOperatorScrew=false;
             var nut=level.GetNut(level.Board.Screws[1].Slots[0].Nut);
             nut.AdvanceMotion(.2f);
             Vector2 targetScreen=game.WorldCamera.WorldToScreenPoint(level.GetScrew(0).Bounds.bounds.center);

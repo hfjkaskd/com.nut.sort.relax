@@ -52,10 +52,10 @@ namespace NutSort.Validation
                 {
                     var startup=UnityEngine.Object.FindObjectOfType<OriginalStartupFlow>();game=UnityEngine.Object.FindObjectOfType<OriginalGameScene>();
                     if(startup==null || startup.MainLevel==null || game==null || game.IsRestarting || game.InputBlocked)return;
-                    game.User.Level=1;game.User.LevelSeed=0;
-                    host=new OriginalNewbieGuideHost(startup.MainLevel.transform.parent,PathName,game.User,game.Tables,"en",()=>true,()=>{},v=>canOperate=v,()=>false,
+                    game.User.Level=1;game.User.LevelSeed=0;game.ModalInputBlocked=true;
+                    host=new OriginalNewbieGuideHost(startup.MainLevel.transform.parent,PathName,game.User,game.Tables,"en",()=>true,()=>{},v=>{canOperate=v;game.IsCanOperatorScrew=v;},()=>false,
                         (delay,action)=>{scheduled++;game.ScheduleDelay(delay,action);},new OriginalSceneGuideUI(game,()=>null,null,null,null));
-                    host.Show();Check(canOperate && host.IsOpen,"Actual host displays teaching");phase=1;deadline=now+.7;return;
+                    host.Show();Check(canOperate && game.IsCanOperatorScrew && host.IsOpen,"Actual host enables scene teaching override");phase=1;deadline=now+.7;return;
                 }
                 if(now<deadline)return;
                 if(phase==1){Check(host.Panel.Tip.text==game.Tables.Text.GetText(70,"en"),"First teaching text before capture");Capture("guide-host-teach-0");phase=2;deadline=now+.3;return;}
@@ -64,7 +64,8 @@ namespace NutSort.Validation
                 var previous=OriginalNewbieGuideView.CallbackAction;Action<object> retained=value=>{};
                 OriginalNewbieGuideView.CallbackAction=retained;
                 host.Panel.Close();Check(!host.IsOpen && scheduled==0 && OriginalNewbieGuideView.CallbackAction==retained,"Real close removes registration without queue or callback clearing");
-                OriginalNewbieGuideView.CallbackAction=previous;
+                OriginalNewbieGuideView.CallbackAction=previous;game.ModalInputBlocked=false;
+                Check(game.IsCanOperatorScrew,"Native close does not reset teaching flag");
                 Debug.Log("NUT_NEWBIE_GUIDE_HOST_PLAY_PASS actual prefab host initial/final teaching and close; production startup and operation-gate wiring remain pending.");Finish(0);
             }
             catch(Exception error){Debug.LogException(error);Finish(1);}
