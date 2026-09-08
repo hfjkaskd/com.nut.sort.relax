@@ -1,5 +1,7 @@
 using System;
 using UnityEngine;
+using Newtonsoft.Json.Linq;
+using NutSort.Content;
 namespace NutSort.UI
 {
     public interface IOriginalWithdrawalProgressUI
@@ -10,7 +12,7 @@ namespace NutSort.UI
         void SetProgressTip(int id,params object[] arguments);
         void SetMarkerX(float x);
     }
-    // TXPanel.Refresh stages one/two and their shared completion block.
+    // TXPanel.Refresh progress branches; one instance retains the shared completion flag.
     public sealed class OriginalWithdrawalEarlyProgress
     {
         private readonly Func<int> showLevel;
@@ -61,6 +63,74 @@ namespace NutSort.UI
                 MoveMarker();
             }
             Complete();
+        }
+        // mainGoldHint reads MainPanel.Top.GoldItem.GoldHintText.text, not a recomputed description.
+        public void RefreshLater(int stage,object[] arguments,OriginalUserLocalData user,
+            Func<string> mainGoldHint,Action<string> setRawTip,Func<float,string> formatGold,
+            Func<bool> isPlayGoldTween,Action<int> setClaimText)
+        {
+            setRawTip(mainGoldHint());
+            JObject row=RewardRow(user);
+            if(stage==4)
+            {
+                float target=OriginalRewardProgress.ToFloat(user.TXTargetGold);
+                ui.Fill=user.Gold/target;
+                ui.SetProgress(string.Concat(formatGold(user.Gold),"/",formatGold(target)));
+                ui.SetProgressTip(27,formatGold(target-user.Gold)??string.Empty);
+                MoveMarker();
+                if(arguments.Length!=0)
+                {
+                    int total=Integer(RewardRow(user),"Stage2StartShowLevel");
+                    ui.Fill=(float)total/total;
+                    ui.SetProgress(string.Format("{0}/{1}",total,total));
+                    MoveMarker();ui.SetTip(159);
+                }
+            }
+            else if(stage==5||stage==6)
+            {
+                float target=OriginalRewardProgress.ToFloat(user.TXTargetGold);
+                int days=Integer(RewardRow(user),"caliper_logs");
+                ui.Fill=(float)user.LoginDay/days;
+                ui.SetProgress(string.Format("{0}/{1}",user.LoginDay,days));
+                ui.SetProgressTip(28,string.Format("{0}",unchecked(days-user.LoginDay)));
+                MoveMarker();
+                if(arguments.Length!=0)
+                {
+                    ui.Fill=user.Gold/target;
+                    // The native numerator is a boxed float, only the denominator uses GoldLSSFormat.
+                    ui.SetProgress(string.Format("{0}/{1}",user.Gold,formatGold(target)));
+                    MoveMarker();ui.SetTip(159);
+                }
+            }
+            else if(stage!=0)
+            {
+                ui.Fill=(float)user.UserLevel/Integer(row,"caliper_rank");
+                ui.SetProgress(string.Format("{0}/{1}",user.UserLevel,Integer(row,"caliper_rank")));
+                ui.SetProgressTip(29,string.Format("{0}",unchecked(Integer(row,"caliper_rank")-user.UserLevel)));
+                MoveMarker();
+            }
+            Complete();
+            if(!string.IsNullOrEmpty(user.TXTargetGold)&&
+                (string.IsNullOrEmpty(user.ComeOnGold)||isPlayGoldTween()))setClaimText(36);
+        }
+        private static JObject RewardRow(OriginalUserLocalData user)
+        {
+            JToken list=Field(user.GoldRewardTargetS2CData,"bear_list");
+            if(list==null||list.Type==JTokenType.Null)throw new NullReferenceException("bear_list");
+            JToken row=((JArray)list)[2];
+            return row==null||row.Type==JTokenType.Null?null:(JObject)row;
+        }
+        private static int Integer(JObject row,string name)
+        {
+            JToken value=Field(row,name);return value==null?0:(int)value;
+        }
+        private static JToken Field(JObject row,string name)
+        {
+            if(row==null)throw new NullReferenceException(name);
+            JToken result=null;
+            foreach(var property in row.Properties())
+                if(string.Equals(property.Name,name,StringComparison.OrdinalIgnoreCase))result=property.Value;
+            return result;
         }
         private void MoveMarker()=>ui.SetMarkerX(Mathf.Clamp01(ui.Fill)*settings.WithdrawalProgressTravel+settings.WithdrawalProgressOffset);
         private void Complete()
