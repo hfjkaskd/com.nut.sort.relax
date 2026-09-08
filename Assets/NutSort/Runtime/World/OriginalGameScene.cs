@@ -84,6 +84,17 @@ namespace NutSort.World
             BeginInitialization(true, false);
         }
 
+        // FailPanel.RestartCallback (0x9D6BE4): unlike ordinary replay,
+        // advance the seed and clear failure before reinitializing, then close.
+        public void RestartAfterFailure(Action closePanel)
+        {
+            var user = audioPlayer.UserState.Data;
+            user.LevelSeed = unchecked(user.LevelSeed + 1);
+            IsFail = false;
+            BeginInitialization(true, false);
+            closePanel();
+        }
+
         private void BeginInitialization(bool reset, bool useLongEntry)
         {
             IsRestarting = true;

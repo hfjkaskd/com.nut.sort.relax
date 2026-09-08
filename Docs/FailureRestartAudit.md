@@ -1,0 +1,9 @@
+# Failure restart action
+
+OriginalGameScene.RestartAfterFailure restores the non-SDK action sequence in FailPanel.RestartCallback (0x9D6BE4): unchecked increment of user LevelSeed (offset 0x34), clear manager IsFail, initialize a reset level with the short entry path, then invoke panel close. It uses BeginInitialization directly; the ordinary replay method's IsRestarting guard is not inserted into this source action. It does not save or advance user Level. The eventual complete panel lifecycle still needs the original banner/InitDone presentation wiring.
+
+The new validation opens the actual LuoSiSortGame scene with isolated preferences, initializes a real level, invokes the action, and checks the state at the close boundary. It verifies per-level resets, absent immediate save, the 0.3-second board rebuild and 0.5-second nut initialization, unchanged player level with incremented seed, and repeated invocation while rebuilding restarting the delay. Integer overflow and a throwing close callback retain preceding mutations. Test preferences are restored.
+
+54 regression PASS markers in Library/unity-failure-restart-validation.log; no compiler errors or exceptions found, fixture backup absent after restoration. This is actual scene state/timing validation using explicit advancement, not a rendered failure-panel or Button interaction test. No visual assets changed.
+
+The FailPanel prefab/controller has not yet been restored or wired to this action. Further source inspection: InitLssPanel (0x9D6964) binds Restart/Revive and plays GameLose; RefreshLssPanel (0x9D6AD8) updates its value and grays Revive using the current add-screw count/configured maximum. Revive continues into the excluded SDK path; no simulated SDK success or reward was added. Normal startup UI/panel routing, remaining lifecycle/tools and AB/GM work remain incomplete. SDK treatment is unchanged.
