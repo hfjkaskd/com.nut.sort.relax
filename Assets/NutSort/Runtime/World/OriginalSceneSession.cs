@@ -8,6 +8,7 @@ namespace NutSort.World
         public string LevelPrefabPath;
         public int Level;
         public int Seed;
+        public int LockedScrewStartLevel;
         public bool LongEntryDelay;
         public float RestartDelay;
         public string StageStartSound;

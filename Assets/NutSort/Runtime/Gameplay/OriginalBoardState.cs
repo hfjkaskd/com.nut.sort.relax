@@ -150,16 +150,27 @@ namespace NutSort.Gameplay
         public readonly ScrewState[] Screws;
         public bool IsSkipLevel;
 
-        public OriginalBoardState(LevelData data, OriginalLayoutSettings layout)
+        public OriginalBoardState(LevelData data, OriginalLayoutSettings layout, bool addLockedScrew = false)
         {
             if (data == null || data.B == null || data.B.Length == 0) throw new ArgumentException("Original board missing.");
             LevelId = data.LId;
-            Screws = new ScrewState[data.B.Length];
-            for (int i = 0; i < Screws.Length; i++)
+            Screws = new ScrewState[data.B.Length + (addLockedScrew ? 1 : 0)];
+            for (int i = 0; i < data.B.Length; i++)
             {
                 Screws[i] = new ScrewState(data.B[i], i);
-                Screws[i].Coordinate = layout.Coordinate(Screws.Length, i);
             }
+            if (addLockedScrew)
+            {
+                // Original AddNullScrew(true), 0x9FA0A4: repeat the last Id,
+                // increment Index, zero usable capacity, but retain as many
+                // empty NutInfos as the previous screw's NutMaxCount.
+                ScrewState last = Screws[data.B.Length - 1];
+                var slots = new NutSlot[last.Capacity];
+                for (int i = 0; i < slots.Length; i++) slots[i] = new NutSlot(new Vector3Int(0, i, 0));
+                Screws[data.B.Length] = new ScrewState(last.Id, last.Index + 1, 0, slots, Array.Empty<ScrewMaskState>())
+                { IsLocked = true };
+            }
+            for (int i = 0; i < Screws.Length; i++) Screws[i].Coordinate = layout.Coordinate(Screws.Length, i);
         }
 
         internal OriginalBoardState(ScrewState[] screws)

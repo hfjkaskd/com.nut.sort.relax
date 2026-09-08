@@ -48,7 +48,8 @@ namespace NutSort.World
             selector = new OriginalLevelSelector(repository, content, UnityLevelRandom.Instance);
             LevelSelection selection = selector.Select(progress, session.LSS260820, session.LSSSHSLV);
             level = pool.Rent(session.LevelPrefabPath, transform).GetComponent<OriginalLevelView>();
-            level.Bind(repository.LoadBoard(selection.Loop, selection.Seed), pool, session.LongEntryDelay, session.LSSAB);
+            level.Bind(repository.LoadBoard(selection.Loop, selection.Seed), pool, session.LongEntryDelay, session.LSSAB,
+                PlayerLevel >= session.LockedScrewStartLevel);
             effects.Bind(level, pool);
             audioPlayer.Bind(level);
             audioPlayer.PlaySound(session.StageStartSound, session.LongEntryDelay ? session.FirstStageSoundDelay : session.RestartStageSoundDelay);
@@ -74,7 +75,8 @@ namespace NutSort.World
             // after the local callback delay; SDK/server calls remain excluded.
             yield return new WaitForSeconds(session.RestartDelay);
             LevelSelection selection = selector.Select(progress, session.LSS260820, session.LSSSHSLV);
-            level.Bind(repository.LoadBoard(selection.Loop, selection.Seed), pool, false, session.LSSAB);
+            level.Bind(repository.LoadBoard(selection.Loop, selection.Seed), pool, false, session.LSSAB,
+                PlayerLevel >= session.LockedScrewStartLevel);
             audioPlayer.PlaySound(session.StageStartSound, session.RestartStageSoundDelay);
             ResizeCameras(Screen.width, Screen.height);
             while (!level.AreNutsInitialized) yield return null;

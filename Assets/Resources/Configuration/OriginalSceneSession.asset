@@ -15,6 +15,7 @@ MonoBehaviour:
   LevelPrefabPath: Game/Level
   Level: 1
   Seed: 0
+  LockedScrewStartLevel: 3
   LongEntryDelay: 1
   LSS260820: 0
   LSSSHSLV: 1

@@ -1,0 +1,22 @@
+{
+  "scope": "Original fresh-level locked screw insertion, native prefab presentation and snapshot compatibility",
+  "source": {
+    "freshLevelInit": "0x9F9AC8",
+    "addNullScrew": "0x9FA0A4",
+    "threshold": "UserLocalData.Level > 2",
+    "lockedConstructor": "Same last screw Id; Index+1; NutMaxCount=0; IsLocked=true; NutInfos count equals previous NutMaxCount; position=(0,y,0); no masks"
+  },
+  "implementation": {
+    "configuration": "OriginalSceneSession.LockedScrewStartLevel=3",
+    "paths": ["Fresh GameScene.Initialize", "GameScene restart", "Existing Level/Screw prefab pool and layout"],
+    "snapshot": "Stored locked rod is restored without appending another",
+    "interaction": "Existing AddScrewRequested branch only; no fabricated SDK grant"
+  },
+  "validation": {
+    "fullRegressionGroups": 20,
+    "log": "unity-locked-start-validation.log",
+    "coverage": ["Threshold levels 1/2/3", "Zero capacity with four original empty slots", "Repeated Id and next index", "Both original lock presentations", "No extra nut instances", "Appended position participates in layout", "Click requests add-screw without save or grant", "Snapshot retains capacity and slot distinction", "Repeated fresh creation does not accumulate locks"]
+  },
+  "pending": ["Player progress binding replaces explicit scene-session level", "Startup resume and completed/empty-save rebuild", "Reward/tool consumption and full native visual comparison"],
+  "sdk": "Unchanged"
+}

@@ -31,9 +31,9 @@ namespace NutSort.World
         public event Action<int> MoveSoundRequested;
         public event Action MoveAttempted;
 
-        public void Bind(LevelData data, OriginalPrefabPool prefabPool, bool useLongEntryDelay, bool useLssab)
+        public void Bind(LevelData data, OriginalPrefabPool prefabPool, bool useLongEntryDelay, bool useLssab, bool addLockedScrew = false)
         {
-            BindBoard(new OriginalBoardState(data, layout), prefabPool, useLongEntryDelay, useLssab);
+            BindBoard(new OriginalBoardState(data, layout, addLockedScrew), prefabPool, useLongEntryDelay, useLssab);
         }
 
         public void BindSaved(OriginalBoardSnapshot snapshot, OriginalPrefabPool prefabPool, bool useLongEntryDelay, bool useLssab)
