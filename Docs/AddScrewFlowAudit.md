@@ -18,3 +18,5 @@ Validation covers lazy reads, inclusive limit, crossing the limit by four, unloc
 Follow-up: AddTile world behavior is restored (see AddTileAudit.md). LevelInfo.Unlock and AddNullScrew world implementations remain to be restored, and the completed operations must be bound to this flow, along with actual configuration/panel context in default startup. Observed callback tests do not prove that a new world screw or tile exists. Full lifecycle and visual parity are still incomplete. Native evidence remains local.
 
 Verification: `Library/unity-add-screw-flow-validation.log` contains 93 full-regression PASS markers including NUT_ADD_SCREW_FLOW_VALIDATION_PASS, with no compiler-error or exception markers. Validation preferences were restored and the backup is absent. No separate Play-mode world-addition success is claimed.
+
+Follow-up: world unlock and its original effect are now restored; see UnlockScrewAudit.md. New whole-screw construction and default startup/tool binding remain pending.

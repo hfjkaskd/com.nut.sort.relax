@@ -16,6 +16,8 @@ MonoBehaviour:
   DonePath: Prefabs/Effects/DoneEffect
   SparkLifetime: 1.5
   DoneLifetime: 2
+  UnlockPath: Prefabs/Effects/UnlockEffect
+  UnlockLifetime: 3
   NutColors:
   - {r: 0.407843137, g: 0.62745098, b: 0.0745098039, a: 1}
   - {r: 0.117647059, g: 0.482352941, b: 0.721568627, a: 1}

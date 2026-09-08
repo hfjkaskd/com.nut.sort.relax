@@ -10,7 +10,7 @@ namespace NutSort.World
         [SerializeField] private OriginalEffectSettings settings;
         private OriginalLevelView level;
         private OriginalPrefabPool pool;
-        private GameObject donePrefab;
+        private GameObject donePrefab,unlockPrefab;
         private struct ActiveEffect
         {
             public GameObject Instance;
@@ -28,7 +28,20 @@ namespace NutSort.World
             level = value; pool = prefabPool;
             level.SparkRequested += ShowSpark;
             level.DoneEffectRequested += ShowDone;
+            level.UnlockRequested += ShowUnlock;
             level.Clearing += ClearActive;
+        }
+
+        private void ShowUnlock(OriginalScrewView screw) { PlayUnlock(screw.transform); }
+        public GameObject PlayUnlock(Transform parent)
+        {
+            if(unlockPrefab==null)unlockPrefab=Resources.Load<GameObject>(settings.UnlockPath);
+            if(unlockPrefab==null){Debug.LogError("InstanceGameObject not find path: "+settings.UnlockPath);return null;}
+            var instance=Instantiate(unlockPrefab,parent,false);
+            instance.transform.localPosition=Vector3.zero;
+            active.Add(new ActiveEffect {Instance=instance,Remaining=settings.UnlockLifetime});
+            foreach(var particles in instance.GetComponentsInChildren<ParticleSystem>())particles.Play();
+            return instance;
         }
 
         private void ShowSpark(OriginalNutView nut) { PlaySpark(nut.ColorRoot); }
@@ -88,6 +101,7 @@ namespace NutSort.World
             {
                 level.SparkRequested -= ShowSpark;
                 level.DoneEffectRequested -= ShowDone;
+                level.UnlockRequested -= ShowUnlock;
                 level.Clearing -= ClearActive;
             }
             ClearActive(); level = null; pool = null;

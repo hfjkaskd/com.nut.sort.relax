@@ -11,3 +11,5 @@ Validation instantiates the original level and screws, increases the first rod f
 This supplies the world add-tile dependency of OriginalAddScrewFlow. Unlock, new whole-screw construction and complete production startup/tool binding remain pending. SDK behavior is unchanged. Native evidence remains local, and this is not a whole-game visual parity claim.
 
 Verification: `Library/unity-add-tile-final.log` contains 94 full-regression PASS markers including NUT_ADD_TILE_VALIDATION_PASS, with no compiler-error or exception markers. The first attempt had a missing test namespace import, corrected before the final run. No separate live Play-mode visual parity is claimed.
+
+Follow-up: world unlock and its original effect are now restored; see UnlockScrewAudit.md. New whole-screw construction and default startup/tool binding remain pending.

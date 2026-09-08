@@ -65,6 +65,12 @@ namespace NutSort.World
             }
         }
 
+        public void RefreshLock(ScrewState screw,Func<bool> lssab)
+        {
+            Locked.SetActive(screw.IsLocked && lssab());
+            Locked1.SetActive(screw.IsLocked && !lssab());
+        }
+
         public void PlayHiddenBreak()
         {
             // Original PlayHiddenTween requests non-looping "posui" then

@@ -1,0 +1,13 @@
+# Screw unlock and effect
+
+LevelInfo.Unlock (0x9FAD44) selects the first screw whose IsLocked is true or whose capacity is <=3. It calls ScrewInfo.Unlock, then AddTile, and returns true. Earlier unlocked capacity>=4 rods are skipped; no eligible rod returns false without reading the mode.
+
+ScrewInfo.Unlock (0xA0A578) clears IsLocked, calls ScrewTypeObj.RefreshLock (0xA0A62C), and requests ShowUnlockEffect under the screw transform with duration 3. RefreshLock only updates the two lock objects, preserving other mask state; its mode reads short-circuit when already unlocked. AddTile reads the live mode after the effect request, so an intervening callback can change the capacity branch.
+
+OriginalLevelView.Unlock now performs that sequence, with a concrete effect event consumed by OriginalGameplayEffects. The current source UnlockEffect prefab is restored unchanged with its original meta and three ParticleSystems. All referenced dependencies were already present in the project. Runtime loads it by the original Resources path, instantiates under the screw, sets local zero, plays active child systems, and tracks source-duration cleanup. Settings serialize the path and 3-second lifetime. This is the same per-event instantiation pattern as the native resource manager, not a newly invented pooled effect. It is low-frequency and bounded; no static game hierarchy is generated in code.
+
+The regression checks real reserved screw selection, state/visual/effect/add ordering, short-circuited mode reads, live mode after effect request, actual segment growth, and all particle materials/shaders. Play validation composes the actual level-three scene, add-screw flow, item manager and effects. Configuration values are explicit test fixtures; world changes, particle playback/cleanup and user/board persistence use real runtime components. No SDK reward success is simulated.
+
+Remaining: AddNullScrew construction and full default startup/tool context binding. This does not prove complete lifecycle, region/AB or whole-game visual parity. Native evidence remains local.
+
+Verification: `Library/unity-unlock-screw-final.log` contains 95 full-regression PASS markers. `Library/unity-unlock-screw-play.log` contains NUT_UNLOCK_SCREW_PLAY_PASS for actual playback, cleanup and saved world/inventory changes. Neither log has compiler-error or exception markers; preferences restored and backup absent. The source and restored UnlockEffect prefab SHA-256 both equal 0c89097606fa522e9f1214f2c163b1400099ab905080412113aeeddd24e8dc5b. Missing resource handling follows native ResourceMgr logging and null return, without fabricated visual success.

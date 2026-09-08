@@ -28,6 +28,7 @@ namespace NutSort.World
         public event Action<OriginalScrewView> DoneEffectRequested;
         public event Action<ScrewState> ScrewCompleted;
         public event Action Clearing;
+        public event Action<OriginalScrewView> UnlockRequested;
         public event Action SelectionSoundRequested;
         public event Action<int> MoveSoundRequested;
         public event Action MoveAttempted;
@@ -158,6 +159,22 @@ namespace NutSort.World
             if (result.OriginalReturnValue) selected = target;
             OperationApplied?.Invoke(result, target);
             return result;
+        }
+
+        // LevelInfo.Unlock 0x9FAD44 selects the first locked or capacity<=3 rod.
+        public bool Unlock(Func<bool> singleTile)
+        {
+            for(int i=0;i<Board.Screws.Length;i++)
+            {
+                var state=Board.Screws[i];
+                if(!state.IsLocked && state.Capacity>3)continue;
+                state.IsLocked=false;
+                screws[i].TypeView.RefreshLock(state,singleTile);
+                UnlockRequested?.Invoke(screws[i]);
+                screws[i].AddTile(singleTile());
+                return true;
+            }
+            return false;
         }
 
         // IsCanAddTile 0xA07E48 always returns true. Manager AddTile
