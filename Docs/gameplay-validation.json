@@ -1,0 +1,10 @@
+{
+  "unity": "2022.3.62f3",
+  "gameplay_state_pass": true,
+  "first_board_win": true,
+  "hidden_reveal": true,
+  "animation_gate_state": true,
+  "rendered_gameplay_verified": false,
+  "complete_main_flow": false,
+  "sdk_changed": false
+}

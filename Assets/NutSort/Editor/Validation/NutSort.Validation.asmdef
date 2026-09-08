@@ -1,6 +1,6 @@
 {
   "name": "NutSort.Validation",
-  "references": ["NutSort.Content"],
+  "references": ["NutSort.Content", "NutSort.Gameplay"],
   "includePlatforms": ["Editor"],
   "autoReferenced": false
 }
