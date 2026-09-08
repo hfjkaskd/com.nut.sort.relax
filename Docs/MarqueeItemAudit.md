@@ -13,3 +13,5 @@ Remaining: PMDBullet launcher/pool/movement, actual main-owner coroutine binding
 Current Unity graphics capture passed (unity-marquee-item-capture.log): Library/ValidationCaptures/marquee-item.png was visually inspected for text, background and circular PayPal icon, with no missing/magenta material. Width is 1002.05 for the deterministic validation text. This editor rendering fixture is not live Play timing or original-device parity evidence.
 
 Follow-up: the standalone PMDBullet launcher/pool/movement is implemented; see MarqueeLauncherAudit.md. Production main-owner coroutine and Top binding remain pending.
+
+Follow-up: OriginalGameScene.ScheduleDelay now provides the original main-owner coroutine boundary, validated in actual Play with the item and launcher. See MarqueePlayAudit.md; production Top remains unbound.

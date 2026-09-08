@@ -32,6 +32,16 @@ namespace NutSort.World
         public bool IsExchanging { get; set; }
         public event Action<ScrewOperation, ScrewState> OperationApplied;
 
+        // TimeLSSUtil.DelayCallback runs on the main LuoSiSort MonoBehaviour.
+        public void ScheduleDelay(float seconds,Action callback)
+        {
+            StartCoroutine(DelayCallback(seconds,callback));
+        }
+        private static System.Collections.IEnumerator DelayCallback(float seconds,Action callback)
+        {
+            yield return new WaitForSeconds(seconds);
+            callback?.Invoke();
+        }
         private void Start() { Initialize(); }
 
         public void Initialize()
