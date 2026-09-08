@@ -106,6 +106,7 @@ namespace NutSort.Validation
                 OriginalRewardItemValidation.Validate();
                 OriginalSuccessPanelFlowValidation.Validate();
                 OriginalSuccessRewardValidation.Validate();
+                OriginalRewardGetFlowValidation.Validate();
                 OriginalRewardPanelValidation.Validate();
                 OriginalToolRewardFlightValidation.Validate();
                 OriginalCurrencyRewardFlightValidation.Validate();
