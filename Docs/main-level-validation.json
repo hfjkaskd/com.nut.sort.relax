@@ -1,0 +1,24 @@
+{
+  "unity": "2022.3.62f3",
+  "result": "pass",
+  "regressionGroups": 15,
+  "checks": [
+    "Original localized level text and parameter order",
+    "Case-sensitive language selection; unknown code uses Chinese then English fallback",
+    "Whitespace, duplicate id, missing id and format failure semantics",
+    "Original badge hierarchy, background, font, outline, sizes and autosizing",
+    "First internal level hides the badge",
+    "Hidden-stage branch retains previous text while hiding the badge",
+    "Normal x=0 and withdrawal-progress x=374 preserve y=-248",
+    "Native startup instantiates the configured prefab under UICanvas"
+  ],
+  "capture": "Library/ValidationCaptures/main-level-component-preview.png",
+  "captureScope": "Badge component preview over the completed first board, not a full stage-four playthrough",
+  "limitations": [
+    "MainPanel currently contains only the restored badge and its original ancestors",
+    "Balances, tools, rewards and remaining main-panel systems are not restored",
+    "Region language selection and actual hidden-stage/withdrawal-progress state consumers remain pending",
+    "Full source-versus-target visual comparison is incomplete"
+  ],
+  "rawEvidence": "Reverse-engineering evidence remains local"
+}

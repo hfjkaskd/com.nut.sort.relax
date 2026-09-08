@@ -1,5 +1,10 @@
 {
   "name": "NutSort.UI",
-  "references": ["NutSort.World", "Unity.ugui", "Unity.TextMeshPro"],
+  "references": [
+    "NutSort.World",
+    "Unity.ugui",
+    "Unity.TextMeshPro",
+    "NutSort.Content"
+  ],
   "autoReferenced": true
 }

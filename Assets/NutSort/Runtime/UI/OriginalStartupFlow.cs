@@ -8,6 +8,9 @@ namespace NutSort.UI
     {
         [SerializeField] private OriginalLoadingView loading;
         [SerializeField] private OriginalGameScene game;
+        [SerializeField] private Transform panelCanvas;
+        [SerializeField] private OriginalMainLevelSettings mainLevelSettings;
+        public OriginalMainLevelView MainLevel { get; private set; }
         public OriginalLoadingView Loading => loading;
 
         private IEnumerator Start()
@@ -23,6 +26,9 @@ namespace NutSort.UI
             // completion signal, while its progress tween is still finishing.
             game.gameObject.SetActive(true);
             game.Initialize();
+            var mainPrefab = Resources.Load<GameObject>(mainLevelSettings.PrefabPath);
+            MainLevel = Instantiate(mainPrefab, panelCanvas, false).GetComponent<OriginalMainLevelView>();
+            MainLevel.Refresh(game.Tables, game.PlayerLevel, mainLevelSettings.LanguageCode, false, false);
             while (loading.IsVisible) yield return null;
             game.InputBlocked = false;
         }

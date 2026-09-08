@@ -1817,6 +1817,8 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   loading: {fileID: 393}
   game: {fileID: 409}
+  panelCanvas: {fileID: 349}
+  mainLevelSettings: {fileID: 11400000, guid: 7e473cab2858433390c15cdaaa9be2e4, type: 2}
 --- !u!114 &401
 MonoBehaviour:
   m_ObjectHideFlags: 0

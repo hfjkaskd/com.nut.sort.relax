@@ -19,6 +19,7 @@ namespace NutSort.World
         public OriginalLevelView Level => level;
         public Camera WorldCamera => GameCamera;
         public OriginalTables Tables { get; private set; }
+        public int PlayerLevel => session.Level;
         public int ShowLevel => Tables.GetShowLevel(session.Level);
         public bool InputBlocked { get; set; }
         public bool IsExchanging { get; set; }

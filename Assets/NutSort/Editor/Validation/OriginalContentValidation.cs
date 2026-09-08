@@ -81,6 +81,7 @@ namespace NutSort.Validation
                 Expect<ArgumentException>(() => repository.LoadBoard(false, "../invalid"));
                 OriginalSelectionValidation.Validate(repository, settings);
                 OriginalTablesValidation.Validate();
+                OriginalMainLevelValidation.Validate();
                 OriginalLayoutValidation.Validate();
                 OriginalGameplayValidation.Validate(repository);
                 OriginalRenderingValidation.Validate();

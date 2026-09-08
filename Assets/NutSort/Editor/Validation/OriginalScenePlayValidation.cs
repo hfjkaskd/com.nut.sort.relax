@@ -64,6 +64,8 @@ namespace NutSort.Validation
                 if(phase==0)
                 {
                     if(game.Tables==null || game.Tables.LevelCount!=51 || game.ShowLevel!=1)throw new Exception("Startup did not bind the original stage table.");
+                    var startup=UnityEngine.Object.FindObjectOfType<OriginalStartupFlow>();
+                    if(startup.MainLevel==null || startup.MainLevel.Group.gameObject.activeSelf || startup.MainLevel.transform.parent.name!="UICanvas")throw new Exception("Main level prefab startup or first-level visibility differs.");
                     effects=game.GetComponent<OriginalGameplayEffects>();
                     if(effects==null)throw new Exception("Gameplay effects component missing.");
                     game.Level.SparkRequested += nut => sparkCount++;
@@ -97,6 +99,13 @@ namespace NutSort.Validation
                     if(!game.Level.Board.IsSuccess||!game.Level.Board.Screws[0].IsCanOperator)throw new Exception("Runtime animation callbacks did not finish the board.");
                     if(sparkCount!=1 || doneCount!=1 || effects.ActiveCount==0)throw new Exception("Original landing/completion effect chain failed: sparks="+sparkCount+", done="+doneCount+", active="+effects.ActiveCount);
                     OriginalSceneValidation.Capture(game.WorldCamera,"play-first-board-complete.png");
+                    // Component preview only: the underlying completed first
+                    // board is unchanged; this is not a level-five playthrough.
+                    var startup=UnityEngine.Object.FindObjectOfType<OriginalStartupFlow>();
+                    startup.MainLevel.Refresh(game.Tables,5,"en",false,false);
+                    string preview=Path.GetFullPath(Path.Combine(Application.dataPath,"../Library/ValidationCaptures/main-level-component-preview.png"));
+                    ScreenCapture.CaptureScreenshot(preview);
+                    Debug.Log("NUT_MAIN_LEVEL_COMPONENT_CAPTURE "+preview);
                     phase=4;deadline=EditorApplication.timeSinceStartup+2.5;
                 }
                 else
