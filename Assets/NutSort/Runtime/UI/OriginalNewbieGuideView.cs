@@ -21,6 +21,46 @@ namespace NutSort.UI
         private string language;
         private Action<bool> canOperate;
         private Action close;
+        private Func<bool> beginClick;
+        private Action clickSound;
+        public Action ClickAction { get; set; }
+        public bool IsOpen { get; private set; }
+        public bool ShowBanner { get; private set; } = true;
+        public int InitialGuideIndex { get; private set; }
+        public Button CloseButton=>Closebtn;
+        public Button ContinueButton=>Button;
+        public Button FullButton=>ButtonFull;
+
+        // InitLssPanel 0x9E1D78 after the base panel's label/visual setup.
+        public void InitializeInteractions(OriginalUserLocalData user,bool? showBanner,
+            Func<bool> beginClick,Action clickSound)
+        {
+            this.beginClick=beginClick ?? throw new ArgumentNullException(nameof(beginClick));
+            this.clickSound=clickSound ?? throw new ArgumentNullException(nameof(clickSound));
+            IsOpen=true;
+            if(showBanner.HasValue)ShowBanner=showBanner.Value;
+            InitialGuideIndex=user.GuideIndex;
+            hollowMask.gameObject.SetActive(false);
+            Closebtn.gameObject.SetActive(false);
+            Closebtn.onClick.RemoveAllListeners();Closebtn.onClick.AddListener(CloseClicked);
+            Button.onClick.RemoveAllListeners();Button.onClick.AddListener(ContinueClicked);
+            ButtonFull.onClick.RemoveAllListeners();ButtonFull.onClick.AddListener(ContinueClicked);
+        }
+        private void ContinueClicked()
+        {
+            if(!beginClick())return;
+            ClickAction?.Invoke();
+            ClickAction=null;
+            clickSound();
+        }
+        private void CloseClicked()
+        {
+            if(!beginClick())return;
+            IsOpen=false;
+            Close();
+            clickSound();
+        }
+
         public OriginalHollowMaskGraphic HollowMask=>hollowMask;
         public TMP_Text Tip=>TipValue;
         public int MarkerCount=>TeachLevels.Length;
