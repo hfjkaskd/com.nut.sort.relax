@@ -15,7 +15,7 @@ namespace NutSort.Validation
         private static OriginalGameScene game;
         private static OriginalGameplayUnlockPanel panel;
         private static OriginalUserLocalData user;
-        private static int phase,index,banners;
+        private static int phase,index,banners,queued,hidden;
         private static double timeout,deadline;
         private static bool gate;
         static OriginalGameplayUnlockPanelValidation(){if(SessionState.GetBool(Key,false)){timeout=EditorApplication.timeSinceStartup+60;EditorApplication.update+=Tick;}}
@@ -28,6 +28,7 @@ namespace NutSort.Validation
             Check(view.Icons.Length==4 && view.ContinueButton!=null && view.Tip.font!=null,"Four original icons, Button and font");
             foreach(var icon in view.Icons)Check(icon.GetComponent<UnityEngine.UI.Image>().sprite!=null,"Original icon sprite resolved");
             Check(prefab.GetComponentInChildren<OriginalLoopRotation>(true)!=null,"Original glow animation restored");
+            Check(new SerializedObject(view).FindProperty("queueDelay").floatValue==2.5f,"Original base Hide queue delay");
             Debug.Log("NUT_GAMEPLAY_UNLOCK_PANEL_VALIDATION_PASS full hierarchy, references, four original sprites, standard Button, font and glow component.");
         }
         public static void RunPlay()
@@ -50,7 +51,9 @@ namespace NutSort.Validation
                     user=UnityEngine.Object.FindObjectOfType<OriginalUserSession>().Data;user.NewGameplayUnlockIndex=index;
                     gate=false;game.ModalInputBlocked=true;
                     var audio=UnityEngine.Object.FindObjectOfType<OriginalAudioPlayer>();
-                    panel.Initialize(user,index,true,game.Tables,"en",()=>gate,s=>audio.PlaySound(s),callback=>{Check(callback==null && user.NewGameplayUnlockIndex==index,"Banner called before index mutation without completion callback");banners++;},()=>{UnityEngine.Object.Destroy(panel.gameObject);game.ModalInputBlocked=false;});
+                    var queue=new OriginalPanelActionQueue();queue.Add(()=>queued++);
+                    panel.BindHide(queue,game.ScheduleDelay,()=>hidden++);
+                    panel.Initialize(user,index,true,game.Tables,"en",()=>gate,s=>audio.PlaySound(s),callback=>{Check(callback==null && user.NewGameplayUnlockIndex==index,"Banner called before index mutation without completion callback");banners++;},()=>{panel.Hide();UnityEngine.Object.Destroy(panel.gameObject);game.ModalInputBlocked=false;});
                     panel.Refresh();
                     for(int i=0;i<4;i++)Check(panel.Icons[i].activeSelf==(i==index),"Actual icon visibility");
                     phase=1;deadline=now+.7;return;
@@ -68,9 +71,15 @@ namespace NutSort.Validation
                     panel.gameObject.SetActive(false);phase=3;deadline=now+.4;return;
                 }
                 Check(panel==null && !game.ModalInputBlocked,"Global close completes for hidden panel");
-                if(++index<4){phase=0;return;}
+                if(phase!=4)
+                {
+                    if(++index<4){phase=0;return;}
+                    Check(hidden==4,"Hide callback runs for each closed variant");
+                    phase=4;deadline=now+2.6;return;
+                }
+                Check(queued==4,"Every scene-owned delay dispatches after its panel is destroyed");
                 Check(banners==4,"Every variant invokes banner once");
-                Debug.Log("NUT_GAMEPLAY_UNLOCK_PANEL_PLAY_PASS four current rendered variants, actual Continue Button gate/banner/index/close ordering and hidden close; banner callback is a fixture boundary.");Finish(0);
+                Debug.Log("NUT_GAMEPLAY_UNLOCK_PANEL_PLAY_PASS four current rendered variants, actual Continue Button gate/banner/index/close ordering, hidden close and post-destruction queue dispatch; banner callback is a fixture boundary.");Finish(0);
             }
             catch(Exception e){Debug.LogException(e);Finish(1);}
         }

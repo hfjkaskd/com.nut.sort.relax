@@ -16,6 +16,10 @@ namespace NutSort.UI
         [SerializeField] private OriginalPanelSettings settings;
         [SerializeField] private OriginalReplayPanel.Label[] labels;
         [SerializeField] private string appearSound,clickSound;
+        [SerializeField] private float queueDelay;
+        private OriginalPanelActionQueue actionQueue;
+        private Action<float,Action> schedule;
+        private Action hidden;
         private Func<bool> gate;
         private Action<string> audio;
         private Action closed;
@@ -43,6 +47,15 @@ namespace NutSort.UI
             audio(appearSound);
         }
         public void Refresh(){display.Refresh(index);}
+        public void BindHide(OriginalPanelActionQueue actionQueue,Action<float,Action> schedule,Action hidden=null)
+        {
+            this.actionQueue=actionQueue;this.schedule=schedule;this.hidden=hidden;
+        }
+        public void Hide()
+        {
+            hidden?.Invoke();
+            schedule(queueDelay,actionQueue.Dequeue);
+        }
         private void Continue(){if(!gate())return;continuation.Run(index,showBanner);audio(clickSound);}
         public void Close(){if(closing)return;closing=true;opening=false;closeElapsed=0;closeStart=main.localScale;}
         private void Awake(){OriginalUIAnimationDriver.Register(this,Advance);}

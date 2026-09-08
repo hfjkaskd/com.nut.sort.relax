@@ -305,6 +305,7 @@ MonoBehaviour:
     Id: 47
   - Text: {fileID: 114918264173551851}
     Id: 62
+  queueDelay: 2.5
   appearSound: Reward_appear
   clickSound: Click
 --- !u!224 &224705390221481576
