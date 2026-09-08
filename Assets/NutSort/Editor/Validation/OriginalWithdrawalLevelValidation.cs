@@ -54,7 +54,7 @@ namespace NutSort.Validation
                 OriginalWithdrawalLevelFlow.IsRecordIn=true;Expect<IndexOutOfRangeException>(()=>flow.Init(Array.Empty<object>(),()=>{},()=>{},()=>{}));Check(OriginalWithdrawalLevelFlow.IsRecordIn,"Invalid init does not consume shared entry flag");
             }
             finally{OriginalWithdrawalLevelFlow.IsRecordIn=old;}
-            Debug.Log("NUT_WITHDRAWAL_LEVEL_VALIDATION_PASS required captured level, one-shot record entry, amount/tip refresh ordering, close/request/hide ordering, held response, native payload-independent state mutation and save/display/guide branches; view/steps and transport remain pending.");
+            Debug.Log("NUT_WITHDRAWAL_LEVEL_VALIDATION_PASS required captured level, one-shot record entry, amount/tip refresh ordering, close/request/hide ordering, held response, native payload-independent state mutation and save/display/guide branches; view/steps covered by companion panel validation; transport remains external.");
         }
         private static int flowLevel;
         private static void Check(bool value,string message){if(!value)throw new InvalidOperationException(message);}

@@ -28,7 +28,10 @@ namespace NutSort.Validation
         private static OriginalWithdrawalConfirmationHost confirmation;
         private static bool previousHint;
         private static OriginalGoldGetFlow goldGetFlow;
-        private static int levelPanels;
+        private static int levelPanels,levelHides;
+        private static OriginalWithdrawalLevelHost levelHost;
+        private static Action<JObject> levelResponse;
+        private static float levelGoldBefore;
         private static int loadingHides;
         private static bool loadingCaptured;
         private static OriginalWithdrawalPanelValidation.Services withdrawalServices;
@@ -40,7 +43,7 @@ namespace NutSort.Validation
         private static Action<object> previousCallback;
         private sealed class Panels:IOriginalGuidePanels
         {
-            public bool HasPanel=>success.IsOpen||guide.IsOpen||target.IsOpen||(withdrawal!=null&&withdrawal.IsOpen)||(loading!=null&&loading.IsOpen)||(userInfo!=null&&userInfo.IsOpen)||(confirmation!=null&&confirmation.IsOpen);
+            public bool HasPanel=>success.IsOpen||guide.IsOpen||target.IsOpen||(withdrawal!=null&&withdrawal.IsOpen)||(loading!=null&&loading.IsOpen)||(userInfo!=null&&userInfo.IsOpen)||(confirmation!=null&&confirmation.IsOpen)||(levelHost!=null&&levelHost.IsOpen);
             public OriginalGuideSuccessBinding GetSuccessGuideTarget()=>success.GetSuccessGuideTarget();
             public OriginalGuideButtonBinding GetWithdrawal()=>withdrawal.GetWithdrawalGuideTarget();
             public void ShowPanel(int id){if(id==36){loading.Show();return;}Check(id==7,"Guide panel dispatch");guide.Show();}
@@ -93,10 +96,15 @@ namespace NutSort.Validation
                         id=>throw new InvalidOperationException("Unexpected account input error"),
                         (id,args)=>{Check(id==21&&(int)args[0]==1,"Actual form confirmation retains captured withdrawal level");confirmations++;confirmation.Show(args);},
                         ()=>game.SaveUserData(),value=>OriginalNewbieGuideView.CallbackActionInvoke(value),()=>OriginalWithdrawalConfirmationFlow.IsHintGoldGet=false,()=>userInfoHides++,game.ScheduleDelay,()=>{});
+                    levelHost=new OriginalWithdrawalLevelHost(parent,"Prefabs/Panels/TXLevelPanel",game.User,game.Tables,"en",
+                        v=>new OriginalGoldFormatter(()=>"en-US").Format(v),()=>true,s=>audio.PlaySound(s),new OriginalWithdrawalLevelPanelValidation.Services(),
+                        (level,cb)=>{Check(level==1&&levelHost.Panel.Closing,"Level-one transport follows actual Button close");levelResponse=cb;},
+                        ()=>throw new InvalidOperationException("Held level request cannot save a result"),OriginalNewbieGuideView.CallbackActionInvoke,
+                        ()=>levelHides++,game.ScheduleDelay,()=>{});
                     goldGetFlow=new OriginalGoldGetFlow(cb=>throw new InvalidOperationException("Early confirmation must not request GoldGet"),
                         ()=>throw new InvalidOperationException("Early confirmation does not read HUD hint"),value=>throw new InvalidOperationException("Unexpected raw tip"),
                         id=>throw new InvalidOperationException("Unexpected GoldGet response tip"),
-                        (id,args)=>{Check(id==28&&(int)args[0]==1&&confirmation.Panel.Closing,"Actual GoldGet routes original level panel while confirmation closes");levelPanels++;},
+                        (id,args)=>{Check(id==28&&(int)args[0]==1&&confirmation.Panel.Closing,"Actual GoldGet routes original level panel while confirmation closes");levelPanels++;levelHost.Show(args);},
                         (show,add)=>throw new InvalidOperationException("Early confirmation does not refresh from a server result"));
                     confirmation=new OriginalWithdrawalConfirmationHost(parent,"Prefabs/Panels/TXUserInfoSurePanel",game.User,game.Tables,"en",()=>"US",()=>"1",()=>true,s=>audio.PlaySound(s),
                         (id,args)=>{Check(id==20&&(int)args[0]==1&&confirmation.IsOpen,"Reenter opens form before closing confirmation");userInfo.Show(args);},
@@ -202,7 +210,21 @@ namespace NutSort.Validation
                 if(phase==13)
                 {
                     Check(!confirmation.IsOpen&&confirmationHides==2&&goldGets==1&&levelPanels==1&&OriginalNewbieGuideView.CallbackAction!=null,"Confirmation closes without fabricating withdrawal completion");
-                    Debug.Log("NUT_SUCCESS_GUIDE_HOST_PLAY_PASS actual success/guide/loading/account form -> real confirmation -> reenter saved form -> resubmit -> actual Confirm Button -> native GoldGet early branch -> level panel 28 dispatch and animated registry removal; no payment result, production initialization/transport remain fixtures.");Finish(0);return;
+                    Check(levelHost.IsOpen&&levelHost.Panel.Flow.Level==1,"Actual level panel owns captured withdrawal");
+                    if(Time.time-start<5.5f)return;
+                    Check(levelHost.Panel.Steps.ActiveTracks==0&&levelHost.Panel.ConfirmButton.transform.localScale==Vector3.one,"Actual native step animation completes through scene driver");
+                    for(int i=1;i<=3;i++){var row=levelHost.Panel.Steps.StepRoot.Find(i.ToString());Check(row.Find("Done").gameObject.activeSelf&&!row.Find("Loading").gameObject.activeSelf,"Actual completed markers");}
+                    ScreenCapture.CaptureScreenshot("Library/ValidationCaptures/withdrawal-level-current.png");start=Time.time;phase=14;return;
+                }
+                if(phase==14)
+                {
+                    levelGoldBefore=game.User.Gold;levelHost.Panel.ConfirmButton.onClick.Invoke();
+                    Check(levelResponse!=null&&levelHost.Panel.Closing&&game.User.Gold==levelGoldBefore,"Actual final Button leaves transport held and balance unchanged");start=Time.time;phase=15;return;
+                }
+                if(phase==15)
+                {
+                    Check(!levelHost.IsOpen&&levelHides==1&&game.User.Gold==levelGoldBefore&&OriginalNewbieGuideView.CallbackAction!=null,"Actual level panel closes without fabricated completion");
+                    Debug.Log("NUT_SUCCESS_GUIDE_HOST_PLAY_PASS actual success/guide/loading/account form -> confirmation -> reenter -> resubmit -> GoldGet -> real level panel 28 -> native steps and final Button -> held request and animated registry removal; no payment result, production initialization/transport remain fixtures.");Finish(0);return;
                 }
                 Check(!withdrawal.IsOpen&&withdrawalServices.Closes==1&&withdrawalServices.HiddenCount==1,"Animated close hides and removes real registry entry");
                 game.User.GuideIndex=77;withdrawal.Show(new object[]{1});Check(withdrawal.IsOpen&&withdrawal.Panel.PlayerParent.childCount==1,"Reopen creates a fresh original panel");withdrawal.Hide();

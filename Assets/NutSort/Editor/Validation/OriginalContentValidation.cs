@@ -156,6 +156,7 @@ namespace NutSort.Validation
                 OriginalWithdrawalConfirmationPanelValidation.Validate();
                 OriginalGoldGetValidation.Validate();
                 OriginalWithdrawalLevelValidation.Validate();
+                OriginalWithdrawalLevelPanelValidation.Validate();
                 OriginalGuideBranchAdapterValidation.Validate();
                 OriginalNewbieGuideHostValidation.Validate();
                 OriginalNewbieInteractionValidation.Validate();

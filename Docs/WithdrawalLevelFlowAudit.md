@@ -1,6 +1,6 @@
 # TXLevelPanel lifecycle and response consumer
 
-Restored UIName 28 controller behavior as OriginalWithdrawalLevelFlow. The source view/steps remain pending, and GoldGet1 transport is an injected boundary. No runtime response is generated automatically.
+Restored UIName 28 controller behavior as OriginalWithdrawalLevelFlow. The source view/steps are now restored in the companion WithdrawalLevelViewAudit.md; GoldGet1 transport remains an injected boundary. No runtime response is generated automatically.
 
 ## Native evidence
 
@@ -24,4 +24,4 @@ This test suite does not represent a successful real withdrawal. Production code
 
 ## Next integration
 
-Restore the current TXLevelPanel prefab and PlayStepTween, connect real fields and Buttons to this controller, and replace panel 28's dispatch observation in the actual guide/confirmation chain. GoldGet1 request handling, subsequent visual results, panel 22 and production startup/country/AB lifecycle composition remain incomplete.
+The current TXLevelPanel prefab, PlayStepTween, real fields/Buttons and panel 28 host now extend the actual guide/confirmation Play fixture. GoldGet1 request handling, subsequent visual results, panel 22 and production startup/country/AB lifecycle composition remain incomplete.
