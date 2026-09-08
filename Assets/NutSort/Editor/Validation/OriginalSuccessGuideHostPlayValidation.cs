@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 using NutSort.Content;
 using NutSort.Gameplay;
 using NutSort.UI;
@@ -17,6 +18,9 @@ namespace NutSort.Validation
         private static float start;
         private static int phase,targets,ads,requests,targetRequests,initializations;
         private static OriginalGuideTargetPanelHost target;
+        private static OriginalGuideTargetRequest targetRequest;
+        private static Action<JObject> targetResponse;
+        private static int withdrawalPanels;
         private static OriginalGameScene game;
         private static OriginalSuccessPanelHost success;
         private static OriginalNewbieGuideHost guide;
@@ -37,7 +41,7 @@ namespace NutSort.Validation
             public void TargetGoldInfo(bool showMask)
             {
                 Check(!showMask&&game.User.GuideIndex==1&&game.User.IsCompleteRecordGuide&&initializations==1&&target.Panel.Closing,"Target request follows initialization and precedes guide increment/save");
-                targetRequests++;
+                targetRequests++;targetRequest.Run(showMask);
             }
             public void CoinGoldInfo(bool showMask){throw new InvalidOperationException("Unexpected coin request");}
             public void EntryGoldInfo(bool showMask){throw new InvalidOperationException("Unexpected entry request");}
@@ -56,6 +60,8 @@ namespace NutSort.Validation
                     Transform parent=null;foreach(var canvas in UnityEngine.Object.FindObjectsOfType<Canvas>())if(canvas.name=="UICanvas")parent=canvas.transform;
                     Check(parent!=null,"Actual UI canvas");game.User.Level=2;game.User.GuideIndex=77;
                     previousCallback=OriginalNewbieGuideView.CallbackAction;
+                    targetRequest=new OriginalGuideTargetRequest(game.User,(showMask,cb)=>{Check(!showMask,"Original unmasked request");targetResponse=cb;},
+                        (id,level)=>{Check(id==18&&level==game.User.Level-1,"Live-level withdrawal panel dispatch");withdrawalPanels++;});
                     var panels=new Panels();mask=new OriginalCountedMask(v=>masked=v,game.ScheduleDelay);
                     var audio=UnityEngine.Object.FindObjectOfType<OriginalAudioPlayer>();
                     var ui=new OriginalSceneGuideUI(game,()=>null,mask,panels,new Requests());
@@ -103,8 +109,9 @@ namespace NutSort.Validation
                     var saved=OriginalUserDataJson.Read(PlayerPrefs.GetString(OriginalUserStore.Key),Resources.Load<OriginalUserDefaults>("Configuration/OriginalUserDefaults"));
                     Check(saved.GuideIndex==2&&saved.IsCompleteRecordGuide,"Actual scene save records callback progression");start=Time.time;phase=5;return;
                 }
-                Check(!target.IsOpen&&targetRequests==1&&ads==0&&requests==0,"Target panel closes after native continuation without extra requests");
-                Debug.Log("NUT_SUCCESS_GUIDE_HOST_PLAY_PASS real SuccessPanel opening -> real guide host -> actual target binding/direct GetCallback -> success close -> counted mask -> delayed guide reopen -> actual target-panel Button -> initialization boundary -> target request -> saved guide progression; initialization and request consumers remain explicit fixtures.");Finish(0);
+                Check(!target.IsOpen&&targetRequests==1&&ads==0&&requests==0&&withdrawalPanels==0&&targetResponse!=null,"Target panel closes while actual target response remains pending");
+                targetResponse(null);Check(withdrawalPanels==1,"Original target response advances to panel 18 without inspecting payload");
+                Debug.Log("NUT_SUCCESS_GUIDE_HOST_PLAY_PASS real SuccessPanel opening -> real guide host -> actual target binding/direct GetCallback -> success close -> counted mask -> delayed guide reopen -> actual target-panel Button -> initialization boundary -> target request -> saved guide progression -> held target response -> panel 18 dispatch; initialization, transport and withdrawal panel consumer remain explicit fixtures.");Finish(0);
             }
             catch(Exception error){Debug.LogException(error);Finish(1);}
         }

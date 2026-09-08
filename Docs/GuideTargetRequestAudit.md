@@ -1,0 +1,11 @@
+# Target reward response opens withdrawal panel
+
+Native NewbieGuidePanel case-one completion (0x9e38e4) passes GoldRewardInfo(false) a cached handler, NewbieGuidePanel.<>c.<ShowGuide>b__23_3 at 0x9e4958. That handler does not read the response argument. It reads the current UserLocalData.Level, subtracts one with native unchecked integer arithmetic, and calls UIMgr.ShowPanel with UIName 18 (TXPanel), supplying the integer as its sole argument. It does not grant currency, write data, increment GuideIndex, refresh the HUD or close other panels. Those operations belong to other existing portions of the chain.
+
+OriginalGuideTargetRequest restores this request/completion connection with a supplied transport callback and panel dispatcher. The mask flag is forwarded to the existing transport boundary. The response uses the live level even when the user state changes while pending, accepts null payload because it is unused, and has no fabricated one-shot guard. It does not replace transport response application/InitLss or an SDK implementation.
+
+Regression covers pending and synchronous callbacks, request mask forwarding, live level changes, signed overflow, repeated completion and request failure. The existing actual SuccessPanel -> NewbieGuidePanel -> TXGuideTargetCompletePanel Play chain now sends the target request through this adapter and holds its response. After target panel closure and real scene save, releasing the explicit fixture callback dispatches panel 18. No response data is invented or applied by the adapter.
+
+The actual TXPanel prefab/runtime and subsequent withdrawal events are still outside this verification, as are full production startup composition and real request transport. Panel dispatch remains an explicit consumer; this is not proof of a completed withdrawal or full 1:1 lifecycle.
+
+Verification: local Unity 2022.3.62f3 actual-chain Play passed in Library/guide-target-response-play.log. Full regression passed 111 markers including NUT_GUIDE_TARGET_REQUEST_VALIDATION_PASS and NUT_CONTENT_VALIDATION_PASS in Library/guide-target-response-regression.log. Successful logs contain no compiler errors or exception entries. Preference backup was restored/removed. Existing exit-time pool warnings remain outside this change.
