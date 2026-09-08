@@ -108,6 +108,7 @@ namespace NutSort.Validation
                 OriginalPayChannelsValidation.Validate();
                 OriginalMarqueeItemValidation.Validate();
                 OriginalMarqueeLauncherValidation.Validate();
+                OriginalMainTopFlowValidation.Validate();
                 OriginalTargetRewardValidation.Validate();
                 OriginalRewardProgressViewValidation.Validate();
                 OriginalGoldItemValidation.Validate();

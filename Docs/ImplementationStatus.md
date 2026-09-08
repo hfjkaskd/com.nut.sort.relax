@@ -131,3 +131,5 @@
 - 已恢复 PMDBullet 原四层结构及发射器：高宽比 2.1 门槛、第 4 关计时、初始 5 秒、交替随机间隔、双次数据选择、原多余随机采样、上下轨道和 12–15 秒线性移动。忙碌时复制原模板、完成后复用，隐藏对象仍由全局动画调度移动。38 组回归通过。正式 Top、主对象宽度协程、实际 Play 时序与真机对照仍待验证；SDK 未改动。详见 Docs/MarqueeLauncherAudit.md。
 
 - 已恢复主游戏对象上的 WaitForSeconds 延迟回调入口，并在实际 Play 中连接 PMDBullet/PMDItem 验证真实 Update 发射和宽度布局。暂停、隐藏后移动/回调继续、停用发射器后不新增提示及终点复用状态均通过；最新 marquee-play.png 已检查。38 组完整回归通过，测试存档已恢复。正式 Top/provider 接线与完整生命周期仍未完成；SDK 未改动。详见 Docs/MarqueePlayAudit.md。
+
+- 已恢复 Top 初始化/刷新调度，连接真实组件验证 Gold 初始化内的交叉进度刷新、随后隐藏但保留 IsShow，以及金额/阶段进度/普通关卡标签刷新顺序。明确保留 Refresh 不主动 Show 收益进度条的原行为。39 组完整回归通过，测试存档恢复。调度尚未绑定生产启动，正式 Top 组装、GM 和生命周期 Show 仍待接入。详见 Docs/MainTopFlowAudit.md。
