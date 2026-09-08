@@ -37,7 +37,8 @@ namespace NutSort.UI
         private void Cancel() { if(owner.BeginClick()) { Close();owner.EndClick(); } }
         private void Replay() { if(owner.BeginClick()) { Close();owner.Restart();owner.EndClick(); } }
         public void Close() { if(closing)return;closing=true;opening=false;elapsed=0;closeStart=main.localScale; }
-        private void Update() { Advance(Time.deltaTime); }
+        private void Awake() { OriginalUIAnimationDriver.Register(this, Advance); }
+        private void OnDestroy() { OriginalUIAnimationDriver.Unregister(this); }
         public void Advance(float delta)
         {
             if(!opening&&!closing)return;

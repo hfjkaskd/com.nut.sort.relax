@@ -53,20 +53,23 @@ namespace NutSort.Validation
                     Check(!mask.activeSelf && !game.ModalInputBlocked,"Scene scheduler releases both acquisitions while controller disabled");
                     replay.enabled=true;replay.ReplayButton.onClick.Invoke();
                     Check(replay.Panel!=null && mask.activeSelf && game.ModalInputBlocked,"Actual main Button opens replay and acquires mask");
+                    replay.Panel.enabled=false;
                     deadline=Time.time+.35f;phase=2;return;
                 }
                 if(phase==2)
                 {
                     Check(!mask.activeSelf && replay.Panel!=null && game.ModalInputBlocked,"Expired click mask retains existing modal panel block");
+                    Check(replay.Panel.Main.localScale==Vector3.one,"Global opening animation completes while panel component disabled");
+                    replay.Panel.enabled=true;
                     replay.Panel.ContinueButton.onClick.Invoke();
                     Check(replay.Panel.Closing && mask.activeSelf,"Actual Continue Button acquires mask before starting close");
-                    replay.Panel.Advance(.3f);
-                    Check(replay.Panel==null && mask.activeSelf && game.ModalInputBlocked,"Panel destruction retains outstanding click acquisition");
+                    replay.Panel.gameObject.SetActive(false);
+                    Check(replay.Panel!=null && mask.activeSelf && game.ModalInputBlocked,"Hidden closing panel retains outstanding click acquisition");
                     deadline=Time.time+.35f;phase=3;return;
                 }
                 if(phase==3)
                 {
-                    Check(!mask.activeSelf && !game.ModalInputBlocked,"Last scene-owned release restores gameplay after close");
+                    Check(replay.Panel==null && !mask.activeSelf && !game.ModalInputBlocked,"Global close destroys hidden panel and restores gameplay");
                     replay.ReplayButton.onClick.Invoke();
                     deadline=Time.time+.35f;phase=4;return;
                 }
@@ -83,7 +86,7 @@ namespace NutSort.Validation
                     "Normal replay completes close, mask release and actual scene reconstruction");
                 Check(UnityEngine.Object.FindObjectOfType<OriginalUserSession>().Data.LevelSeed==seed &&
                     PlayerPrefs.GetString(NutSort.Content.OriginalUserStore.Key)==saved,"Actual replay retains seed and does not add a save");
-                Debug.Log("NUT_REPLAY_MASK_PLAY_VALIDATION_PASS normal startup binding, repeated acquisition, disabled-controller release, actual main/continue/replay Buttons, modal retention, post-close release and scene restart without seed/save change.");
+                Debug.Log("NUT_REPLAY_MASK_PLAY_VALIDATION_PASS normal startup binding, repeated acquisition, disabled-controller release, disabled-panel opening and inactive-panel close, actual main/continue/replay Buttons, modal retention, post-close release and scene restart without seed/save change.");
                 Finish(0);
             }
             catch(Exception e){Debug.LogException(e);Finish(1);}
