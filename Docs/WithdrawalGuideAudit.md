@@ -1,0 +1,11 @@
+# Withdrawal guide branch and completion
+
+ShowGuide case 2 (0x9E26E0) obtains TXPanel ID 18, shows the guide hand and Button, copies the referenced target's world position and RectTransform sizeDelta, and hides the tip. The assigned click callback (0x9E3A9C) closes the guide, increments the current GuideIndex, saves, then shows panel 36 with no arguments. The global completion captures the guide panel's initialized index, not the subsequently incremented user index.
+
+The global callback (0x9E41DC) strictly unboxes its parameter as int before checking that captured index. When the captured index is 2, stage 1 with IsGoldReduceLevel1 false sets that flag, subtracts Level1Gold, clamps Gold at zero and refreshes the main gold component. Stage 2 similarly uses IsGoldReduceLevel2 and Level2Gold. Already handled or other stages skip deduction and refresh. Every normally returning path then invokes InitLevel(true,true,false): reset, show banner, not first initialization. No save call appears in this completion callback. A refresh exception leaves the applied flag/balance change but interrupts initialization.
+
+The branch body is now in OriginalNewbieGuideView.ShowWithdrawalGuide. OriginalWithdrawalGuideCompletion supplies the typed application boundary with original strict object-to-int semantics. It is not called automatically to fabricate a successful request and makes no SDK call or reward grant.
+
+Unity 2022.3.62f3 full content regression passed with 82 PASS markers in Library/unity-withdrawal-guide-validation.log and no compiler-error or exception markers. Test preferences were restored. Validation exercises the existing prefab's standard Button and callback ordering, cached index after live increment and object destruction, repeated stage idempotence, second-stage zero clamp, other captured indices/stages, null/string/long rejection and refresh failure boundaries. Fixture amounts and callbacks are isolated; no production server payload is invented.
+
+Production TXPanel/ID 36 integration, whole ShowGuide dispatch and main initialization wiring remain incomplete. This round does not claim end-to-end withdrawal or whole-game visual parity. Native assembly evidence stays local.

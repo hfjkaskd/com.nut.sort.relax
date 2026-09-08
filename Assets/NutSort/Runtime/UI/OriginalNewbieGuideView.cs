@@ -71,6 +71,26 @@ namespace NutSort.UI
             };
         }
 
+        // ShowGuide case 2 (0x9E26E0); target is TXPanel's original control RectTransform.
+        public void ShowWithdrawalGuide(OriginalUserLocalData user,RectTransform target,Action save,
+            Action<int> showPanel,Action refreshGold,Action<bool,bool,bool> initializeLevel)
+        {
+            Hand.gameObject.SetActive(true);
+            Button.gameObject.SetActive(true);
+            Pos.position=target.position;
+            Button.image.rectTransform.sizeDelta=target.sizeDelta;
+            SetTip(-1,0);
+            ClickAction=()=>
+            {
+                Close();
+                user.GuideIndex=unchecked(user.GuideIndex+1);
+                save();
+                showPanel(36);
+            };
+            var completion=new OriginalWithdrawalGuideCompletion(user,InitialGuideIndex,refreshGold,initializeLevel);
+            CallbackAction=completion.Complete;
+        }
+
         public bool IsOpen { get; private set; }
         public bool ShowBanner { get; private set; } = true;
         public int InitialGuideIndex { get; private set; }
