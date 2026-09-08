@@ -28,3 +28,8 @@ MonoBehaviour:
   RestartStageSoundDelay: 0.5
   FailPanelDelay: 3
   FailPanelId: 10
+  GameplayUnlockLevels:
+  - 8
+  - 21
+  - 61
+  - 111

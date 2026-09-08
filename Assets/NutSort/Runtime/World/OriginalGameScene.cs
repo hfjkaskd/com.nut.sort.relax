@@ -19,6 +19,7 @@ namespace NutSort.World
         private OriginalLevelView level;
         private OriginalLevelRepository repository;
         private OriginalLevelSelector selector;
+        private OriginalGameplayUnlockConfig unlockConfig;
         private struct PendingInitialization
         {
             public bool Reset, LongEntry;
@@ -37,6 +38,11 @@ namespace NutSort.World
         public bool IsExchanging { get; set; }
         private readonly OriginalFailureFlow failure = new OriginalFailureFlow();
         public bool IsFail { get => failure.IsFail; set => failure.IsFail = value; }
+
+        public bool NewGameplayUnlock(bool showBanner, Action<int,int,bool> showPanel)
+        {
+            return new OriginalGameplayUnlock(audioPlayer.UserState.Data, unlockConfig.Read, showPanel).Run(showBanner);
+        }
 
         public void Fail(Action<int> showPanel)
         {
@@ -71,6 +77,7 @@ namespace NutSort.World
             repository = new OriginalLevelRepository(content);
             repository.Initialize();
             audioPlayer.Initialize();
+            unlockConfig = new OriginalGameplayUnlockConfig(audioPlayer.UserState.Data, session.GameplayUnlockLevels);
             selector = new OriginalLevelSelector(repository, content, UnityLevelRandom.Instance);
             level = pool.Rent(session.LevelPrefabPath, transform).GetComponent<OriginalLevelView>();
             effects.Bind(level, pool);

@@ -16,6 +16,7 @@ namespace NutSort.World
         public bool LSS260820;
         public int LSSSHSLV;
         public bool LSSAB;
+        public int[] GameplayUnlockLevels;
         public float RaycastDistance;
         public LayerMask GameplayLayers;
     }
