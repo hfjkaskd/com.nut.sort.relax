@@ -31,6 +31,11 @@ namespace NutSort.UI
             };
         }
         public OriginalSuccessPanel Show(OriginalItemGetInfo info)=>registry.Show(9,p=>{initialize(p);p.Init(info);});
+        public OriginalGuideSuccessBinding GetSuccessGuideTarget()
+        {
+            var panel=registry.Get(9);
+            return new OriginalGuideSuccessBinding(panel.MoreButton,panel.GetCallback);
+        }
         public void Refresh()=>registry.Refresh(9);
         public void Hide()=>registry.Hide(9);
     }

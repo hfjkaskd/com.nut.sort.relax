@@ -11,12 +11,12 @@ namespace NutSort.Validation
         public static void Validate()
         {
             var root=UnityEngine.Object.Instantiate(Resources.Load<GameObject>("prefabs/panels/NewbieGuidePanel"));
-            var sourceRoot=UnityEngine.Object.Instantiate(Resources.Load<GameObject>("prefabs/panels/TXGuideTargetCompletePanel"));
+            var sourceRoot=UnityEngine.Object.Instantiate(Resources.Load<GameObject>("prefabs/panels/SuccessPanel"));
             try
             {
                 var view=root.GetComponent<OriginalNewbieGuideView>();
-                // An existing configured Button is only a fixture stand-in for SuccessPanel.MoreGetBtn.
-                var target=sourceRoot.GetComponent<OriginalGuideTargetPanel>().ContinueButton;
+                // Use the actual restored SuccessPanel visual target.
+                var target=sourceRoot.GetComponent<OriginalSuccessPanel>().MoreButton;
                 var user=new OriginalUserLocalData(Resources.Load<OriginalUserDefaults>("Configuration/OriginalUserDefaults"));
                 var trace=new List<string>();Action delayed=null;bool gate=false;
                 view.InitializeInteractions(user,null,()=>gate,()=>trace.Add("audio"));
@@ -46,7 +46,7 @@ namespace NutSort.Validation
                 UnityEngine.Object.DestroyImmediate(root);delayed();Check(trace[trace.Count-1]=="show","Reopen callback survives guide destruction");
             }
             finally{if(root!=null)UnityEngine.Object.DestroyImmediate(root);UnityEngine.Object.DestroyImmediate(sourceRoot);}
-            Debug.Log("NUT_NEWBIE_SUCCESS_GUIDE_VALIDATION_PASS configured Button placement and visibility, gated request/increment/close/mask/schedule/audio ordering and delayed reopen after destruction; SDK and actual SuccessPanel integration excluded.");
+            Debug.Log("NUT_NEWBIE_SUCCESS_GUIDE_VALIDATION_PASS configured Button placement and visibility, gated request/increment/close/mask/schedule/audio ordering and delayed reopen after destruction; actual SuccessPanel Button target; complete host lifecycle covered separately.");
         }
         private static void Check(bool value,string message){if(!value)throw new InvalidOperationException(message);}
     }
