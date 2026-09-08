@@ -1,0 +1,19 @@
+# SuccessPanel native view
+
+Restores the source SuccessPanel prefab as eleven GameObjects with the original RectTransforms, UI geometry, image colors, font/material references, labels 186/88/58, and three standard Buttons. After removing only the three added serialized feedback-component references, all 31 non-MonoBehaviour blocks are identical to the typed export. Exported UGUI/TMP script references are remapped to Unity official packages. OriginalButtonFeedback is configured on the same Button objects; UnityEvents have no persistent listeners and all actions bind in code.
+
+The missing background and title sprites and textures are copied from the reverse project. SHA-256:
+- bg_2.png (171950 bytes): 368df1a72ad6c2ac96d708ae2a3005c06a6164216beb003957d9ac3ee511331a
+- title_7.png (305579 bytes): 5ec103bdb2cdeaa5f649c368f1f4e17ccb0147f0398729dd0288596e77185023
+
+OriginalSuccessPanel composes the restored SuccessPanel lifecycle, RewardGetPanel dispatch and big reward-item factory. Initialization starts the source main/title scale curves, applies base alpha/localized labels, retains ItemGetInfo, replaces Close/Get/More button listeners, then runs the success timestamps/audio. Refresh appends actual Item_Big instances without clearing previous children, followed by the early-level label centering, text 1, hidden ad and hidden ordinary claim. Later refresh does not undo earlier visibility changes.
+
+Main scale completion at configured 0.25 seconds triggers the captured guide branch. Title has its independent configured 0.15-second delay and 0.25-second duration, including its original overshoot curve. Native DOTween calls are reproduced using the existing scene animation driver and serialized curves, keeping the project on official Unity assemblies. Close uses 0.25-second InBack, preserves independent opening/title animation, and accepts repeated calls like the native method. No extra closing debounce is introduced. Direct guide GetCallback bypasses Button gating/audio; standard Button callbacks use the injected gate, action, then Click audio.
+
+Hide delegates through SuccessPanel lifecycle so base hidden action and 2.5-second queue scheduling precede its mode/target/guide branch. SDK/configuration/time and production host dependencies remain explicit. The view does not synthesize ads, reward payloads or grants.
+
+Evidence: RewardGetPanel.Init 0x9d9ab4; SuccessPanel.Refresh 0x9e7d94; BaseLSSPanel.Init 0x9c4a78, Close 0x9c4f78, Hide 0x9c5218; PanelLssTween.PlayTween 0x9e968c. See prior lifecycle and reward-dispatch audits for branch evidence.
+
+Validation uses actual prefabs, fonts and sprites, verifies early/later refresh behavior, gate/action/audio ordering, main-versus-title timing, guide close and delayed queue consumption. Play validation renders newly captured early and ordinary claim layouts on the current scene canvas with explicit fixture rewards, guide consumer and ad-completion consumer. These fixtures do not prove complete production startup, payout integration or whole-lifecycle visual parity. Production unified panel registry and startup composition remain pending.
+
+Verification: Unity 2022.3.62f3 full regression has 110 PASS markers and final NUT_CONTENT_VALIDATION_PASS in Library/success-panel-validation-2.log. Actual Play completed NUT_SUCCESS_PANEL_PLAY_PASS in Library/success-panel-play.log. Both successful logs have no compiler-error or exception entries. Current 480x1040 captures success-panel-guide-current.png and success-panel-normal-current.png were visually inspected: restored purple background/pink title, cash and diamond big-item effects, source localized Withdraw versus Claim x10/Only a little and ad icon. Test rewards are explicit fixture values. Existing scene-exit pooled-parent warnings remain outside this change.

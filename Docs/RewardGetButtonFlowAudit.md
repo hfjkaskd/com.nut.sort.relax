@@ -10,6 +10,6 @@ OriginalRewardGetFlow exposes existing SDK, configuration, clock and shared time
 
 Validation covers both thresholds, inclusive interstitial boundary, signed integer overflow, callback false/true and repetition, pending completion, mutation before configuration failure, lucky timestamp order, and early/later SuccessPanel composition. Fixtures do not call an SDK.
 
-Remaining: restore and bind the actual SuccessPanel prefab, inherited button visuals, panel host and production configuration/time/SDK composition. This change alone does not enable production startup or establish visual parity.
+Follow-up: the actual SuccessPanel prefab and inherited button visuals are restored in SuccessPanelViewAudit.md. Remaining: production panel host and configuration/time/SDK composition. This change alone does not enable production startup or establish visual parity.
 
 Verification: local Unity 2022.3.62f3 full content regression passed, including the new NUT_REWARD_GET_FLOW_VALIDATION_PASS and final NUT_CONTENT_VALIDATION_PASS. No C# compiler errors or runtime exception entries in Library/reward-get-flow-validation.log.
