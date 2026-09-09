@@ -132,11 +132,14 @@ namespace NutSort.Validation
                 {
                     if(Time.time<nextAction||startup.Replay.Panel!=null)return;
                     Check(game.PlayerLevel==4&&game.User.LevelSeed==1&&game.IsInitDone&&!game.ModalInputBlocked,"Source replay preserves level/seed and returns input");
-                    Debug.Log("NUT_LOCAL_GAMEPLAY_PLAY_PASS default native teaching panel/markers/rule text and world-input override, local final-stage text, last-teaching close and later-level override reset; default boot; four tutorial seeds and levels 2/3 through real world ray clicks; native next and duplicate guard; settled/partial persistence reload; explicit deadlock fixture through native failure delay and retry Button; real replay popup Button; no fake earnings.");
+                    Debug.Log("NUT_LOCAL_GAMEPLAY_PLAY_PASS default native teaching panel/markers/rule text and world-input override, local final-stage text, last-teaching close and later-level override reset; default boot; four tutorial seeds and levels 2/3 through real world ray clicks; native success prefab/title/close animation and raycast next with duplicate guard; settled/partial persistence reload; explicit deadlock fixture through native failure delay and retry Button; real replay popup Button; no fake earnings.");
                     Finish(0);return;
                 }
                 if(local.AwaitingNext)
                 {
+                    if(local.SuccessPanel.Closing)return;
+                    if(Vector3.Distance(local.SuccessPanel.Main.localScale,Vector3.one)>.001f||Vector3.Distance(local.SuccessPanel.Title.localScale,Vector3.one)>.001f)return;
+                    Check(!local.SuccessPanel.Ad.activeInHierarchy&&!local.SuccessPanel.GetButton.gameObject.activeInHierarchy&&local.SuccessPanel.MoreLabel.text=="Next level","Native local success shows next-level action without SDK claim controls");
                     Check(!game.IsInitDone&&game.ModalInputBlocked,"Settlement blocks world input");
                     var saved=OriginalUserDataJson.Read(PlayerPrefs.GetString(OriginalUserStore.Key),Resources.Load<OriginalUserDefaults>("Configuration/OriginalUserDefaults"));
                     Check(saved.Level==game.PlayerLevel&&string.IsNullOrEmpty(saved.LevelInfo),"Atomic pending-board checkpoint");
@@ -151,8 +154,12 @@ namespace NutSort.Validation
                     {
                         phase=2;game=null;startup=null;board=null;SceneManager.LoadScene("LuoSiSortGame");return;
                     }
-                    int level=game.PlayerLevel;local.NextButton.onClick.Invoke();local.NextButton.onClick.Invoke();
-                    Check(game.PlayerLevel==level&&game.IsRestarting&&!local.AwaitingNext,"Next button starts once without incrementing again");return;
+                    int level=game.PlayerLevel;var next=local.NextButton;var canvas=next.GetComponentInParent<Canvas>();
+                    var pointer=new PointerEventData(EventSystem.current){position=RectTransformUtility.WorldToScreenPoint(canvas.renderMode==RenderMode.ScreenSpaceOverlay?null:canvas.worldCamera,next.transform.position),button=PointerEventData.InputButton.Left};
+                    var hits=new List<RaycastResult>();EventSystem.current.RaycastAll(pointer,hits);
+                    Check(hits.Count>0&&ExecuteEvents.GetEventHandler<IPointerClickHandler>(hits[0].gameObject)==next.gameObject,"Actual UI raycast resolves native next-level button");
+                    ExecuteEvents.Execute(next.gameObject,pointer,ExecuteEvents.pointerClickHandler);next.onClick.Invoke();
+                    Check(game.PlayerLevel==level&&local.SuccessPanel.Closing&&!game.IsRestarting&&local.AwaitingNext,"Native close starts once before next-board initialization without incrementing again");return;
                 }
                 Check(game.IsInitDone,"Default local boot enables real input without test binding or flag overrides");
                 if(Time.time<nextAction)return;

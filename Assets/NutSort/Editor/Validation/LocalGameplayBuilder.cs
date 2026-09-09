@@ -42,6 +42,19 @@ namespace NutSort.Validation
             }
             finally{UnityEngine.Object.DestroyImmediate(instance);}
         }
+        private static void BuildLocalSuccess()
+        {
+            var instance=(GameObject)PrefabUtility.InstantiatePrefab(Resources.Load<GameObject>("Prefabs/Panels/SuccessPanel"));
+            try
+            {
+                var panel=instance.GetComponent<OriginalSuccessPanel>();
+                panel.Ad.SetActive(false);panel.CloseButton.gameObject.SetActive(false);panel.GetButton.gameObject.SetActive(false);
+                panel.Main.Find("Items").gameObject.SetActive(false);
+                panel.MoreLabel.rectTransform.anchoredPosition=Vector2.zero;
+                PrefabUtility.SaveAsPrefabAsset(instance,"Assets/Resources/prefabs/panels/LocalSuccess.prefab");
+            }
+            finally{UnityEngine.Object.DestroyImmediate(instance);}
+        }
         public static void Run()
         {
             GameObject root=null;
@@ -61,10 +74,10 @@ namespace NutSort.Validation
                 var card=Rect("Card",backdrop,new Vector2(.5f,.5f),Vector2.zero,new Vector2(620,330));
                 card.gameObject.AddComponent<Image>().color=new Color(.10f,.18f,.24f,1);
                 var message=Label("Message",card,font,"Level complete",new Vector2(0,45),new Vector2(560,150),38);
-                var next=Button("Next",card,font,"Next level");var dismiss=Button("Dismiss",card,font,"Continue");
+                var dismiss=Button("Dismiss",card,font,"Continue");
                 var so=new SerializedObject(owner);
                 so.FindProperty("modeLabel").objectReferenceValue=mode;so.FindProperty("message").objectReferenceValue=message;
-                so.FindProperty("resultPanel").objectReferenceValue=backdrop.gameObject;so.FindProperty("next").objectReferenceValue=next;
+                so.FindProperty("resultPanel").objectReferenceValue=backdrop.gameObject;
                 so.FindProperty("dismiss").objectReferenceValue=dismiss;
                 so.FindProperty("maximumAddedTiles").intValue=12;
                 so.FindProperty("unavailableText").stringValue="Tool unavailable\nSDK rewards are skipped";
@@ -74,7 +87,9 @@ namespace NutSort.Validation
                 so.FindProperty("localTeachingCaption").stringValue="Local";
                 so.FindProperty("localFinalTeachingText").stringValue="Complete this level to continue in local mode";
                 so.FindProperty("modeText").stringValue="LOCAL MODE - SDK skipped";
-                so.FindProperty("successText").stringValue="Level complete\nProgress saved locally";
+                so.FindProperty("successPrefabPath").stringValue="Prefabs/Panels/LocalSuccess";
+                so.FindProperty("localNextCaption").stringValue="Next level";
+                BuildLocalSuccess();
                 so.FindProperty("failurePrefabPath").stringValue="Prefabs/Panels/LocalFailure";
                 BuildLocalFailure();
                 var bottom=((GameObject)PrefabUtility.InstantiatePrefab(Resources.Load<GameObject>("Prefabs/Panels/MainPanelBottom"),rect)).GetComponent<OriginalMainBottomView>();

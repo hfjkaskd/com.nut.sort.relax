@@ -31,6 +31,8 @@ namespace NutSort.UI
         private Action<float,Action> schedule;
         private OriginalPanelActionQueue queue;
         private bool opening,titleOpening;
+        private Action openingCompleted;
+        public bool Closing=>closes.Count>0;
         private float elapsed;
         private struct CloseTrack { public float Elapsed;public Vector3 Start;public bool Started; }
         private readonly List<CloseTrack> closes=new List<CloseTrack>();
@@ -52,17 +54,29 @@ namespace NutSort.UI
         }
         public void Init(OriginalItemGetInfo value)
         {
-            lifecycle.Init(()=>
-            {
-                main.localScale=Vector3.zero;title.localScale=Vector3.zero;
-                elapsed=0;opening=titleOpening=true;
-                backdrop.color=new Color(0,0,0,settings.BackdropAlpha);
-                foreach(var label in labels)label.Text.text=tables.Text.GetText(label.Id,language);
-                info=value;
-                Close.onClick.RemoveAllListeners();Close.onClick.AddListener(ClickClose);
-                GetBtn.onClick.RemoveAllListeners();GetBtn.onClick.AddListener(ClickGet);
-                MoreGetBtn.onClick.RemoveAllListeners();MoreGetBtn.onClick.AddListener(ClickMore);
-            });
+            openingCompleted=()=>lifecycle.TweenEndRefresh(()=>{});
+            lifecycle.Init(()=>{InitializePresentation();info=value;});
+        }
+        // Explicit presentation-only composition for authorized local progression.
+        // It never runs reward/account lifecycle or synthesizes claim data.
+        public void InitLocal(OriginalTables tables,string language,Func<bool> gate,Action<string> audio,Action closed,string caption)
+        {
+            this.tables=tables;this.language=language;this.gate=gate;this.audio=audio;this.closed=closed;
+            openingCompleted=null;
+            InitializePresentation();moreLabel.text=caption;
+            Close.onClick.RemoveAllListeners();Close.onClick.AddListener(ClickClose);
+            GetBtn.onClick.RemoveAllListeners();GetBtn.onClick.AddListener(ClickClose);
+            MoreGetBtn.onClick.RemoveAllListeners();MoreGetBtn.onClick.AddListener(ClickClose);
+        }
+        private void InitializePresentation()
+        {
+            main.localScale=Vector3.zero;title.localScale=Vector3.zero;
+            elapsed=0;opening=titleOpening=true;
+            backdrop.color=new Color(0,0,0,settings.BackdropAlpha);
+            foreach(var label in labels)label.Text.text=tables.Text.GetText(label.Id,language);
+            Close.onClick.RemoveAllListeners();Close.onClick.AddListener(ClickClose);
+            GetBtn.onClick.RemoveAllListeners();GetBtn.onClick.AddListener(ClickGet);
+            MoreGetBtn.onClick.RemoveAllListeners();MoreGetBtn.onClick.AddListener(ClickMore);
         }
         public void Refresh()
         {
@@ -88,7 +102,7 @@ namespace NutSort.UI
             if(opening)
             {
                 main.localScale=Vector3.one*settings.PanelOpenCurve.Evaluate(Mathf.Clamp01(elapsed/settings.PanelDurationTime));
-                if(elapsed>=settings.PanelDurationTime){opening=false;lifecycle.TweenEndRefresh(()=>{});}
+                if(elapsed>=settings.PanelDurationTime){opening=false;openingCompleted?.Invoke();}
             }
             if(titleOpening)
             {

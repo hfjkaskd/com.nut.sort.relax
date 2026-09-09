@@ -10,6 +10,8 @@
 
 失败重试现已改用原 FailPanel 的本地预制体变体，并恢复缺失的 GameLose 音频；SDK 收益/复活子树隐藏。详见 [原版失败接入](LocalNativeFailure.md)。
 
+过关现已接入原版标题、入场/关闭动画和按钮预制体变体；关闭完成后才进入下一关。详见 [原版过关表现](LocalNativeSuccess.md)。
+
 详见 [教学接入](LocalGameplayTeaching.md)、[本地推进](LocalGameplayProgression.md)、[核心道具入口](LocalCoreTools.md)、[玩法解锁](LocalGameplayUnlocks.md)。SDK 收益、广告回调、提现与服务器奖励均未模拟；完整奖励引导、外围生命周期、国家/AB GM 和真机视觉对照仍未完成。
 
 下方保留历轮恢复记录；其中早期“尚未接入”等描述反映当轮状态，当前入口以本节和上述最新验证文档为准。
