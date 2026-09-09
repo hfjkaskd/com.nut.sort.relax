@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f57856e8ecd49a0ba8a6381b4c1a2ca, type: 3}
+  m_Name: OriginalServerConfigDefaults
+  m_EditorClassIdentifier:
+  LSSLR1: 30
+  LSSLR2: 4
+  LSSLRFP: 3
+  LSSLRFV: 5
+  LSSLD1: 300
+  LSSLD2: 30
+  LSSLDR:
+  - 80
+  - 0
+  - 0
+  - 0
+  - 7
+  - 3
+  - 7
+  - 1
+  - 7
+  - 3
+  LSSEDGC: 2
+  LSSR1: 7
+  LSSR2: 4
+  LSSUPT:
+  - 90
+  - 120
+  LSSNTY: 1
+  LSSGPUL:
+  - 8
+  - 21
+  - 61
+  - 111
+  LSS260820: 0
+  LSSSHSLV: 10
+  LSSLSMAC: 12
+  LSSAB: 0
+  ksCountry: ID-BR

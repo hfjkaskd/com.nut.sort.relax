@@ -26,7 +26,9 @@ namespace NutSort.Validation
             string fixture=File.ReadAllText(Path.Combine(Application.dataPath,"NutSort/Editor/Validation/user-data-fixture.json"));
             var data=OriginalUserDataJson.Read(fixture,defaults);
             var expected=JObject.Parse(fixture);var actual=JObject.Parse(OriginalUserDataJson.Write(data));
-            Check(expected.Count==62&&JToken.DeepEquals(expected,actual),"All 62 top-level fields round-trip with nested documents and exact strings");
+            // Native ServerConfigData ignores these fixture unknown fields and constructs its own defaults.
+            expected["ServerConfigData"]=JObject.Parse("{\"LSSLR1\":30,\"LSSLR2\":4,\"LSSLRFP\":3,\"LSSLRFV\":5,\"LSSLD1\":300,\"LSSLD2\":30,\"LSSLDR\":[80,0,0,0,7,3,7,1,7,3],\"LSSEDGC\":2,\"LSSR1\":7,\"LSSR2\":4,\"LSSUPT\":[90,120],\"LSSNTY\":true,\"LSSGPUL\":[8,21,61,111],\"LSS260820\":false,\"LSSSHSLV\":10,\"LSSLSMAC\":12,\"LSSAB\":false,\"ksCountry\":\"ID-BR\"}");
+            Check(expected.Count==62&&JToken.DeepEquals(expected,actual),"All 62 top-level fields round-trip, with typed server-config defaults and other nested documents preserved");
             Check(data.RegisterTime==9007199254740993L&&data.LoginTime==long.MaxValue,"64-bit timestamps avoid double precision loss");
             int level=data.Level,revoke=data.RevokeCount;string board=data.LevelInfo;bool audio=data.IsAudio;
             data.Init();Check(data.CurrentLevelAddScrewCount==0&&data.Level==level&&data.RevokeCount==revoke&&data.LevelInfo==board&&data.IsAudio==audio,"Source Init resets only CurrentLevelAddScrewCount");

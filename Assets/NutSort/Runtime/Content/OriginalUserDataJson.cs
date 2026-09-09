@@ -33,6 +33,8 @@ namespace NutSort.Content
                     string name=(string)reader.Value;
                     if(!reader.Read())throw new JsonSerializationException("Missing user field value.");
                     while(reader.TokenType==JsonToken.Comment)if(!reader.Read())throw new JsonSerializationException("Missing user field value.");
+                    if(string.Equals(name,"ServerConfigData",StringComparison.OrdinalIgnoreCase))
+                    {data.ServerConfigData=OriginalServerConfigJson.ReadValue(reader,defaults.ServerConfig);continue;}
                     JToken value=JToken.ReadFrom(reader);
                     // Process in source order: duplicate and case-varied field names
                     // overwrite earlier values just as Json.NET field deserialization.
@@ -62,7 +64,6 @@ namespace NutSort.Content
                         case "REGISTERTIME": data.RegisterTime=(long)value;break;
                         case "LOGINTIME": data.LoginTime=(long)value;break;
                         case "USERLSSINFO": data.UserLssInfo=Document(value);break;
-                        case "SERVERCONFIGDATA": data.ServerConfigData=Document(value);break;
                         case "GOLDREWARDTARGETS2CDATA": data.GoldRewardTargetS2CData=Document(value);break;
                         case "SCREWDONECOUNT": data.ScrewDoneCount=(int)value;break;
                         case "SCREWMOVECOUNT": data.ScrewMoveCount=(int)value;break;
