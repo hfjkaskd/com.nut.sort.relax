@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: OriginalMainLevel
   m_EditorClassIdentifier:
   PrefabPath: Prefabs/Panels/MainPanel
+  LocalGameplayPath: Prefabs/Panels/LocalGameplay
   LanguageCode: en
   MinimumLevel: 2
   TextId: 2

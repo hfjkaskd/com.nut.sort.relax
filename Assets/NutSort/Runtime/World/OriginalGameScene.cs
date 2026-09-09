@@ -63,6 +63,9 @@ namespace NutSort.World
         private readonly OriginalFailureFlow failure = new OriginalFailureFlow();
         public bool IsFail { get => failure.IsFail; set => failure.IsFail = value; }
 
+        public bool NewLevelMode => session.LSS260820;
+        public event Action BoardReady;
+
         public bool NewGameplayUnlock(bool showBanner, Action<int,int,bool> showPanel)
         {
             return new OriginalGameplayUnlock(audioPlayer.UserState.Data, unlockConfig.Read, showPanel).Run(showBanner);
@@ -271,7 +274,11 @@ namespace NutSort.World
             if (!IsRestarting || level == null) return;
             if (pendingInitializations.Count == 0)
             {
-                if (level.AreNutsInitialized) IsRestarting = false;
+                if (level.AreNutsInitialized)
+                {
+                    IsRestarting = false;
+                    BoardReady?.Invoke();
+                }
                 return;
             }
             // Each InitLevel callback captures its own flags and delay. A later

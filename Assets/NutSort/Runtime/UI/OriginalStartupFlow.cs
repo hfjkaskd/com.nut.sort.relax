@@ -16,6 +16,7 @@ namespace NutSort.UI
         public OriginalMainLevelView MainLevel { get; private set; }
         public OriginalTargetRewardBanner TargetReward { get; private set; }
         public OriginalLoadingView Loading => loading;
+        public LocalGameplayController LocalGameplay { get; private set; }
 
         private IEnumerator Start()
         {
@@ -38,6 +39,12 @@ namespace NutSort.UI
             Replay = MainLevel.GetComponent<OriginalReplayController>();
             Replay.Bind(game, audioPlayer, panelCanvas, mainLevelSettings.LanguageCode, clickMask);
             MainLevel.Refresh(game.Tables, game.PlayerLevel, mainLevelSettings.LanguageCode, false, false);
+            if (!string.IsNullOrEmpty(mainLevelSettings.LocalGameplayPath))
+            {
+                var localPrefab = Resources.Load<GameObject>(mainLevelSettings.LocalGameplayPath);
+                LocalGameplay = Instantiate(localPrefab, panelCanvas, false).GetComponent<LocalGameplayController>();
+                LocalGameplay.Bind(game, audioPlayer, this, mainLevelSettings.LanguageCode);
+            }
             while (loading.IsVisible) yield return null;
             game.InputBlocked = false;
         }

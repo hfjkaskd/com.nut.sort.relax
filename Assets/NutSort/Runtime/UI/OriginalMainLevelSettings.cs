@@ -6,6 +6,7 @@ namespace NutSort.UI
     public sealed class OriginalMainLevelSettings : ScriptableObject
     {
         public string PrefabPath;
+        public string LocalGameplayPath;
         public string LanguageCode;
         public int MinimumLevel;
         public int TextId;
