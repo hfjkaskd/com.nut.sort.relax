@@ -26,7 +26,7 @@ namespace NutSort.Validation
         }
         public static void RunPlay()
         {
-            OriginalPreferenceFixture.Begin();
+            OriginalPreferenceFixture.Begin("{\"Level\":2}");
             EditorSceneManager.OpenScene("Assets/Scenes/LuoSiSortGame.unity");
             SessionState.SetBool(Key,true);EditorApplication.EnterPlaymode();
         }

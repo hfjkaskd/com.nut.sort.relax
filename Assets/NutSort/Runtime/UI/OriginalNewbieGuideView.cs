@@ -185,6 +185,12 @@ namespace NutSort.UI
             foreach(var label in labels)label.Text.text=tables.Text.GetText(label.Id,language);
         }
 
+        // Refresh a configured label without changing its prefab layout/style.
+        public void SetLabel(int textId,string value)
+        {
+            foreach(var label in labels)if(label.Id==textId)label.Text.text=value;
+        }
+
         public void BindGuide(OriginalUserLocalData user,Func<bool> skipTeaching,IOriginalGuideBranches branches)
         {
             teachingFlow=new OriginalTeachingFlow(user,this,skipTeaching);

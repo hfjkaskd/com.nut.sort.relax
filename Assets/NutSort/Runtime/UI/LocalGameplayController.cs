@@ -76,18 +76,21 @@ namespace NutSort.UI
             SetExchange(false,0);
             bottom.Refresh();
             RefreshLevel();
+            RefreshTeaching();
             BeginCoreInitialization();
             game.SaveUserData();
         }
         private void RefreshLevel() => startup.MainLevel.Refresh(game.Tables,game.PlayerLevel,language,false,false);
         private void ClearGuide()
         {
+            CloseTeaching();
             for (int i=0;i<game.Level.Board.Screws.Length;i++) game.Level.GetScrew(i).ClearGuide();
         }
         private void SaveTutorialTransition()
         {
             PersistPendingBoard();
             RefreshLevel();
+            RefreshTeaching();
         }
         private void PersistPendingBoard()
         {

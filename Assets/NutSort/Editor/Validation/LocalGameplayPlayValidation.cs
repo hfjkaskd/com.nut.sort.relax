@@ -9,6 +9,8 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 namespace NutSort.Validation
 {
     [InitializeOnLoad]
@@ -45,6 +47,16 @@ namespace NutSort.Validation
         {
             Physics.SyncTransforms();
             var point=game.WorldCamera.WorldToScreenPoint(game.Level.GetScrew(index).Bounds.bounds.center);
+            if(startup.LocalGameplay.TeachingPanel!=null)
+            {
+                var data=new PointerEventData(EventSystem.current){position=point,button=PointerEventData.InputButton.Left};
+                var hits=new List<RaycastResult>();EventSystem.current.RaycastAll(data,hits);
+                if(hits.Count>0)
+                {
+                    var handler=ExecuteEvents.GetEventHandler<IPointerClickHandler>(hits[0].gameObject);
+                    if(handler!=null)ExecuteEvents.Execute(handler,data,ExecuteEvents.pointerClickHandler);
+                }
+            }
             return game.TryOperateAtScreenPoint(point);
         }
         private static void Tick()
@@ -62,7 +74,7 @@ namespace NutSort.Validation
                     if(!local.UnlockPanel.Closing)local.UnlockPanel.ContinueButton.onClick.Invoke();
                     return;
                 }
-                if(game.ModalInputBlocked&&!local.ResultVisible&&startup.Replay.Panel==null)return;
+                if(game.ModalInputBlocked&&!game.IsCanOperatorScrew&&!local.ResultVisible&&startup.Replay.Panel==null)return;
                 Check(game.User.Gold==0&&game.User.Coin==0&&game.User.GoldRewardTargetS2CData==null,"No synthetic earnings or reward-stage response");
                 if(phase==2)
                 {
@@ -120,7 +132,7 @@ namespace NutSort.Validation
                 {
                     if(Time.time<nextAction||startup.Replay.Panel!=null)return;
                     Check(game.PlayerLevel==4&&game.User.LevelSeed==1&&game.IsInitDone&&!game.ModalInputBlocked,"Source replay preserves level/seed and returns input");
-                    Debug.Log("NUT_LOCAL_GAMEPLAY_PLAY_PASS default boot; four tutorial seeds and levels 2/3 through real world ray clicks; native next and duplicate guard; settled/partial persistence reload; explicit deadlock fixture through native failure delay and retry Button; real replay popup Button; no fake earnings.");
+                    Debug.Log("NUT_LOCAL_GAMEPLAY_PLAY_PASS default native teaching panel/markers/rule text and world-input override, local final-stage text, last-teaching close and later-level override reset; default boot; four tutorial seeds and levels 2/3 through real world ray clicks; native next and duplicate guard; settled/partial persistence reload; explicit deadlock fixture through native failure delay and retry Button; real replay popup Button; no fake earnings.");
                     Finish(0);return;
                 }
                 if(local.AwaitingNext)
@@ -147,15 +159,31 @@ namespace NutSort.Validation
                 if(board!=game.Level.Board)
                 {
                     board=game.Level.Board;solution=Solve(board);move=0;boards++;
+                    if(game.PlayerLevel==1)
+                    {
+                        var teaching=local.TeachingPanel;
+                        Check(teaching!=null&&teaching.IsOpen&&game.IsCanOperatorScrew&&game.ModalInputBlocked,"Default native teaching modal permits world input through the original override");
+                        Check(!teaching.HollowMask.gameObject.activeSelf,"Pure teaching hides hollow mask");
+                        var serialized=new SerializedObject(teaching);var markers=serialized.FindProperty("TeachLevels");
+                        string filled=serialized.FindProperty("filledMarkerPath").stringValue,empty=serialized.FindProperty("emptyMarkerPath").stringValue;
+                        for(int i=0;i<markers.arraySize;i++)
+                            Check(((Image)markers.GetArrayElementAtIndex(i).objectReferenceValue).sprite==Resources.Load<Sprite>(i<=game.User.LevelSeed?filled:empty),"Native inclusive teaching markers");
+                        string expected=game.User.LevelSeed>2?new SerializedObject(local).FindProperty("localFinalTeachingText").stringValue:game.Tables.Text.GetText(70+game.User.LevelSeed,"en");
+                        Check(teaching.Tip.text==expected,"Original first three rule messages and explicit local final-stage text");
+                    }
+                    else Check(local.TeachingPanel==null&&!game.IsCanOperatorScrew,"Later levels clear the tutorial input override");
                     Debug.Log("NUT_LOCAL_BOARD level="+game.PlayerLevel+" seed="+game.User.LevelSeed+" moves="+solution.Count);
                     nextAction=Time.time+.9f;return;
                 }
                 if(move>=solution.Count)return;
                 foreach(var rod in board.Screws)if(!rod.IsCanOperator)return;
                 ScreenCapture.CaptureScreenshot("Library/local-gameplay-board-current.png");
+                if(game.PlayerLevel==1&&move==0)ScreenCapture.CaptureScreenshot("Library/local-teaching-"+game.User.LevelSeed+"-current.png");
                 var step=solution[move++];
                 Check(Click(step.x).Kind==ScrewOperationKind.Ready,"Actual screen selection "+step.x);
                 Check(Click(step.y).Kind==ScrewOperationKind.Moved,"Actual screen transfer "+step.y);
+                if(game.PlayerLevel==1&&game.User.LevelSeed>=3&&game.Level.Board.IsSuccess)
+                    Check(local.TeachingPanel==null,"Last tutorial victory closes teaching through native move completion");
                 nextAction=Time.time+1.2f;
                 if(phase==3)
                 {

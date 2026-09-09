@@ -56,6 +56,9 @@ namespace NutSort.Validation
                 so.FindProperty("unavailableText").stringValue="Tool unavailable\nSDK rewards are skipped";
                 so.FindProperty("gameplaySession").objectReferenceValue=Resources.Load<NutSort.World.OriginalSceneSession>("Configuration/OriginalSceneSession");
                 so.FindProperty("unlockPrefabPath").stringValue="Prefabs/Panels/UnlockGameplayPanel";
+                so.FindProperty("teachingPrefabPath").stringValue="Prefabs/Panels/NewbieGuidePanel";
+                so.FindProperty("localTeachingCaption").stringValue="Local";
+                so.FindProperty("localFinalTeachingText").stringValue="Complete this level to continue in local mode";
                 so.FindProperty("modeText").stringValue="LOCAL MODE - SDK skipped";
                 so.FindProperty("successText").stringValue="Level complete\nProgress saved locally";
                 so.FindProperty("failureText").stringValue="No moves left\nTry another board";
