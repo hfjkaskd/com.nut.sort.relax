@@ -1,5 +1,7 @@
 using System;
 using NutSort.UI;
+using NutSort.Content;
+using NutSort.Gameplay;
 using NutSort.World;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -14,7 +16,7 @@ namespace NutSort.Validation
         private static OriginalReplayController replay;
         private static GameObject mask;
         private static int phase, seed;
-        private static string saved;
+        private static LocalGameplayController local;
         private static double timeout;
         private static float deadline;
         static OriginalReplayMaskPlayValidation()
@@ -39,11 +41,11 @@ namespace NutSort.Validation
                 if(phase==0)
                 {
                     var startup=UnityEngine.Object.FindObjectOfType<OriginalStartupFlow>();
-                    replay=startup.Replay;
+                    replay=startup.Replay;local=startup.LocalGameplay;
                     mask=(GameObject)new SerializedObject(startup).FindProperty("clickMask").objectReferenceValue;
                     Check(!mask.activeSelf && replay.Panel==null,"Normal startup starts without click mask or replay panel");
                     Check(replay.BeginClick() && replay.BeginClick(),"Direct repeated callbacks each acquire, without a timer gate");
-                    Check(mask.activeSelf && game.ModalInputBlocked,"Real serialized mask blocks during acquisitions");
+                    Check(mask.activeSelf && !game.ModalInputBlocked,"Real serialized mask blocks UI without becoming a registered modal");
                     replay.enabled=false;
                     deadline=Time.time+.35f;phase=1;return;
                 }
@@ -51,7 +53,7 @@ namespace NutSort.Validation
                 if(phase==1)
                 {
                     Check(!mask.activeSelf && !game.ModalInputBlocked,"Scene scheduler releases both acquisitions while controller disabled");
-                    replay.enabled=true;replay.ReplayButton.onClick.Invoke();
+                    replay.enabled=true;local.Bottom.Replay.onClick.Invoke();
                     Check(replay.Panel!=null && mask.activeSelf && game.ModalInputBlocked,"Actual main Button opens replay and acquires mask");
                     replay.Panel.enabled=false;
                     deadline=Time.time+.35f;phase=2;return;
@@ -70,13 +72,12 @@ namespace NutSort.Validation
                 if(phase==3)
                 {
                     Check(replay.Panel==null && !mask.activeSelf && !game.ModalInputBlocked,"Global close destroys hidden panel and restores gameplay");
-                    replay.ReplayButton.onClick.Invoke();
+                    local.Bottom.Replay.onClick.Invoke();
                     deadline=Time.time+.35f;phase=4;return;
                 }
                 if(phase==4)
                 {
                     seed=UnityEngine.Object.FindObjectOfType<OriginalUserSession>().Data.LevelSeed;
-                    saved=PlayerPrefs.GetString(NutSort.Content.OriginalUserStore.Key);
                     replay.Panel.ReplayButton.onClick.Invoke();
                     Check(replay.Panel.Closing && game.IsRestarting && game.Level.Board==null,
                         "Actual Replay Button starts close and immediately clears board for reconstruction");
@@ -84,9 +85,9 @@ namespace NutSort.Validation
                 }
                 Check(replay.Panel==null && !mask.activeSelf && !game.ModalInputBlocked && !game.IsRestarting,
                     "Normal replay completes close, mask release and actual scene reconstruction");
-                Check(UnityEngine.Object.FindObjectOfType<OriginalUserSession>().Data.LevelSeed==seed &&
-                    PlayerPrefs.GetString(NutSort.Content.OriginalUserStore.Key)==saved,"Actual replay retains seed and does not add a save");
-                Debug.Log("NUT_REPLAY_MASK_PLAY_VALIDATION_PASS normal startup binding, repeated acquisition, disabled-controller release, disabled-panel opening and inactive-panel close, actual main/continue/replay Buttons, modal retention, post-close release and scene restart without seed/save change.");
+                var saved=OriginalUserDataJson.Read(PlayerPrefs.GetString(OriginalUserStore.Key),Resources.Load<OriginalUserDefaults>("Configuration/OriginalUserDefaults"));
+                Check(UnityEngine.Object.FindObjectOfType<OriginalUserSession>().Data.LevelSeed==seed&&saved.LevelSeed==seed&&saved.LevelInfo==OriginalBoardSnapshotJson.Write(game.Level.CaptureSnapshot()),"Actual replay retains seed and local board checkpoint");
+                Debug.Log("NUT_REPLAY_MASK_PLAY_VALIDATION_PASS normal startup binding, repeated acquisition, disabled-controller release, disabled-panel opening and inactive-panel close, actual main/continue/replay Buttons, modal retention, post-close release and scene restart with unchanged seed and local board checkpoint; counted UI shield is separate from registered modal state.");
                 Finish(0);
             }
             catch(Exception e){Debug.LogException(e);Finish(1);}

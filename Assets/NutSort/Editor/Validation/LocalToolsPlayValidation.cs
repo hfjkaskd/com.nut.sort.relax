@@ -119,7 +119,7 @@ namespace NutSort.Validation
                 }
                 if(phase==13)
                 {
-                    Check(startup.Replay.IsClickMasked&&game.ModalInputBlocked,"Notice dismissal preserves the still-active native click mask");
+                    Check(startup.Replay.IsClickMasked&&!game.ModalInputBlocked,"Dismissal preserves the UI shield without inventing a registered modal");
                     waitUntil=Time.time+.4f;phase=9;return;
                 }
                 if(phase==9)

@@ -61,7 +61,7 @@ namespace NutSort.UI
         private System.Collections.IEnumerator ReleaseUnlockInput()
         {
             yield return null; // registry removes the panel after its Hide callback
-            game.ModalInputBlocked=HasLocalModal||startup.Replay.Panel!=null||startup.Replay.IsClickMasked;
+            game.ModalInputBlocked=HasLocalModal||startup.Replay.Panel!=null;
         }
     }
 }

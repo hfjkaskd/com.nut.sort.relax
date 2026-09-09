@@ -13,7 +13,7 @@ namespace NutSort.UI
         private GameObject clickMask;
         private string language;
         private System.Func<bool> additionalModal;
-        public void BindModalBlocker(System.Func<bool> blocked) { additionalModal=blocked; }
+        public void BindModalBlocker(System.Func<bool> blocked) { additionalModal=blocked;RefreshModalInput(); }
         private OriginalCountedMask maskState;
         public OriginalReplayPanel Panel { get; private set; }
         public Button ReplayButton=>replayButton;
@@ -42,18 +42,25 @@ namespace NutSort.UI
             if(Panel!=null)return;
             var prefab=Resources.Load<GameObject>(settings.ReplayPath);
             Panel=Instantiate(prefab,canvas,false).GetComponent<OriginalReplayPanel>();
+            RefreshModalInput();
             Panel.Initialize(this,game.Tables,language);
         }
         public void Restart() { game.RestartLevel(); }
         public void PanelClosed(OriginalReplayPanel panel)
         {
             if(Panel!=panel)return;Panel=null;Destroy(panel.gameObject);
-            game.ModalInputBlocked=maskState.Count>0 || (additionalModal!=null&&additionalModal());
+            RefreshModalInput();
         }
         private void SetClickMask(bool active)
         {
             clickMask.SetActive(active);
-            game.ModalInputBlocked=Panel!=null || active || (additionalModal!=null&&additionalModal());
+            RefreshModalInput();
+        }
+        private void RefreshModalInput()
+        {
+            // Level.Update 0x9F91B4 checks registered panels, not UIMgr's
+            // counted UI click shield. Keep same-release world input available.
+            if(game!=null)game.ModalInputBlocked=Panel!=null || (additionalModal!=null&&additionalModal());
         }
         private void OnDestroy() { if(Panel!=null)Destroy(Panel.gameObject); }
     }

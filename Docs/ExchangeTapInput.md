@@ -1,0 +1,15 @@
+# Exchange release ordering and UI click masks
+
+A reproducible default-input bug prevented exchange when EventSystem handled the exchange-mask Button before the game's same-release world ray. The Button acquired the 0.2-second UI click shield; OriginalReplayController incorrectly mapped that shield to ModalInputBlocked, so the later world ray returned Ignored. The prior separate Button/world tests did not exercise this ordering.
+
+Current reverse evidence: Level.Update 0x9F91B4 calls UIMgr.IsExistPanel at 0x9F9290 and applies the teaching override before checking board and IsInitDone. IsExistPanel 0x9F7DF8 tests registered panel count > 1. It does not inspect the click-mask count. MainPanel.MaskCallback 0x9DE890 calls SetExchangeState(false, 0.5), retaining the source exchange-operation flag while restoring visuals. The counted UI mask remains a raycast-blocking UI object, not a registered modal. Raw reverse files remain outside the repository.
+
+OriginalReplayController now derives world modal state from its registered replay panel and the bound local modal provider. It refreshes that state when the panel is registered/removed, as well as when the UI shield changes. Acquiring the shield does not create a world modal. Local notice/unlock close continuations likewise use actual modal presence. The explicit one-frame local-notice dismissal fence remains; SDK behavior is unchanged.
+
+LocalExchangeTapPlayValidation uses the real EventSystem/GraphicRaycasters to resolve the topmost standard Button and dispatches its IPointerClickHandler, together with the actual game camera-ray input method. It checks both UI-first and world-first orders for one release. Each order rotates the original slots and consumes exactly one owned exchange item. The test also verifies that the counted shield actually intercepts UI raycasts and that a real replay popup blocks world input both before and after the shield expires. This is deterministic pointer-event dispatch, not an OS/device hardware-tap test.
+
+The new regression failed before the fix in Library/exchange-tap-before.log with the assertion that a counted UI mask is not a registered modal. After the fix, exchange-tap-after.log contains NUT_EXCHANGE_TAP_PLAY_PASS. Existing repeated-mask/disabled-controller/inactive-panel/restart coverage was updated to the source modal semantics and current authorized local save checkpoints; exchange-tap-replay-mask.log contains NUT_REPLAY_MASK_PLAY_VALIDATION_PASS.
+
+Complete lifecycle/source-device equivalence remains unproven. No prefabs, layouts, effects, SDK responses or inventory grants were changed by this repair; the test's initial inventory is an explicit fixture.
+
+Final Unity 2022.3.62f3 checks: exchange-tap-tools.log contains NUT_LOCAL_TOOLS_PLAY_PASS; exchange-tap-content-validation.log ends with NUT_CONTENT_VALIDATION_PASS and 164 PASS markers (1476 resources / 1474 board payloads). Preference backup restored. Existing scene teardown pool and edit-mode tool-flight diagnostics remain outside this input repair.

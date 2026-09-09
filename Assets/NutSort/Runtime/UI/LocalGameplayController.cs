@@ -153,7 +153,7 @@ namespace NutSort.UI
             yield return null;
             if (HasLocalModal) yield break;
             if (game.IsFail) ShowFailure();
-            else game.ModalInputBlocked=startup.Replay.Panel!=null||startup.Replay.IsClickMasked;
+            else game.ModalInputBlocked=startup.Replay.Panel!=null;
         }
         private void Retry()
         {
