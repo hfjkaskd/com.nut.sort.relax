@@ -182,6 +182,7 @@ namespace NutSort.Validation
                 OriginalServerConfigRequestsValidation.Validate();
                 OriginalUserRegistrationFlowValidation.Validate();
                 OriginalRegistrationRequestsValidation.Validate();
+                OriginalGoldRewardInfoFlowValidation.Validate();
                 OriginalGuideBranchAdapterValidation.Validate();
                 OriginalNewbieGuideHostValidation.Validate();
                 OriginalNewbieInteractionValidation.Validate();

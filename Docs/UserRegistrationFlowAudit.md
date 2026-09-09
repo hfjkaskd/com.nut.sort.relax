@@ -9,3 +9,5 @@
 Play 显式构造空存档的新用户，将真实 UserSession/UserStartup/CountryState、原始配置响应解析、UserConfigFlow 及 MessagePanel 串联。先注册失败并通过标准 Button 重试，再配置失败并重试，最后收到配置、请求收益、保存，并保持等待直到收益回调。原始真实存档通过既有夹具备份恢复。设备身份和收益响应仍为显式夹具。后续已在同一 Play 链路接入原始注册响应解析与用户 ID 替换（见 RegistrationRequestsAudit.md），传输及默认生产入口仍未接通。SDK 保持当前处理，没有伪造生产成功。
 
 验证：user-registration-flow-validation.log 输出 155 个 VALIDATION_PASS；user-registration-flow-play.log 输出 NUT_USER_REGISTRATION_FLOW_PLAY_PASS，最终日志没有 C# 编译错误或未处理验证异常。Unity 均已退出，存档备份已恢复且文件不存在。本轮没有修改视觉资源或使用旧截图判断效果。
+
+后续已接入收益信息管理层的强制失败拦截和确认重试，见 GoldRewardInfoFlowAudit.md。首次注册等待现由该管理层过滤后才释放，空网络响应不会直接触发注册完成回调；底层收益 Init 仍为显式验证端口。
