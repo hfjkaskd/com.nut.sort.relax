@@ -58,6 +58,10 @@ namespace NutSort.Validation
             Check(game.TryOperateAtScreenPoint(sourceScreen).Kind==ScrewOperationKind.Ignored,"Teaching does not bypass startup input blocking");
             game.InputBlocked=false;game.IsCanOperatorScrew=false;game.ModalInputBlocked=true;
             Check(game.TryOperateAtScreenPoint(sourceScreen).Kind==ScrewOperationKind.Ignored,"Modal blocks ordinary screw operation");
+            // Edit-mode raycast harness owns immediate teardown of its existing
+            // marker. Runtime deferred destruction is covered by BoardGuidePlay.
+            for(int i=0;i<level.Board.Screws.Length;i++)
+                if(level.GetScrew(i).GuideInstance!=null)UnityEngine.Object.DestroyImmediate(level.GetScrew(i).GuideInstance);
             game.IsCanOperatorScrew=true;
             Check(game.TryOperateAtScreenPoint(sourceScreen).Kind==ScrewOperationKind.Ready,"Native teaching override allows source collider selection through modal");
             game.ModalInputBlocked=false;game.IsCanOperatorScrew=false;

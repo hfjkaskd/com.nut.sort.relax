@@ -18,6 +18,17 @@ namespace NutSort.World
         private OriginalScrewOperator operation;
         private OriginalDeadlockRules deadlock;
         private OriginalScrewTypeRefresh typeRefresh;
+        private readonly OriginalBoardGuide guideRules=new OriginalBoardGuide();
+        private Func<bool> guideMode,guideSuccess;
+        private Func<int> guideLevel,guideSeed;
+        public void BindGuide(Func<bool> mode,Func<int> level,Func<int> seed,Func<bool> success)
+        {guideMode=mode;guideLevel=level;guideSeed=seed;guideSuccess=success;}
+        public void RefreshGuide()
+        {
+            if(guideMode!=null)guideRules.Refresh(Board,selected,guideMode,guideLevel,guideSeed,guideSuccess,ClearScrewGuide,ShowScrewGuide);
+        }
+        private void ClearScrewGuide(int i)=>screws[i].ClearGuide();
+        private void ShowScrewGuide(int i,int type)=>screws[i].SetGuide(type);
         private ScrewState selected;
         private bool pendingNuts, lssab;
         private float spawnDelay, spawnTime;
@@ -82,6 +93,7 @@ namespace NutSort.World
             }
             spawnDelay = useLongEntryDelay ? settings.NutInitLongDelay : settings.NutInitDelay;
             spawnTime = 0f; pendingNuts = true;
+            RefreshGuide();
         }
 
         private void Update()
@@ -172,6 +184,7 @@ namespace NutSort.World
             // Level.Update remembers the clicked target on every true return,
             // including an invalid destination that just reverted the source.
             if (result.OriginalReturnValue) selected = target;
+            RefreshGuide();
             OperationApplied?.Invoke(result, target);
             return result;
         }

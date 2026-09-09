@@ -87,6 +87,7 @@ namespace NutSort.World
 
         public void Release()
         {
+            ClearGuide();
             CancelDone();
             for (int i = 0; i < ScrewTiles.Count; i++) pool.Return(ScrewTiles[i].gameObject);
             ScrewTiles.Clear();

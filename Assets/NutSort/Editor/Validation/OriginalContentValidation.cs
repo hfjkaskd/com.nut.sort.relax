@@ -86,6 +86,7 @@ namespace NutSort.Validation
                 OriginalMainLevelValidation.Validate();
                 OriginalLayoutValidation.Validate();
                 OriginalGameplayValidation.Validate(repository);
+                OriginalBoardGuideValidation.Validate();
                 OriginalRenderingValidation.Validate();
                 OriginalPrefabValidation.Validate();
                 OriginalNutMotionValidation.Validate(repository);

@@ -7,6 +7,8 @@ namespace NutSort.World
     public sealed class OriginalScrewSettings : ScriptableObject
     {
         public string PrefabPath;
+        public string[] GuidePaths;
+        public float GuideHeightOffset;
         public Vector3 ColliderCenter;
         public Vector3 ColliderSize;
         public Vector3 CapPosition;

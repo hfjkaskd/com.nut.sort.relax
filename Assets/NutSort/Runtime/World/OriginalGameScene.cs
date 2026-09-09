@@ -207,6 +207,7 @@ namespace NutSort.World
             unlockConfig = new OriginalGameplayUnlockConfig(audioPlayer.UserState.Data, session.GameplayUnlockLevels);
             selector = new OriginalLevelSelector(repository, content, UnityLevelRandom.Instance);
             level = pool.Rent(session.LevelPrefabPath, transform).GetComponent<OriginalLevelView>();
+            level.BindGuide(()=>session.LSS260820,()=>User.Level,()=>User.LevelSeed,IsSuccess);
             effects.Bind(level, pool);
             audioPlayer.Bind(level);
             level.OperationApplied += ForwardOperation;
