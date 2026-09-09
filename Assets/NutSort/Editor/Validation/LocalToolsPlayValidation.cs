@@ -26,7 +26,7 @@ namespace NutSort.Validation
         public static void Run()
         {
             // Explicit owned-tool inventory fixture, no production grants/config.
-            OriginalPreferenceFixture.Begin("{\"Level\":4,\"RevokeCount\":3,\"ExchangeCount\":3,\"AddScrewCount\":3}");
+            OriginalPreferenceFixture.Begin("{\"Level\":4,\"NewGameplayUnlockIndex\":1,\"RevokeCount\":3,\"ExchangeCount\":3,\"AddScrewCount\":3}");
             EditorSceneManager.OpenScene("Assets/Scenes/LuoSiSortGame.unity");
             PlayModeWindow.SetCustomRenderingResolution(480,1040,"Core tools");SessionState.SetBool(Key,true);EditorApplication.EnterPlaymode();
         }
@@ -115,7 +115,12 @@ namespace NutSort.Validation
                     Check(!game.ModalInputBlocked&&!local.ResultVisible,"Notice dismiss restores input");
                     game.User.AddScrewCount=0;local.Bottom.Refresh();local.Bottom.GetOtherItem(4).Display.Click.onClick.Invoke();
                     Check(local.ResultVisible&&game.User.AddScrewCount==0,"No inventory opens SDK skip notice without grant");
-                    local.DismissButton.onClick.Invoke();waitUntil=Time.time+.4f;phase=9;return;
+                    local.DismissButton.onClick.Invoke();waitUntil=Time.time+.05f;phase=13;return;
+                }
+                if(phase==13)
+                {
+                    Check(startup.Replay.IsClickMasked&&game.ModalInputBlocked,"Notice dismissal preserves the still-active native click mask");
+                    waitUntil=Time.time+.4f;phase=9;return;
                 }
                 if(phase==9)
                 {

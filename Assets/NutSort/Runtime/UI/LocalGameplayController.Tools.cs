@@ -18,7 +18,7 @@ namespace NutSort.UI
         {
             tools=new OriginalItemManager(game.User,game.SaveUserData,bottom.Refresh,(n,r,s)=>{},(n,r)=>{});
             startup.Replay.ReplayButton.transform.parent.gameObject.SetActive(false);
-            startup.Replay.BindModalBlocker(()=>resultPanel.activeSelf);
+            startup.Replay.BindModalBlocker(()=>HasLocalModal);
             BindToolsScene();bottom.Init();
             exchangeMask.onClick.RemoveAllListeners();exchangeMask.onClick.AddListener(CancelExchange);
             exchangeMask.gameObject.SetActive(false);

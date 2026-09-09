@@ -38,6 +38,7 @@ namespace NutSort.UI
             next.onClick.AddListener(Next);
             dismiss.onClick.AddListener(Dismiss);
             BindTools();
+            BindCoreInitialization();
             retry.onClick.AddListener(Retry);
             game.BoardReady+=OnBoardReady;
             // The native initialization continuation needs unavailable reward-stage
@@ -75,6 +76,7 @@ namespace NutSort.UI
             SetExchange(false,0);
             bottom.Refresh();
             RefreshLevel();
+            BeginCoreInitialization();
             game.SaveUserData();
         }
         private void RefreshLevel() => startup.MainLevel.Refresh(game.Tables,game.PlayerLevel,language,false,false);
@@ -149,9 +151,9 @@ namespace NutSort.UI
         {
             // Keep the release that clicked the UI from also selecting a world rod.
             yield return null;
-            if (resultPanel.activeSelf) yield break;
+            if (HasLocalModal) yield break;
             if (game.IsFail) ShowFailure();
-            else game.ModalInputBlocked=false;
+            else game.ModalInputBlocked=startup.Replay.Panel!=null||startup.Replay.IsClickMasked;
         }
         private void Retry()
         {

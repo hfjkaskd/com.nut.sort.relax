@@ -57,6 +57,12 @@ namespace NutSort.Validation
                 if(startup==null)startup=UnityEngine.Object.FindObjectOfType<OriginalStartupFlow>();
                 if(game==null||startup==null||startup.LocalGameplay==null||game.IsRestarting||game.InputBlocked||!game.Level.AreNutsInitialized)return;
                 var local=startup.LocalGameplay;
+                if(local.UnlockPanel!=null)
+                {
+                    if(!local.UnlockPanel.Closing)local.UnlockPanel.ContinueButton.onClick.Invoke();
+                    return;
+                }
+                if(game.ModalInputBlocked&&!local.ResultVisible&&startup.Replay.Panel==null)return;
                 Check(game.User.Gold==0&&game.User.Coin==0&&game.User.GoldRewardTargetS2CData==null,"No synthetic earnings or reward-stage response");
                 if(phase==2)
                 {

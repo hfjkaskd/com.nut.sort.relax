@@ -17,6 +17,7 @@ namespace NutSort.UI
         private OriginalCountedMask maskState;
         public OriginalReplayPanel Panel { get; private set; }
         public Button ReplayButton=>replayButton;
+        public bool IsClickMasked=>maskState!=null&&maskState.Count>0;
         public void Bind(OriginalGameScene scene, OriginalAudioPlayer audio, Transform panelCanvas, string languageCode, GameObject mask)
         {
             clickMask=mask;game=scene;audioPlayer=audio;canvas=panelCanvas;language=languageCode;
