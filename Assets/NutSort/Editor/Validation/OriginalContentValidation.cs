@@ -170,6 +170,7 @@ namespace NutSort.Validation
                 OriginalCountryInfosValidation.Validate();
                 OriginalUserCountryStateValidation.Validate();
                 OriginalUserInitializationTailValidation.Validate();
+                OriginalServerConfigInitializationValidation.Validate();
                 OriginalGuideBranchAdapterValidation.Validate();
                 OriginalNewbieGuideHostValidation.Validate();
                 OriginalNewbieInteractionValidation.Validate();
