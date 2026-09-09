@@ -19,7 +19,7 @@ namespace NutSort.UI
         [SerializeField] private int defaultMaximum;
         private OriginalUserLocalData user;
         private Func<bool> hasLevel;
-        private Func<int> historyCount;
+        private Func<int> historyCount, maximumAddedTiles;
         private readonly List<Image> images=new List<Image>(4);
         private static Material gray;
         public int ItemType => itemType;
@@ -27,8 +27,9 @@ namespace NutSort.UI
         public Image CountIcon => countIcon;
         public TMP_Text Value => value;
         public Button Click => click;
-        public void Bind(OriginalUserLocalData user,Func<bool> hasLevel,Func<int> historyCount)
+        public void Bind(OriginalUserLocalData user,Func<bool> hasLevel,Func<int> historyCount,Func<int> maximumAddedTiles=null)
         {
+            this.maximumAddedTiles=maximumAddedTiles;
             this.user=user ?? throw new ArgumentNullException(nameof(user));
             this.hasLevel=hasLevel ?? throw new ArgumentNullException(nameof(hasLevel));
             this.historyCount=historyCount ?? throw new ArgumentNullException(nameof(historyCount));
@@ -57,6 +58,11 @@ namespace NutSort.UI
                     else
                     {
                         int used=user.CurrentLevelAddScrewCount;
+                        if(maximumAddedTiles!=null)
+                        {
+                            disabled=used>=maximumAddedTiles();
+                            break;
+                        }
                         JObject config=user.ServerConfigData ?? throw new NullReferenceException("ServerConfigData");
                         JToken maximum=null;
                         foreach(JProperty field in config.Properties())

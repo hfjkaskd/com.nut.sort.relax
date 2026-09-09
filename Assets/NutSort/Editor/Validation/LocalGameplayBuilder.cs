@@ -57,6 +57,18 @@ namespace NutSort.Validation
                 so.FindProperty("modeText").stringValue="LOCAL MODE - SDK skipped";
                 so.FindProperty("successText").stringValue="Level complete\nProgress saved locally";
                 so.FindProperty("failureText").stringValue="No moves left\nTry another board";
+                var bottom=((GameObject)PrefabUtility.InstantiatePrefab(Resources.Load<GameObject>("Prefabs/Panels/MainPanelBottom"),rect)).GetComponent<OriginalMainBottomView>();
+                // Settings remain outside this core-only local composition.
+                bottom.Setting.transform.parent.gameObject.SetActive(false);
+                var original=Resources.Load<GameObject>("Prefabs/Panels/MainPanelComplete").GetComponent<OriginalMainPanelView>();
+                var mask=UnityEngine.Object.Instantiate(original.ExchangeMask.gameObject,rect,false).GetComponent<Button>();
+                mask.name="ExchangeMask";mask.gameObject.SetActive(false);
+                so.FindProperty("bottom").objectReferenceValue=bottom;
+                so.FindProperty("exchangeMask").objectReferenceValue=mask;
+                so.FindProperty("exchangeCancelDelay").floatValue=new SerializedObject(original).FindProperty("exchangeCancelDelay").floatValue;
+                so.FindProperty("noHistoryText").stringValue="No moves to undo";
+                so.FindProperty("limitText").stringValue="No more rods can be added";
+                bottom.transform.SetAsFirstSibling();mask.transform.SetSiblingIndex(1);backdrop.SetAsLastSibling();
                 so.ApplyModifiedPropertiesWithoutUndo();backdrop.gameObject.SetActive(false);
                 PrefabUtility.SaveAsPrefabAsset(root,"Assets/Resources/prefabs/panels/LocalGameplay.prefab");
                 var settings=Resources.Load<OriginalMainLevelSettings>("Configuration/OriginalMainLevel");

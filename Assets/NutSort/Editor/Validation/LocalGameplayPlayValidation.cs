@@ -102,7 +102,7 @@ namespace NutSort.Validation
                 if(phase==10)
                 {
                     Check(game.PlayerLevel==4&&game.IsInitDone&&!game.ModalInputBlocked,"Failure retry returns playable original board");
-                    startup.Replay.ReplayButton.onClick.Invoke();Check(startup.Replay.Panel!=null,"Actual replay button opens source prefab");
+                    local.Bottom.Replay.onClick.Invoke();Check(startup.Replay.Panel!=null,"Actual replay button opens source prefab");
                     nextAction=Time.time+1;phase=11;return;
                 }
                 if(phase==11)

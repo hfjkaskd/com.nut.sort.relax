@@ -20,14 +20,14 @@ namespace NutSort.UI
         public IReadOnlyList<OriginalToolItemController> Items => items;
         public void Bind(OriginalUserLocalData user,Func<bool> hasLevel,Func<int> historyCount,
             Action addScrew,Action revoke,Action<int,float,bool> applyItem,Action<bool,float> setExchangeState,
-            Action<int,int> openToolPanel,Action<int> showTip,Func<bool> tryClick,Action playClick,Action<int> openPanel)
+            Action<int,int> openToolPanel,Action<int> showTip,Func<bool> tryClick,Action playClick,Action<int> openPanel,Func<int> maximumAddedTiles=null)
         {
             this.tryClick=tryClick ?? throw new ArgumentNullException(nameof(tryClick));
             this.playClick=playClick ?? throw new ArgumentNullException(nameof(playClick));
             this.openPanel=openPanel ?? throw new ArgumentNullException(nameof(openPanel));
             foreach(var item in items)
             {
-                item.Display.Bind(user,hasLevel,historyCount);
+                item.Display.Bind(user,hasLevel,historyCount,maximumAddedTiles);
                 item.Bind(user,historyCount,addScrew,revoke,applyItem,setExchangeState,openToolPanel,showTip,tryClick,playClick);
             }
         }
@@ -40,7 +40,7 @@ namespace NutSort.UI
             game.BindExchange(items,openPanel);
             Bind(game.User,()=>game.Level!=null,()=>game.Level.MoveHistoryCount,game.AddScrew,
                 ()=>game.Revoke(RefreshOtherItemButtonState,openPanel),items.AddTool,setExchangeState,
-                openToolPanel,showTip,tryClick,playClick,openPanel);
+                openToolPanel,showTip,tryClick,playClick,openPanel,maximum);
         }
 
         public void Init()

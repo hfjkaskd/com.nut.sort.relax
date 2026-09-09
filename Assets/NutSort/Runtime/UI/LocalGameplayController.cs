@@ -10,7 +10,7 @@ namespace NutSort.UI
 {
     // Explicit user-authorized offline progression. No fabricated server response
     // or reward document; the original selector, world rules and success timing remain.
-    public sealed class LocalGameplayController : MonoBehaviour
+    public sealed partial class LocalGameplayController : MonoBehaviour
     {
         [SerializeField] private TMP_Text modeLabel, message;
         [SerializeField] private GameObject resultPanel;
@@ -37,8 +37,7 @@ namespace NutSort.UI
             resultPanel.SetActive(false);
             next.onClick.AddListener(Next);
             dismiss.onClick.AddListener(Dismiss);
-            var items=new OriginalItemManager(game.User,game.SaveUserData,()=>{},(n,r,s)=>{},(n,r)=>{});
-            game.BindAddScrew(()=>maximumAddedTiles,()=>false,items,()=>{},(id,type)=>ShowUnavailable(),id=>ShowUnavailable());
+            BindTools();
             retry.onClick.AddListener(Retry);
             game.BoardReady+=OnBoardReady;
             // The native initialization continuation needs unavailable reward-stage
@@ -72,6 +71,9 @@ namespace NutSort.UI
             game.IsFail=false;
             game.IsInitDone=true;
             BindBoardCallbacks();
+            BindToolsScene();
+            SetExchange(false,0);
+            bottom.Refresh();
             RefreshLevel();
             game.SaveUserData();
         }
@@ -126,11 +128,12 @@ namespace NutSort.UI
             dismiss.gameObject.SetActive(false);
             resultPanel.SetActive(true);
         }
-        private void ShowUnavailable()
+        private void ShowUnavailable() => ShowNotice(unavailableText);
+        private void ShowNotice(string text)
         {
             if (resultPanel.activeSelf) return;
             game.ModalInputBlocked=true;
-            message.text=unavailableText;
+            message.text=text;
             next.gameObject.SetActive(false);
             retry.gameObject.SetActive(false);
             dismiss.gameObject.SetActive(true);
@@ -171,7 +174,8 @@ namespace NutSort.UI
         }
         private void OnDestroy()
         {
-            if (game!=null) game.BoardReady-=OnBoardReady;
+            if (game!=null) { game.BoardReady-=OnBoardReady;game.OperationApplied-=RefreshToolsAfterOperation; }
+            if(startup!=null&&startup.Replay!=null)startup.Replay.BindModalBlocker(null);
             next.onClick.RemoveListener(Next);
             retry.onClick.RemoveListener(Retry);
             dismiss.onClick.RemoveListener(Dismiss);
