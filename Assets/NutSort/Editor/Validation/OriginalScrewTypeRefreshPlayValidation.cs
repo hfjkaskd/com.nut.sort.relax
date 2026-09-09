@@ -76,7 +76,7 @@ namespace NutSort.Validation
                 }
                 if(EditorApplication.timeSinceStartup-paused<.9)return;
                 Check(!game.Level.GetScrew(2).TypeView.IsMaskVisible&&done==1,"Unscaled mask hide continues while game clock is paused");
-                Debug.Log("NUT_SCREW_TYPE_REFRESH_PLAY_PASS real world transfer, automatic scene mask/adjacency consumer with null observer, actual saved mask states, source scaled mask callback and independent-time cover hide while paused; actual native smoke playing; explicit board fixture, hidden-cover skeletal assets and default startup still pending.");
+                Debug.Log("NUT_SCREW_TYPE_REFRESH_PLAY_PASS real world transfer, automatic scene mask/adjacency consumer with null observer, actual saved mask states, source scaled mask callback and independent-time cover hide while paused; actual native smoke playing; explicit board fixture, default startup still pending.");
                 Finish(0);
             }
             catch(Exception error){Debug.LogException(error);Finish(1);}

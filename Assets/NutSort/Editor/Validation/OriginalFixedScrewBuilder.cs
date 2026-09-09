@@ -104,7 +104,7 @@ namespace NutSort.Validation
             finally{PrefabUtility.UnloadPrefabContents(screw);}
             AssetDatabase.SaveAssets();
         }
-        private static void Curve(AnimationClip clip,string path,Type type,string property,JToken source,Func<JToken,float> value,float setup)
+        internal static void Curve(AnimationClip clip,string path,Type type,string property,JToken source,Func<JToken,float> value,float setup)
         {
             var keys=new JArray();
             // Before the first key Spine uses setup pose, not the first value.

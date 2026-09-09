@@ -94,6 +94,7 @@ namespace NutSort.Validation
                 OriginalScrewTypeRefreshValidation.Validate(repository);
                 OriginalMaskSmokeValidation.Validate();
                 OriginalFixedScrewValidation.Validate();
+                OriginalHiddenCoverValidation.Validate();
                 OriginalLevelViewValidation.Validate(repository);
                 OriginalExchangeScrewValidation.Validate(repository);
                 OriginalExchangeOperationValidation.Validate(repository);

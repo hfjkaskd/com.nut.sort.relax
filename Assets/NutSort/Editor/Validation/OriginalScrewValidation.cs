@@ -71,7 +71,7 @@ namespace NutSort.Validation
                 second.Release();pool.Return(second.gameObject);
             }
             finally { UnityEngine.Object.DestroyImmediate(holder); }
-            Debug.Log("NUT_SCREW_VALIDATION_PASS original prefab structure, fixed geometry, aliased anchors, tile reuse, cap, LSSAB lock variants and mask state verified; hidden-cover skeletal animations remain pending; mask smoke now has native assets.");
+            Debug.Log("NUT_SCREW_VALIDATION_PASS original prefab structure, fixed geometry, aliased anchors, tile reuse, cap, LSSAB lock variants and mask state verified; native cover effects have separate source-curve and Play validation.");
         }
         private static void Check(bool value,string message) { if (!value) throw new InvalidDataException(message); }
         private static void Near(Vector3 a,Vector3 b,string message) { Check((a-b).sqrMagnitude<.000001f,message+": "+a); }

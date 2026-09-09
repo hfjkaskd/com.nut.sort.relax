@@ -17,6 +17,7 @@ namespace NutSort.World
         [SerializeField] private OriginalNativeWorldEffect dontMoveEffect;
         [SerializeField] private GameObject Hidden;
         [SerializeField] private GameObject HiddenSpine;
+        [SerializeField] private OriginalNativeWorldEffect hiddenEffect;
         [SerializeField] private GameObject Locked;
         [SerializeField] private GameObject Locked1;
         private readonly Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>(StringComparer.Ordinal);
@@ -28,8 +29,7 @@ namespace NutSort.World
         public Vector3 MaskDoneScale=>MaskDone.transform.localScale;
         public bool IsMaskBreakVisible=>MaskSpine.activeSelf;
         private bool pendingHiddenHide;
-        // Smoke and fixed-column effects have native prefab consumers. Hidden
-        // cover clips remain explicit until shear/clipping conversion is complete.
+        // Native prefab consumers play the effects; this event is an observer.
         public event Action<GameObject, string, bool> AnimationRequested;
         public bool IsMaskVisible => Mask.activeSelf;
         public bool IsDontMoveVisible => DontMove.activeSelf;
@@ -76,7 +76,12 @@ namespace NutSort.World
             else if (mask.Type == ScrewType.Hidden)
             {
                 Hidden.SetActive(mask.IsShow);
-                if (mask.IsShow) AnimationRequested?.Invoke(HiddenSpine, "wanzheng", true);
+                if (mask.IsShow)
+                {
+                    if(hiddenEffect==null)throw new InvalidOperationException("Original hidden cover binding missing.");
+                    hiddenEffect.Play("wanzheng",true);
+                    AnimationRequested?.Invoke(HiddenSpine, "wanzheng", true);
+                }
             }
         }
 
@@ -90,6 +95,8 @@ namespace NutSort.World
         {
             // Original PlayHiddenTween requests non-looping "posui" then
             // SetGameObjectLSSActive(false, 1). Its DelayedCall ignores timeScale.
+            if(hiddenEffect==null)throw new InvalidOperationException("Original hidden cover binding missing.");
+            hiddenEffect.Play("posui",false);
             AnimationRequested?.Invoke(HiddenSpine, "posui", false);
             if (!Hidden.activeSelf) return;
             if (hiddenBreakDelay <= 0f) { Hidden.SetActive(false); return; }
