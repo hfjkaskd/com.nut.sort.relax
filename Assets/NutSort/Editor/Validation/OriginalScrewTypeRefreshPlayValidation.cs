@@ -18,7 +18,7 @@ namespace NutSort.Validation
         static OriginalScrewTypeRefreshPlayValidation()
         {if(SessionState.GetBool(Key,false)){timeout=EditorApplication.timeSinceStartup+80;EditorApplication.update+=Tick;}}
         public static void Run()
-        {OriginalPreferenceFixture.Begin();EditorSceneManager.OpenScene("Assets/Scenes/LuoSiSortGame.unity");SessionState.SetBool(Key,true);EditorApplication.EnterPlaymode();}
+        {OriginalPreferenceFixture.Begin();EditorSceneManager.OpenScene("Assets/Scenes/LuoSiSortGame.unity");PlayModeWindow.SetCustomRenderingResolution(480,1040,"Core mask smoke");SessionState.SetBool(Key,true);EditorApplication.EnterPlaymode();}
         private static ScrewData Rod(int[] colors,params OBIMData[] masks)
         {
             var cells=new CData[4];
@@ -66,11 +66,17 @@ namespace NutSort.Validation
                     Check(done==1&&game.Level.GetScrew(2).TypeView.IsMaskBreakVisible,"Delayed completion and mask break callback run independently");
                     Check(game.Level.GetScrew(2).TypeView.IsMaskVisible,"Mask still visible before total 1.7-second timeline");
                     Check(!game.Level.GetScrew(4).TypeView.IsHiddenVisible&&game.Level.GetScrew(5).TypeView.IsHiddenVisible,"Only adjacent hidden cover breaks");
+                    var effect=game.Level.GetScrew(2).GetComponentInChildren<OriginalNativeWorldEffect>(true);
+                    Check(effect!=null&&effect.Player!=null&&effect.Player.IsPlaying("animation"),"Actual native smoke Animation plays from mask callback");
+                    var sprites=effect.Player.GetComponentsInChildren<SpriteRenderer>();bool visible=false;
+                    foreach(var sprite in sprites)if(sprite.color.a>0)visible=true;
+                    Check(sprites.Length==24&&visible,"Native source smoke slots are visible");
+                    ScreenCapture.CaptureScreenshot("Library/core-mask-smoke-current.png");
                     Time.timeScale=0;paused=EditorApplication.timeSinceStartup;phase=3;return;
                 }
                 if(EditorApplication.timeSinceStartup-paused<.9)return;
                 Check(!game.Level.GetScrew(2).TypeView.IsMaskVisible&&done==1,"Unscaled mask hide continues while game clock is paused");
-                Debug.Log("NUT_SCREW_TYPE_REFRESH_PLAY_PASS real world transfer, automatic scene mask/adjacency consumer with null observer, actual saved mask states, source scaled mask callback and independent-time cover hide while paused; explicit board fixture, skeletal assets and default startup still pending.");
+                Debug.Log("NUT_SCREW_TYPE_REFRESH_PLAY_PASS real world transfer, automatic scene mask/adjacency consumer with null observer, actual saved mask states, source scaled mask callback and independent-time cover hide while paused; actual native smoke playing; explicit board fixture, fixed/hidden skeletal assets and default startup still pending.");
                 Finish(0);
             }
             catch(Exception error){Debug.LogException(error);Finish(1);}

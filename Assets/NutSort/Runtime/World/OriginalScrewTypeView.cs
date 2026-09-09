@@ -10,6 +10,7 @@ namespace NutSort.World
         [SerializeField] private SpriteRenderer MaskNut;
         [SerializeField] private SpriteRenderer MaskDone;
         [SerializeField] private GameObject MaskSpine;
+        [SerializeField] private OriginalNativeWorldEffect maskEffect;
         [SerializeField] private GameObject Mask;
         [SerializeField] private GameObject DontMove;
         [SerializeField] private GameObject DontMoveSpine;
@@ -26,8 +27,8 @@ namespace NutSort.World
         public Vector3 MaskDoneScale=>MaskDone.transform.localScale;
         public bool IsMaskBreakVisible=>MaskSpine.activeSelf;
         private bool pendingHiddenHide;
-        // The three source skeletal effects still require native animation assets.
-        // Keep their original targets and clip requests explicit until converted.
+        // Smoke has a native prefab consumer. Fixed/hidden skeletal effects
+        // retain their explicit clip requests until their conversion is complete.
         public event Action<GameObject, string, bool> AnimationRequested;
         public bool IsMaskVisible => Mask.activeSelf;
         public bool IsDontMoveVisible => DontMove.activeSelf;
@@ -115,6 +116,8 @@ namespace NutSort.World
                 MaskDone.transform.localScale=Vector3.LerpUnclamped(track.Start,Vector3.one,eased);
                 if(track.Elapsed<settings.MaskDoneScaleDuration){maskTracks[i++]=track;continue;}
                 maskTracks.RemoveAt(i);MaskSpine.SetActive(true);
+                if(maskEffect==null)throw new InvalidOperationException("Original mask smoke prefab binding missing.");
+                maskEffect.Play("animation",false);
                 AnimationRequested?.Invoke(MaskSpine,"animation",false);
                 if(Mask.activeSelf)maskHides.Add(settings.MaskBreakHideDelay);
             }
