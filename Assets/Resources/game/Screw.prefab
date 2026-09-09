@@ -278,6 +278,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4279359913592680}
+  - component: {fileID: 9111311414169707212}
   m_Layer: 6
   m_Name: DontMoveSpine
   m_TagString: Untagged
@@ -1099,6 +1100,7 @@ MonoBehaviour:
   Mask: {fileID: 1709867586078768}
   DontMove: {fileID: 1985305603660343}
   DontMoveSpine: {fileID: 1705390221481576}
+  dontMoveEffect: {fileID: 9111311414169707212}
   Hidden: {fileID: 1977153420339851}
   HiddenSpine: {fileID: 1336590748365959}
   Locked: {fileID: 1256069497284392}
@@ -4811,3 +4813,18 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   prefabPath: Game/NativeEffects/MaskSmoke/MaskSmoke
+  mixDuration: 0
+--- !u!114 &9111311414169707212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1705390221481576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d65c60391abd46c9955f6a8329f7bc81, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  prefabPath: Game/NativeEffects/FixedScrew/FixedScrew
+  mixDuration: 0.2

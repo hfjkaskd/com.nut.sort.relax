@@ -7,7 +7,9 @@ namespace NutSort.World
     public sealed class OriginalNativeWorldEffect : MonoBehaviour
     {
         [SerializeField] private string prefabPath;
+        [SerializeField] private float mixDuration;
         private Animation player;
+        private string currentClip;
         public Animation Player=>player;
         public void Play(string clipName,bool loop)
         {
@@ -21,7 +23,11 @@ namespace NutSort.World
             var state=player[clipName];
             if(state==null)throw new InvalidOperationException("Missing native effect clip: "+clipName);
             state.wrapMode=loop?WrapMode.Loop:WrapMode.ClampForever;
-            state.time=0;player.Play(clipName,PlayMode.StopAll);player.Sample();
+            state.time=0;
+            if(player.isPlaying&&currentClip!=clipName&&mixDuration>0)
+                player.CrossFade(clipName,mixDuration,PlayMode.StopAll);
+            else player.Play(clipName,PlayMode.StopAll);
+            currentClip=clipName;player.Sample();
         }
     }
 }

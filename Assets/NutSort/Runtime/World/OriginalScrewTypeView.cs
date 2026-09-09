@@ -14,6 +14,7 @@ namespace NutSort.World
         [SerializeField] private GameObject Mask;
         [SerializeField] private GameObject DontMove;
         [SerializeField] private GameObject DontMoveSpine;
+        [SerializeField] private OriginalNativeWorldEffect dontMoveEffect;
         [SerializeField] private GameObject Hidden;
         [SerializeField] private GameObject HiddenSpine;
         [SerializeField] private GameObject Locked;
@@ -27,8 +28,8 @@ namespace NutSort.World
         public Vector3 MaskDoneScale=>MaskDone.transform.localScale;
         public bool IsMaskBreakVisible=>MaskSpine.activeSelf;
         private bool pendingHiddenHide;
-        // Smoke has a native prefab consumer. Fixed/hidden skeletal effects
-        // retain their explicit clip requests until their conversion is complete.
+        // Smoke and fixed-column effects have native prefab consumers. Hidden
+        // cover clips remain explicit until shear/clipping conversion is complete.
         public event Action<GameObject, string, bool> AnimationRequested;
         public bool IsMaskVisible => Mask.activeSelf;
         public bool IsDontMoveVisible => DontMove.activeSelf;
@@ -65,7 +66,12 @@ namespace NutSort.World
             else if (mask.Type == ScrewType.DontMove)
             {
                 DontMove.SetActive(!screw.IsDone);
-                if (!screw.IsDone) AnimationRequested?.Invoke(DontMoveSpine, "animation", true);
+                if (!screw.IsDone)
+                {
+                    if(dontMoveEffect==null)throw new InvalidOperationException("Original fixed screw animation binding missing.");
+                    dontMoveEffect.Play("animation",true);
+                    AnimationRequested?.Invoke(DontMoveSpine,"animation",true);
+                }
             }
             else if (mask.Type == ScrewType.Hidden)
             {
@@ -98,6 +104,8 @@ namespace NutSort.World
         }
         public void PlayDontMoveBreak()
         {
+            if(dontMoveEffect==null)throw new InvalidOperationException("Original fixed screw animation binding missing.");
+            dontMoveEffect.Play("animation2",false);
             AnimationRequested?.Invoke(DontMoveSpine,"animation2",false);
             if(DontMove.activeSelf)dontMoveHides.Add(settings.DontMoveBreakHideDelay);
         }

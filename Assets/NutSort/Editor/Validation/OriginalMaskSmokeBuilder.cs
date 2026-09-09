@@ -100,7 +100,7 @@ namespace NutSort.Validation
             AssetDatabase.SaveAssets();
         }
         private static float Channel(string value,int index)=>Convert.ToInt32(value.Substring(index*2,2),16)/255f;
-        private static void SetCurve(AnimationClip clip,string path,Type type,string property,JArray frames,Func<JToken,float> value)
+        internal static void SetCurve(AnimationClip clip,string path,Type type,string property,JArray frames,Func<JToken,float> value)
         {
             var keys=new Keyframe[frames.Count];
             for(int i=0;i<keys.Length;i++)keys[i]=new Keyframe((float?)frames[i]["time"]??0,value(frames[i]));
@@ -123,7 +123,7 @@ namespace NutSort.Validation
             }
             return (keys[i+1].value-keys[i].value)/(keys[i+1].time-keys[i].time);
         }
-        private static T Store<T>(T value,string path) where T:UnityEngine.Object
+        internal static T Store<T>(T value,string path) where T:UnityEngine.Object
         {
             var existing=AssetDatabase.LoadAssetAtPath<T>(path);
             if(existing==null){AssetDatabase.CreateAsset(value,path);return value;}

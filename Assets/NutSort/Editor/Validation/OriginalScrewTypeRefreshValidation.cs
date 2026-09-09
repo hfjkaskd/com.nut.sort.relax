@@ -36,7 +36,7 @@ namespace NutSort.Validation
             calls.Clear();flow.Run(board,board.Screws[0]);
             Check(board.Screws[1].IsColorMask&&string.Join(",",calls)=="d0,m1,save,h1,save","Mismatch does not block later entries, already hidden entries still process within admitted rod");
             ValidateView(repository);
-            Debug.Log("NUT_SCREW_TYPE_REFRESH_VALIDATION_PASS ordered mask/unmovable/adjacent-hidden transitions, first-type admission, multiple entries, per-entry saves, original mask scale and independent hide timings; fixed and hidden skeletal clip conversion remains pending.");
+            Debug.Log("NUT_SCREW_TYPE_REFRESH_VALIDATION_PASS ordered mask/unmovable/adjacent-hidden transitions, first-type admission, multiple entries, per-entry saves, original mask scale and independent hide timings; hidden-cover skeletal clip conversion remains pending.");
         }
         private static void ValidateView(OriginalLevelRepository repository)
         {
