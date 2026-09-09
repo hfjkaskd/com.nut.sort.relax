@@ -176,6 +176,7 @@ namespace NutSort.Validation
                 OriginalBootstrapValidation.Validate();
                 OriginalBootLoadingValidation.Validate();
                 OriginalBootLoadingPanelValidation.Validate();
+                OriginalMessagePanelValidation.Validate();
                 OriginalGuideBranchAdapterValidation.Validate();
                 OriginalNewbieGuideHostValidation.Validate();
                 OriginalNewbieInteractionValidation.Validate();
