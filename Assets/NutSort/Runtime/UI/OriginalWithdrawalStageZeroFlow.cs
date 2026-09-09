@@ -22,6 +22,7 @@ namespace NutSort.UI
         private readonly Func<int> showLevel;
         private readonly Action save;
         private readonly Action<object> guide;
+        public static bool IsShowOnlineTimeHint;
         public bool IsGuide{get;set;}
         public OriginalWithdrawalStageZeroFlow(OriginalUserLocalData user,IOriginalWithdrawalStageZeroUI view,object[] arguments,
             Func<long> clock,Func<float,string> goldFormat,Func<long,string,string> timeFormat,Func<int,int,int> random,
