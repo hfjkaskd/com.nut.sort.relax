@@ -9,7 +9,7 @@ namespace NutSort.UI
         [SerializeField] private OriginalMainBottomView bottom;
         [SerializeField] private Button exchangeMask;
         [SerializeField] private float exchangeCancelDelay;
-        [SerializeField] private string noHistoryText,limitText;
+        [SerializeField] private string popTipPrefabPath;
         private OriginalItemManager tools;
         public OriginalMainBottomView Bottom=>bottom;
         public Button ExchangeMask=>exchangeMask;
@@ -42,7 +42,11 @@ namespace NutSort.UI
             return startup.Replay.BeginClick();
         }
         private void RefreshToolsAfterOperation(ScrewOperation operation,ScrewState target) => bottom.Refresh();
-        private void ShowToolTip(int id) => ShowNotice(id==3?noHistoryText:limitText);
+        private void ShowToolTip(int id)
+        {
+            var tip=Instantiate(Resources.Load<GameObject>(popTipPrefabPath),startup.TopCanvas,false).GetComponent<OriginalPopTip>();
+            tip.Show(game.Tables.Text.GetText(id,language),game.ScheduleDelay);
+        }
         private void SetExchange(bool active,float delay) => game.SetExchangeState(exchangeMask.gameObject,active,delay);
         private void CancelExchange()
         {

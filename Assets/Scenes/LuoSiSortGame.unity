@@ -1822,6 +1822,7 @@ MonoBehaviour:
   loading: {fileID: 393}
   game: {fileID: 409}
   panelCanvas: {fileID: 349}
+  topCanvas: {fileID: 357}
   mainLevelSettings: {fileID: 11400000, guid: 7e473cab2858433390c15cdaaa9be2e4, type: 2}
   audioPlayer: {fileID: 186623822}
   clickMask: {fileID: 21}

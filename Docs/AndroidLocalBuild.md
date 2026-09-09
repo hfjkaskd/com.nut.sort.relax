@@ -10,8 +10,10 @@ LocalAndroidBuild 在构建期间设置 APK 显示名，完成后恢复 Editor �
 
 修复使用 TMP 3.0.6 原生 CreateFontAsset 的同种 0×0 Alpha8 空动态图集初始化，保存为实际 Texture2D 资源并重绑字体与材质引用。保留源 TTF、动态模式、512×512 容量、padding 9、渲染模式和构建时清理开关。没有关闭 TMP 检查、冻结为静态图集或绕过缺失资源。新增检查遍历工程字体图集引用，并在临时副本中通过原生 FontEngine 补入拉丁、希腊和西里尔字符，确认动态图集实际扩展和绘字；不污染生产字形表。
 
-修复后 Library/local-android-build-final.log 记录 NUT_ANDROID_BUILD_PASS，Unity 报告 warnings=0、errors=0。最终 APK 为 Builds/Android/NutSortRelax-local.apk，53,767,621 字节，SHA-256 6fc89963d06c20314eeffffba8af32dc4d34842837e8722d09b94261a98da3b9。aapt 验证包名、版本、API、显示名和 arm64-v8a；apksigner verify 成功，v1/v2 签名有效。签名工具另有两条 META-INF 元数据条目的提示，不将其描述为全工具零警告。
+修复后 Library/local-android-build-final.log 记录 NUT_ANDROID_BUILD_PASS，Unity 报告 warnings=0、errors=0。该首次构建 APK 为 Builds/Android/NutSortRelax-local.apk，53,767,621 字节，SHA-256 6fc89963d06c20314eeffffba8af32dc4d34842837e8722d09b94261a98da3b9。aapt 验证包名、版本、API、显示名和 arm64-v8a；apksigner verify 成功，v1/v2 签名有效。签名工具另有两条 META-INF 元数据条目的提示，不将其描述为全工具零警告。
 
 此包为本地开发验证产物，不是商店发布包。当前 ADB 没有已连接设备，未进行安装、Android 触摸实玩、系统强杀/恢复或逐像素真机对照；构建成功不等于真机运行和全生命周期 1:1 已验证。Unity 自动生成的 URP shader prefilter 缓存差异不作为美术/渲染配置改动提交。
 
 修复后 `Library/local-android-content-validation.log` 完成 165 个 PASS 标记及 NUT_CONTENT_VALIDATION_PASS，其中新增动态图集引用/补字检查。可通过 Unity batchmode 调用 `NutSort.Validation.LocalAndroidBuild.Run` 重建；产物使用 Development 选项。
+
+当前更新包包含原版非模态道具提示（见 LocalPopTips.md）。Library/local-pop-tip-android-build.log 记录 NUT_ANDROID_BUILD_PASS，warnings=0、errors=0；APK 56,233,582 字节，SHA-256 50b6b066d0b8defe73d803cf0ccf0802f434635ba678b02b9b9ba7f3b2660344。重新核验 v1/v2 签名、包名、版本与 ARM64 均通过，签名工具的两条 META-INF 提示仍存在。该文件已替换上述首次构建产物，尚未完成真机验证。

@@ -14,6 +14,8 @@
 
 Android ARM64 IL2CPP 本地开发 APK 已构建，签名和包元数据校验通过；修复动态后备字体缺失图集，165 项内容回归通过。尚未连接真机验证。详见 [Android 本地构建](AndroidLocalBuild.md)。
 
+撤销无历史和加螺杆上限已恢复原 TopCanvas 浮动提示，不再弹出阻断操作的本地卡片；详见 [原版浮动提示](LocalPopTips.md)。
+
 详见 [教学接入](LocalGameplayTeaching.md)、[本地推进](LocalGameplayProgression.md)、[核心道具入口](LocalCoreTools.md)、[玩法解锁](LocalGameplayUnlocks.md)。SDK 收益、广告回调、提现与服务器奖励均未模拟；完整奖励引导、外围生命周期、国家/AB GM 和真机视觉对照仍未完成。
 
 下方保留历轮恢复记录；其中早期“尚未接入”等描述反映当轮状态，当前入口以本节和上述最新验证文档为准。

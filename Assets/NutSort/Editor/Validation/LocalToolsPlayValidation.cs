@@ -102,17 +102,17 @@ namespace NutSort.Validation
                 if(phase==6)
                 {
                     local.Bottom.GetOtherItem(2).Display.Click.onClick.Invoke();
-                    Check(local.ResultVisible&&game.User.RevokeCount==2,"No-history notice without consuming another tool");
+                    Check(!local.ResultVisible&&!game.ModalInputBlocked&&game.User.RevokeCount==2&&startup.TopCanvas.GetComponentInChildren<OriginalPopTip>()!=null,"Original no-history toast without a modal or tool cost");
                     waitUntil=Time.time+.4f;phase=7;return;
                 }
                 if(phase==7)
                 {
-                    Check(game.ModalInputBlocked,"Common click-mask expiry cannot unlock active local notice");
-                    local.DismissButton.onClick.Invoke();waitUntil=Time.time+.3f;phase=8;return;
+                    Check(!game.ModalInputBlocked&&startup.TopCanvas.GetComponentInChildren<OriginalPopTip>()!=null,"Toast remains nonmodal after counted UI shield expiry");
+                    waitUntil=Time.time+1;phase=8;return;
                 }
                 if(phase==8)
                 {
-                    Check(!game.ModalInputBlocked&&!local.ResultVisible,"Notice dismiss restores input");
+                    Check(!game.ModalInputBlocked&&!local.ResultVisible,"Expired toast leaves normal input");
                     game.User.AddScrewCount=0;local.Bottom.Refresh();local.Bottom.GetOtherItem(4).Display.Click.onClick.Invoke();
                     Check(local.ResultVisible&&game.User.AddScrewCount==0,"No inventory opens SDK skip notice without grant");
                     local.DismissButton.onClick.Invoke();waitUntil=Time.time+.05f;phase=13;return;

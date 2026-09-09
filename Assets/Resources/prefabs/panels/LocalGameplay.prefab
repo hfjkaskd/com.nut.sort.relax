@@ -612,8 +612,7 @@ MonoBehaviour:
   bottom: {fileID: 6733030412207139940}
   exchangeMask: {fileID: 1780478057215504892}
   exchangeCancelDelay: 0.5
-  noHistoryText: No moves to undo
-  limitText: No more rods can be added
+  popTipPrefabPath: Prefabs/Tip
   gameplaySession: {fileID: 11400000, guid: 8fbf9bb2717640819316bc3847b2c9f0, type: 2}
   unlockPrefabPath: Prefabs/Panels/UnlockGameplayPanel
 --- !u!1 &6802968947088192281

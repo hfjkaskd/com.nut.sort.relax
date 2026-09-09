@@ -8,7 +8,8 @@ namespace NutSort.UI
     {
         [SerializeField] private OriginalLoadingView loading;
         [SerializeField] private OriginalGameScene game;
-        [SerializeField] private Transform panelCanvas;
+        [SerializeField] private Transform panelCanvas,topCanvas;
+        public Transform TopCanvas=>topCanvas;
         [SerializeField] private OriginalMainLevelSettings mainLevelSettings;
         [SerializeField] private OriginalAudioPlayer audioPlayer;
         [SerializeField] private GameObject clickMask;

@@ -101,8 +101,7 @@ namespace NutSort.Validation
                 so.FindProperty("bottom").objectReferenceValue=bottom;
                 so.FindProperty("exchangeMask").objectReferenceValue=mask;
                 so.FindProperty("exchangeCancelDelay").floatValue=new SerializedObject(original).FindProperty("exchangeCancelDelay").floatValue;
-                so.FindProperty("noHistoryText").stringValue="No moves to undo";
-                so.FindProperty("limitText").stringValue="No more rods can be added";
+                so.FindProperty("popTipPrefabPath").stringValue="Prefabs/Tip";
                 bottom.transform.SetAsFirstSibling();mask.transform.SetSiblingIndex(1);backdrop.SetAsLastSibling();
                 so.ApplyModifiedPropertiesWithoutUndo();backdrop.gameObject.SetActive(false);
                 PrefabUtility.SaveAsPrefabAsset(root,"Assets/Resources/prefabs/panels/LocalGameplay.prefab");
