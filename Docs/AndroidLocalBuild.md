@@ -25,3 +25,5 @@ LocalAndroidBuild 在构建期间设置 APK 显示名，完成后恢复 Editor �
 该次增量 APK 的 ZIP 中央目录有 2,112 项，压缩载荷合计 53,337,845 字节；额外空间主要是未被当前中央目录引用的旧局部 ZIP 记录（大间隙仍以 PK 本地文件头开头）。因此本次开发包增大不能直接当作运行时资源增长；尚未做发布打包体积清理，保留官方构建及签名产物。
 
 最新子回合点阵包：Library/local-subround-dots-android-build.log 记录 NUT_ANDROID_BUILD_PASS，warnings=0、errors=0。APK 68,786,702 字节，SHA-256 a6e13eace9c95797a13c7635d9ae7f2617507f11ed622f153fb8acea1e2bc849。签名、包名、版本及 ARM64 复核通过，替换上一轮开发 APK。点阵接入和验证见 LocalSubroundView.md；增量开发打包与真机验证限制不变。
+
+新增 RunDeviceTest 构建独立包 com.nut.sort.relax.localtest，输出 NutSortRelax-device-test.apk，可与原版并存。它已在 Android 15 模拟器完成真实触摸、教学、结算、续局、后台/强制重启和撤销验证，详情及独立 APK 哈希见 AndroidRuntimeValidation.md。标准 NutSortRelax-local.apk 保持上一轮哈希，未因验证而改包名。

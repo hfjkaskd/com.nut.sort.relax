@@ -4,6 +4,8 @@
 
 ## 当前默认入口（2026-09-09）
 
+已在 Android 15 模拟器通过独立包名实际验证四段教学、原生结算/下一关、后台恢复、强制结束后棋盘/历史恢复、撤销与库存持久化。原版包未覆盖；物理真机及完整视觉对照仍未验证。详见 [Android 运行验证](AndroidRuntimeValidation.md)。
+
 默认本地玩法已接入原子回合点阵：按原表显示四/五点、当前点闪烁与离开子回合时隐藏。收益里程碑保持跳过；详见 [子回合点阵接入](LocalSubroundView.md)。
 
 已补齐原表 SubTotalRound/SubRound 的中间子回合自动续局，最后子回合显示结算；普通 Round 不跳过结算；见 [本地多回合推进](LocalSubroundProgression.md)。
@@ -18,7 +20,7 @@
 
 过关现已接入原版标题、入场/关闭动画和按钮预制体变体；关闭完成后才进入下一关。详见 [原版过关表现](LocalNativeSuccess.md)。
 
-Android ARM64 IL2CPP 本地开发 APK 已构建，签名和包元数据校验通过；修复动态后备字体缺失图集，166 项内容回归通过。尚未连接真机验证。详见 [Android 本地构建](AndroidLocalBuild.md)。
+Android ARM64 IL2CPP 本地开发 APK 已构建，签名和包元数据校验通过；修复动态后备字体缺失图集，166 项内容回归通过。已有 Android 模拟器运行验证，尚未完成物理真机验证。详见 [Android 本地构建](AndroidLocalBuild.md)。
 
 撤销无历史和加螺杆上限已恢复原 TopCanvas 浮动提示，不再弹出阻断操作的本地卡片；详见 [原版浮动提示](LocalPopTips.md)。
 
