@@ -12,6 +12,18 @@ namespace NutSort.Validation
     [InitializeOnLoad]
     public static class OriginalCoreProgressPlayValidation
     {
+        // The real first tutorial path must not touch later reward consumers.
+        private sealed class FirstTutorialEffects:IOriginalScrewDoneEffects
+        {
+            private static Exception Unexpected()=>new InvalidOperationException("First tutorial reached a later reward/config consumer");
+            public float RemoveGold=>throw Unexpected();public float RemoveCoin=>throw Unexpected();
+            public void FlyGold(ScrewState s)=>throw Unexpected();public void FlyCoin(ScrewState s)=>throw Unexpected();
+            public void AddGold(float n,bool r,bool sync)=>throw Unexpected();public void AddCoin(float n,bool r)=>throw Unexpected();
+            public bool HasPanel=>throw Unexpected();public int Config(string f)=>throw Unexpected();public long TimeSeconds=>throw Unexpected();
+            public long LuckyRewardTime{get=>throw Unexpected();set=>throw Unexpected();}
+            public long LuckyDrawTime{get=>throw Unexpected();set=>throw Unexpected();}
+            public void RequestLuckyReward()=>throw Unexpected();public void ShowPanel(int id)=>throw Unexpected();
+        }
         private const string Key="NutSort.CoreProgressPlay";
         private static double timeout;
         private static int phase,refreshes;
@@ -44,14 +56,12 @@ namespace NutSort.Validation
                 }
                 if(phase==1)
                 {
-                    // At source ShowLevel < 3, successful DoneEvent goes directly
-                    // to Success. This fixture binds that known branch only.
+                    // Use the actual scene DoneEvent consumer rather than a test
+                    // callback that calls Success on behalf of gameplay.
                     game.BindSuccess(()=>false,()=>refreshes++,()=>{},()=>{},startup.MainLevel.transform.parent,
                         captured=>throw new Exception("First tutorial completion must not request reward"));
-                    game.BindMoveCompletion((target,success)=>
-                    {Check(success,"First seed must complete");game.Success();},
-                        ()=>throw new Exception("Early seed cannot hide guide"),()=>{},s=>{},
-                        id=>throw new Exception("Solvable first seed cannot fail"));
+                    game.BindScrewCompletion(new FirstTutorialEffects(),
+                        ()=>throw new Exception("Early seed cannot hide guide"),()=>{});
                     Check(game.Level.Operate(0).Kind==ScrewOperationKind.Ready,"Real world nut selected");
                     Check(game.Level.Operate(1).Kind==ScrewOperationKind.Moved,"Real world transfer");
                     Check(game.Level.Board.IsSuccess,"Actual first board solved");phase=2;return;
@@ -81,7 +91,7 @@ namespace NutSort.Validation
                 Check(saved.Level==2&&saved.LevelSeed==0&&saved.TodayPassLevelCount==1,"Actual PlayerPrefs contains applied progress");
                 var snapshot=OriginalBoardSnapshotJson.Read(saved.LevelInfo);
                 Check(snapshot!=null,"Actual next board persists with progress");
-                Debug.Log("NUT_CORE_PROGRESS_PLAY_PASS real first-board transfer, delayed native tutorial success and seed rebuild, explicit clearance result application, original next-level index/board and PlayerPrefs persistence; production initialization and completion bindings remain pending.");
+                Debug.Log("NUT_CORE_PROGRESS_PLAY_PASS real first-board transfer through native scene DoneEvent consumer, delayed native tutorial success and seed rebuild, explicit clearance result application, original next-level index/board and PlayerPrefs persistence; production initialization and completion bindings remain pending.");
                 Finish(0);
             }
             catch(Exception error){Debug.LogException(error);Finish(1);}

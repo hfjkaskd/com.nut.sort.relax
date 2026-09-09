@@ -119,6 +119,14 @@ namespace NutSort.World
             level.BindMoveCompletion(completion.Run);
         }
 
+        // Compose the native delayed DoneEvent and victory path. External
+        // effects retain real config/account/request semantics.
+        public void BindScrewCompletion(IOriginalScrewDoneEffects doneEffects,Action hideGuide,Action pushHint)
+        {
+            var done=new OriginalScrewDoneFlow(()=>User,()=>ShowLevel,Success,doneEffects);
+            BindMoveCompletion(done.Run,hideGuide,pushHint,null,doneEffects.ShowPanel);
+        }
+
         private OriginalAddScrewFlow addScrewFlow;
         public void BindAddScrew(Func<int> maximum,Func<bool> singleTile,OriginalItemManager items,
             Action refreshBottom,Action<int,int> showToolPanel,Action<int> showTip)
