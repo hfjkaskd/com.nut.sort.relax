@@ -1,0 +1,55 @@
+using System;
+using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
+using NutSort.Content;
+using NutSort.UI;
+using NutSort.World;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+namespace NutSort.Validation
+{
+    [InitializeOnLoad]
+    public static class OriginalUserRegistrationFlowPlayValidation
+    {
+        private const string Key="NutSort.UserRegistrationFlowPlay";private static double timeout;private static float begin;private static int phase,registrations,identities,saves,rewards;
+        private static OriginalMessagePanel panel;private static OriginalUserSession session;private static OriginalUserStartup startup;private static JObject prior;
+        private static Action<bool> registered;private static Action<JObject> reward;private static readonly List<Action<string,byte[]>> configs=new List<Action<string,byte[]>>();
+        static OriginalUserRegistrationFlowPlayValidation(){if(SessionState.GetBool(Key,false)){timeout=EditorApplication.timeSinceStartup+180;EditorApplication.update+=Tick;}}
+        public static void Run(){OriginalPreferenceFixture.Begin("");EditorSceneManager.OpenScene("Assets/Scenes/LuoSiSortGame.unity");SessionState.SetBool(Key,true);EditorApplication.EnterPlaymode();}
+        private static void Tick()
+        {
+            if(!EditorApplication.isPlaying)return;
+            try
+            {
+                Check(EditorApplication.timeSinceStartup<timeout,"Fresh registration Play timeout phase="+phase);
+                if(phase==0)
+                {
+                    var game=UnityEngine.Object.FindObjectOfType<OriginalGameScene>();if(game==null||game.Level==null||game.IsRestarting)return;
+                    session=UnityEngine.Object.FindObjectOfType<OriginalAudioPlayer>().UserState;
+                    // OriginalPreferenceFixture preserves the real save; ensure this
+                    // second, explicitly composed startup receives an empty save.
+                    PlayerPrefs.SetString(OriginalUserStore.Key,"");PlayerPrefs.Save();prior=OriginalServerConfigRequests.Cached;OriginalServerConfigRequests.Cached=null;
+                    Transform canvas=null;foreach(var c in UnityEngine.Object.FindObjectsOfType<Canvas>())if(c.name=="UICanvas")canvas=c.transform;Check(canvas!=null,"Actual canvas");
+                    panel=UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Prefabs/Panels/MessagePanel"),canvas,false).GetComponent<OriginalMessagePanel>();panel.Bind(id=>game.Tables.Text.GetText(id,"en"));panel.Init();panel.gameObject.SetActive(false);
+                    var defaults=Resources.Load<OriginalUserDefaults>("Configuration/OriginalUserDefaults");var country=new OriginalUserCountryState(game.Tables.Countries,s=>throw new Exception(s)){CountryCode="US",Area="USA"};
+                    var request=new OriginalServerConfigRequests(defaults.ServerConfig,()=>country.CountryInfo,new OriginalServerConfigInitialization(()=>session.Data),
+                        (area,callback)=>{Check(area=="USA"&&!panel.gameObject.activeSelf,"Current Area and hidden message before config request");configs.Add(callback);});
+                    var config=new OriginalUserConfigFlow(request.Config,panel.Show);OriginalUserRegistrationFlow registration=null;
+                    Action<Action<JObject>,bool> rewardRequest=(callback,refresh)=>{Check(refresh&&!session.IsUserInitDone,"Fresh reward request refreshes and holds readiness");rewards++;reward=callback;};
+                    Action save=()=>{Check(!session.IsUserInitDone&&reward!=null,"Save follows held reward request");saves++;game.SaveUserData();};
+                    startup=new OriginalUserStartup(defaults,new UnityUserPreferences(),country,()=>{identities++;return "explicit-fixture-device";},config.Config,()=>registration.Register(),rewardRequest,save,()=>"Player_A1B2");
+                    registration=new OriginalUserRegistrationFlow(callback=>{Check(!panel.gameObject.activeSelf&&ReferenceEquals(game.User,startup.Data)&&country.CountryInfo.Code=="US","Fresh user published and country initialized before register");registrations++;registered=callback;},config.Config,rewardRequest,panel.Show,value=>startup.IsInitDone=value,save);
+                    session.StartUser(startup);Check(identities==1&&registrations==1&&saves==0&&session.Data.ServerConfigData==null&&!session.IsUserInitDone,"Actual fresh identity then held registration");registered(false);Check(panel.gameObject.activeSelf&&configs.Count==0,"Registration failure message without config request");begin=Time.time;phase=1;return;
+                }
+                if(Time.time-begin<1)return;
+                if(phase==1){panel.ConfirmButton.onClick.Invoke();Check(registrations==2&&identities==1&&!panel.gameObject.activeSelf,"Confirm retries register without rebuilding identity");registered(true);Check(configs.Count==1&&!session.IsUserInitDone,"Registered success waits for real config");configs[0]("",null);Check(panel.gameObject.activeSelf&&rewards==0&&saves==0,"Config failure blocks fresh reward/save");begin=Time.time;phase=2;return;}
+                if(phase==2){panel.ConfirmButton.onClick.Invoke();Check(configs.Count==2,"Config confirmation retries only config");configs[1]("{\"LSS260820\":true}",null);Check(rewards==1&&saves==1&&!session.IsUserInitDone&&ReferenceEquals(session.Data.ServerConfigData,OriginalServerConfigRequests.Cached),"Real config initialized then reward requested and saved, still waiting");Check((bool)JObject.Parse(PlayerPrefs.GetString(OriginalUserStore.Key))["ServerConfigData"]["LSS260820"],"Actual user save contains new config");begin=Time.time;phase=3;return;}
+                if(phase==3){Check(!session.IsUserInitDone,"Elapsed time alone never releases registration readiness");reward(null);Check(session.IsUserInitDone&&saves==1&&registrations==2&&!panel.gameObject.activeSelf,"Only reward callback completes fresh initialization");Debug.Log("NUT_USER_REGISTRATION_FLOW_PLAY_PASS actual fresh store/session/country, register and config MessagePanel retries, raw config parse/Init, refreshed reward request then save and readiness held until callback; registration boolean, identity and reward payload are explicit fixtures, production bootstrap pending.");Finish(0);}
+            }
+            catch(Exception error){Debug.LogException(error);Finish(1);}
+        }
+        private static void Check(bool value,string message){if(!value)throw new InvalidOperationException(message);}
+        private static void Finish(int code){OriginalServerConfigRequests.Cached=prior;OriginalPreferenceFixture.Restore();SessionState.SetBool(Key,false);EditorApplication.update-=Tick;EditorApplication.Exit(code);}
+    }
+}

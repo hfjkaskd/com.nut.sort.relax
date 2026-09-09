@@ -180,6 +180,7 @@ namespace NutSort.Validation
                 OriginalMarqueeRequestsValidation.Validate();
                 OriginalUserConfigFlowValidation.Validate();
                 OriginalServerConfigRequestsValidation.Validate();
+                OriginalUserRegistrationFlowValidation.Validate();
                 OriginalGuideBranchAdapterValidation.Validate();
                 OriginalNewbieGuideHostValidation.Validate();
                 OriginalNewbieInteractionValidation.Validate();
