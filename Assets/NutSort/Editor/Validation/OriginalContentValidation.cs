@@ -164,6 +164,7 @@ namespace NutSort.Validation
                 OriginalWithdrawalStageZeroAnimationValidation.Validate();
                 OriginalUIAnimationSchedulingValidation.Validate();
                 OriginalWithdrawalTooFastValidation.Validate();
+                OriginalWithdrawalTooFastPanelValidation.Validate();
                 OriginalGuideBranchAdapterValidation.Validate();
                 OriginalNewbieGuideHostValidation.Validate();
                 OriginalNewbieInteractionValidation.Validate();

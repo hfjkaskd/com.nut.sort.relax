@@ -8,6 +8,12 @@ Refresh 首先设置首阶段共享 IsShowOnlineTimeHint 标志，再捕获奖�
 
 新增回归覆盖初始化、赋值顺序、回调期间替换奖励容器/修改原行、两次关卡读取、零分母、整数溢出、关闭后动态解析目标、异常顺序及标志保留。校验恢复进入前的共享标志。
 
-当前仅恢复控制器。33 的源 Prefab 已确认存在，但实际视图、面板宿主与 23 的正式入口仍待恢复；本轮没有视觉或全生命周期 1:1 完成声明。
+已恢复 33 的实际视图与面板宿主。源 Prefab 的 19 个 GameObject、37 个 RectTransform/CanvasRenderer 块保持原值；除官方脚本映射外，19 个 Image/TMP/Button 组件的全部序列化字段保持原值。资源包含原版进度条、背景、标题与绿色描边字体材质。新增唯一标准 Button 的反馈组件并通过代码绑定，不添加静态运行时布局。宿主注册后初始化和刷新，关闭动画完成才移除，隐藏后仍使用原版 2.5 秒队列调度。
+
+真实首阶段 UIName 23 的正式入口与宿主仍待恢复，目前通过注入的实时解析器表达返回契约。测试回调不能作为完整生产链路证据；本轮不声明全生命周期或原机像素级 1:1 完成。
 
 验证结果：本机 Unity 2022.3.62f3 完整回归输出 138 个 VALIDATION_PASS 标记，包含新增提示控制器校验及总入口通过；进程正常结束，玩家偏好备份已恢复。日志：Library/withdrawal-too-fast-validation.log。
+
+本轮验证：完整 Unity 回归 139 个 VALIDATION_PASS，包含实际 Prefab、字体/图片引用、Button 门控、进度条钳制及关闭顺序。日志 Library/withdrawal-too-fast-panel-validation.log。
+
+Play 验证通过：Library/withdrawal-too-fast-play.log。已查看本轮生成的 Library/ValidationCaptures/withdrawal-too-fast-current.png（480×1040），标题、正文、6/12 与 10/10 进度条及确认按钮显示完整；截图仅证明当前工程渲染，不替代原机对照。实际 Button 立即调用测试返回目标，关闭动画完成后宿主移除面板。
