@@ -6,6 +6,8 @@
 
 首关现已接入原版教学面板、逐步提示、四个进度标记与操作权限切换；本地模式的收益文案替换为明确的本地推进提示。
 
+特殊螺杆已补验默认存档入口、完成联动、读档、撤销后重载和继续操作；详见 [特殊螺杆集成验证](LocalSpecialScrewIntegration.md)。
+
 详见 [教学接入](LocalGameplayTeaching.md)、[本地推进](LocalGameplayProgression.md)、[核心道具入口](LocalCoreTools.md)、[玩法解锁](LocalGameplayUnlocks.md)。SDK 收益、广告回调、提现与服务器奖励均未模拟；完整奖励引导、外围生命周期、国家/AB GM 和真机视觉对照仍未完成。
 
 下方保留历轮恢复记录；其中早期“尚未接入”等描述反映当轮状态，当前入口以本节和上述最新验证文档为准。
