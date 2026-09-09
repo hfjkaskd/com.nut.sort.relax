@@ -169,6 +169,7 @@ namespace NutSort.Validation
                 OriginalWithdrawalTimeValidation.Validate();
                 OriginalCountryInfosValidation.Validate();
                 OriginalUserCountryStateValidation.Validate();
+                OriginalUserInitializationTailValidation.Validate();
                 OriginalGuideBranchAdapterValidation.Validate();
                 OriginalNewbieGuideHostValidation.Validate();
                 OriginalNewbieInteractionValidation.Validate();
