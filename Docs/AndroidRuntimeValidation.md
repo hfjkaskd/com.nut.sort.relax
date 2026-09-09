@@ -33,3 +33,15 @@ LocalTeachingViewPlayValidation 四段教学通过，包含源规则文本、世
 - NutSortRelax-device-test.apk：53,708,319 字节，SHA-256 `2e625d1907c9b1a87eb4e509ee5f0c1fde5742ac02abbbe523d67bfd521ec919`。
 
 本轮 Android 只复核更新与第二关画面，四段教学视觉回归在 Unity Play 中执行；未宣称重新完成全部 Android 教学或物理真机验证。
+
+## 普通重开与取消的 Android 实测
+
+使用教学遮挡修复后的同一独立 APK（SHA-256 2e625d1907c9b1a87eb4e509ee5f0c1fde5742ac02abbbe523d67bfd521ec919），未重新构建或修改运行时代码。通过 Android input tap 实际点击底栏重开、Continue 和 Replay；未调用 Unity 测试方法或改写任何 Android 存档。原版应用保持不动。
+
+在 Level=2/LevelSeed=0 上先打开并取消重开，LevelInfo 原样保留。随后通过世界触摸完成一次真实搬移（左上柱到下中空柱），ScrewMoveCount 从 17 增到 18，棋盘与历史产生变化。再次打开重开并点击 Continue，部分棋盘和历史保持一致。随后重新打开并点击 Replay，ScrewInfos 与搬移前逐项一致，OperatorInfos 清空，Level=2、LevelSeed=0、TodayPassLevelCount=1、RevokeCount=4 不变，累计搬移数保留 18；Gold/Coin 和奖励文档没有变化。这符合原 ReplayCallback 保留种子、InitLevel(true,false,false) 重建的路径，与失败重试增加种子不同。
+
+在重建完成后仅 force-stop 测试包，PID 从 12801 变为 13103；重新启动后的 Level/LevelSeed/LevelInfo/搬移数/过关数/撤销库存与退出前完全一致。PID 13103 日志未发现 Exception/FATAL EXCEPTION/Shader error/DllNotFound 标记。没有通过强杀证明重建尚未完成时的结果。
+
+证据位于 Library/android-replay-evidence.json、android-replay-before.json、android-replay-partial.json、android-replay-reset.json、android-replay-runtime.log。已检查本轮 Android 截图 android-replay-open-current.png 和 android-replay-reset-current.png，原生 Restart? 面板、Continue/Replay 和重开的世界棋盘显示正常；另有重启截图 android-replay-resumed-current.png。模拟器保留第二关，累计搬移数 18，撤销库存 4。
+
+此轮补充普通重开的真实设备输入与进程重启证据；失败重试仍以此前 Unity Play 证据为准，未将其计作本轮 Android 测试。没有发现需修改的普通重开逻辑差异；物理手机、所有关卡与完整生命周期尚未证明。
