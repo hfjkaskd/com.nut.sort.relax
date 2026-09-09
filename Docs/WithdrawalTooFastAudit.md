@@ -10,7 +10,7 @@ Refresh 首先设置首阶段共享 IsShowOnlineTimeHint 标志，再捕获奖�
 
 已恢复 33 的实际视图与面板宿主。源 Prefab 的 19 个 GameObject、37 个 RectTransform/CanvasRenderer 块保持原值；除官方脚本映射外，19 个 Image/TMP/Button 组件的全部序列化字段保持原值。资源包含原版进度条、背景、标题与绿色描边字体材质。新增唯一标准 Button 的反馈组件并通过代码绑定，不添加静态运行时布局。宿主注册后初始化和刷新，关闭动画完成才移除，隐藏后仍使用原版 2.5 秒队列调度。
 
-首阶段 UIName 23 的实际视图和宿主已随后恢复，新增真实 23→33→23 Play 往返验证，详见 WithdrawalStageZeroViewAudit.md。正式初始化、时间工具与最终 UI18 目的地仍未接通，不能作为完整生产链路或原机像素级 1:1 的完成证据。
+首阶段 UIName 23 的实际视图和宿主已随后恢复，新增真实 23→33→23 Play 往返验证，详见 WithdrawalStageZeroViewAudit.md。时间工具已随后恢复并通过首阶段 Play 验证；正式初始化与最终 UI18 目的地仍未接通，不能作为完整生产链路或原机像素级 1:1 的完成证据。
 
 验证结果：本机 Unity 2022.3.62f3 完整回归输出 138 个 VALIDATION_PASS 标记，包含新增提示控制器校验及总入口通过；进程正常结束，玩家偏好备份已恢复。日志：Library/withdrawal-too-fast-validation.log。
 
