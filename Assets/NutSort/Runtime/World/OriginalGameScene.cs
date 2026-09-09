@@ -57,6 +57,9 @@ namespace NutSort.World
         public bool IsExchanging { get; set; }
         public bool IsInitDone { get; set; }
         public bool IsSucceed { get; set; }
+        public bool IsSkipLevel { get; set; }
+        // IsSuccess 0x9FB348 short-circuits before reading the board.
+        public bool IsSuccess() => IsSkipLevel || level.Board.IsSuccess;
         private readonly OriginalFailureFlow failure = new OriginalFailureFlow();
         public bool IsFail { get => failure.IsFail; set => failure.IsFail = value; }
 
@@ -113,10 +116,11 @@ namespace NutSort.World
         public void BindMoveCompletion(Action<ScrewState,bool> doneEvent,Action hideGuide,Action pushHint,
             Action<ScrewState> typesRefreshed,Action<int> showPanel)
         {
-            var completion=new OriginalMoveCompletionFlow(User,()=>level.Board.IsSuccess,level.IsCannotMove,
+            var completion=new OriginalMoveCompletionFlow(User,IsSuccess,level.IsCannotMove,
                 ScheduleDelay,doneEvent,hideGuide,pushHint,target=>{level.RefreshScrewTypes(target);typesRefreshed?.Invoke(target);},()=>Fail(showPanel),
                 session.ScrewDoneEventDelay,session.SuccessDoneEventDelay);
             level.BindMoveCompletion(completion.Run);
+            level.BindLandingCompletion(()=>IsSkipLevel,doneEvent);
         }
 
         // Compose the native delayed DoneEvent and victory path. External
@@ -301,7 +305,7 @@ namespace NutSort.World
             ResizeCameras(Screen.width, Screen.height);
             // Original resume initializes its view, then resets complete/empty
             // boards through InitLevel(true) with another reconstruction delay.
-            if (!resetBoard && (level.Board.IsSuccess || level.Board.Screws.Length == 0))
+            if (!resetBoard && (IsSuccess() || level.Board.Screws.Length == 0))
                 BeginInitialization(true, longEntry);
         }
 

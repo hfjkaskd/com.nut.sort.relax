@@ -40,13 +40,16 @@ namespace NutSort.Gameplay
 
         // Original b__1 (0xA0ADF4) only acts on the last staggered movement.
         // Completing the data transfer must not release the visual operation gate.
-        public void CompleteMovement(int index)
+        public void CompleteMovement(int index) { TryCompleteMovement(index); }
+
+        public bool TryCompleteMovement(int index)
         {
             if (index < 0 || index >= Transfers.Length) throw new ArgumentOutOfRangeException(nameof(index));
-            if (index != Transfers.Length - 1 || lastMovementCompleted) return;
+            if (index != Transfers.Length - 1 || lastMovementCompleted) return false;
             lastMovementCompleted = true;
             RequiresDoneAnimation = Destination.IsDone;
             if (!RequiresDoneAnimation) Destination.IsCanOperator = true;
+            return true;
         }
 
         public void CompleteDoneAnimation()

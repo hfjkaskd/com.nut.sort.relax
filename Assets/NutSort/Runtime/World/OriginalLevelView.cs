@@ -215,6 +215,14 @@ namespace NutSort.World
             screws[0].AddTile(singleTile());
         }
 
+        private Func<bool> skipLevel;
+        private Action<ScrewState,bool> landingDone;
+        public void BindLandingCompletion(Func<bool> skip,Action<ScrewState,bool> done)
+        {
+            skipLevel=skip??throw new ArgumentNullException(nameof(skip));
+            landingDone=done??throw new ArgumentNullException(nameof(done));
+        }
+
         private Action<ScrewState> moveCompletion;
         public void BindMoveCompletion(Action<ScrewState> callback) { moveCompletion=callback ?? throw new ArgumentNullException(nameof(callback)); }
 
@@ -315,8 +323,14 @@ namespace NutSort.World
 
         private void OnLanded(NutMoveBatch batch, int index)
         {
-            batch.CompleteMovement(index);
-            if (index != batch.Transfers.Length - 1 || !batch.RequiresDoneAnimation) return;
+            if (!batch.TryCompleteMovement(index)) return;
+            if (!batch.RequiresDoneAnimation)
+            {
+                // Operator b__1 0xA0ADF4 reopens the operation gate first, then
+                // reads the current manager flag and calls DoneEvent(true).
+                if (skipLevel!=null&&skipLevel()) landingDone(batch.Destination,true);
+                return;
+            }
             var view = screws[batch.Destination.Index];
             view.PlayDone(() => { batch.CompleteDoneAnimation(); ScrewCompleted?.Invoke(batch.Destination); },
                 () => DoneEffectRequested?.Invoke(view));
