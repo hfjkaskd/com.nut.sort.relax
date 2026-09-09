@@ -11,3 +11,5 @@
 本轮底层收益响应解析和 GoldRewardTargetS2CData.Init 尚为明确端口，Play 注入预备的用户收益文档及类型化响应进行管理层验证。生产启动整合、真实传输仍待完成，SDK 保持现有处理；不把这一层通过当作完整收益数据链完成。
 
 验证记录：完整 Editor 验证日志 gold-reward-info-flow-validation.log 包含本层及 NUT_CONTENT_VALIDATION_PASS，共 157 个 PASS 标记。新增 Play 重试用例尚未完成：本次 GUI Unity 停留在 project path 启动阶段，没有进入 executeMethod，也未创建偏好备份；不得计作 Play 通过。按用户最新优先级，保存本轮后转入核心玩法接线。
+
+后续补验：改用 batchmode 保留图形后，gold-reward-info-flow-play-batch.log 已输出 NUT_USER_REGISTRATION_FLOW_PLAY_PASS，偏好备份恢复，进程退出。仅为此前记录的管理层用例收尾，没有继续开发外围收益功能。
