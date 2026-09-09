@@ -27,7 +27,7 @@ namespace NutSort.Validation
                     Transform parent=null;foreach(var c in UnityEngine.Object.FindObjectsOfType<Canvas>())if(c.name=="UICanvas")parent=c.transform;Check(parent!=null,"Actual canvas");
                     game.User.UserLssInfo=null;game.User.GoldRewardTargetS2CData=new JObject{{"bear_list",new JArray(new JObject(),new JObject(),new JObject{{"Stage2StartShowLevel",12}})}};
                     var audio=UnityEngine.Object.FindObjectOfType<OriginalAudioPlayer>();
-                    var withdrawalTime=new OriginalWithdrawalTime(()=>OriginalWithdrawalTime.CountryLanguageCode("en","US"));
+                    var withdrawalTime=new OriginalWithdrawalTime(()=>game.Tables.Countries.Get("US").CountryLanguageCode);
                     stage=new OriginalWithdrawalStageZeroHost(parent,"Prefabs/Panels/TXProgress0Panel",game.User,game.Tables,"en",OriginalWithdrawalTime.LocalSeconds,v=>"fixture",withdrawalTime.Format,(a,b)=>a,()=>false,()=>7,
                         ()=>saves++,v=>throw new Exception("Guide fixture routes UI18"),()=>true,s=>audio.PlaySound(s),
                         (id,args)=>{if(id==33){Check(!hint.IsOpen,"Single initial hint");hint.Show(args);}else{Check(id==18&&stage.Panel.Closing,"Native return route");returns++;}},()=>hides++,game.ScheduleDelay,()=>{});
