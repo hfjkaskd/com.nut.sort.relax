@@ -10,6 +10,6 @@ LocalPopTipPlayValidation 从默认存档入口开始，通过真实 EventSystem
 
 Library/local-pop-tip-play.log 包含 NUT_LOCAL_POP_TIP_PLAY_PASS。最新 Library/local-pop-tip-current.png 已检查，显示两个独立提示重叠时的原层级效果。LocalToolsPlayValidation 已更新原无历史分支预期；Library/local-pop-tip-tools-play.log 包含 NUT_LOCAL_TOOLS_PLAY_PASS，涵盖实际搬移、撤销、交换、加螺杆、库存存档、SDK 不可用说明及普通重开。
 
-本轮不证明全部画面或设备输入已达 1:1；当前 Android 平台 Editor 的大背景纹理可见色带，仍需核对纹理导入与源图。已知退出对象池诊断未在本轮处理。
+本轮不证明全部画面或设备输入已达 1:1；该轮发现的 Android 平台 Editor 大背景色带已在后续 BackgroundTextureFidelity.md 中定位为自动 ETC_RGB4 导入并修复为源 ASTC 10×10。已知退出对象池诊断未在本轮处理。
 
 Library/local-pop-tip-content-validation.log 完成 165 项内容检查和 NUT_CONTENT_VALIDATION_PASS。Android ARM64 IL2CPP 开发包重新构建成功，Unity 报告 warnings=0、errors=0；包名/版本/架构及 v1/v2 签名复核通过，最新产物校验值见 AndroidLocalBuild.md。

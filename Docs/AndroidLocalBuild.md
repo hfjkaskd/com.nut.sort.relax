@@ -16,4 +16,6 @@ LocalAndroidBuild 在构建期间设置 APK 显示名，完成后恢复 Editor �
 
 修复后 `Library/local-android-content-validation.log` 完成 165 个 PASS 标记及 NUT_CONTENT_VALIDATION_PASS，其中新增动态图集引用/补字检查。可通过 Unity batchmode 调用 `NutSort.Validation.LocalAndroidBuild.Run` 重建；产物使用 Development 选项。
 
-当前更新包包含原版非模态道具提示（见 LocalPopTips.md）。Library/local-pop-tip-android-build.log 记录 NUT_ANDROID_BUILD_PASS，warnings=0、errors=0；APK 56,233,582 字节，SHA-256 50b6b066d0b8defe73d803cf0ccf0802f434635ba678b02b9b9ba7f3b2660344。重新核验 v1/v2 签名、包名、版本与 ARM64 均通过，签名工具的两条 META-INF 提示仍存在。该文件已替换上述首次构建产物，尚未完成真机验证。
+上一轮更新包包含原版非模态道具提示（见 LocalPopTips.md）。Library/local-pop-tip-android-build.log 记录 NUT_ANDROID_BUILD_PASS，warnings=0、errors=0；APK 56,233,582 字节，SHA-256 50b6b066d0b8defe73d803cf0ccf0802f434635ba678b02b9b9ba7f3b2660344。重新核验 v1/v2 签名、包名、版本与 ARM64 均通过，签名工具的两条 META-INF 提示仍存在。该轮文件已替换上述首次构建产物，尚未完成真机验证。
+
+最新背景修复包：Library/local-background-android-build.log 记录 NUT_ANDROID_BUILD_PASS，warnings=0、errors=0。APK 56,233,492 字节，SHA-256 ee20c6b8f5c9a77bba7be8a690df5be73165afeebb4b10cb615dace571917aab。签名、包名、版本及 ARM64 验证通过；产物替换上述上一轮 APK。场景背景恢复源 ASTC 10×10 格式，详情与误差测量见 BackgroundTextureFidelity.md。

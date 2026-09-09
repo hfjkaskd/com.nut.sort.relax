@@ -121,6 +121,7 @@ namespace NutSort.Validation
                 OriginalEffectsValidation.Validate();
                 OriginalAudioValidation.Validate();
                 OriginalDynamicFontAtlasBuilder.Validate();
+                OriginalBackgroundTextureValidation.Validate();
                 OriginalUserValidation.Validate();
                 OriginalBoardSnapshotValidation.Validate(repository);
                 OriginalLockedScrewValidation.Validate(repository);
