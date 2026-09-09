@@ -19,12 +19,18 @@ namespace NutSort.Content
         public const string Key="UserLocalData";
         private readonly IOriginalUserPreferences preferences;
         public OriginalUserLocalData Data { get; }
-        public OriginalUserStore(OriginalUserDefaults defaults,IOriginalUserPreferences storage)
+        public OriginalUserStore(OriginalUserDefaults defaults,IOriginalUserPreferences storage,Action<OriginalUserLocalData> initializeFresh=null)
         {
             if(defaults==null)throw new ArgumentNullException(nameof(defaults));
             preferences=storage??throw new ArgumentNullException(nameof(storage));
             string json=preferences.GetString(Key,string.Empty);
-            Data=string.IsNullOrEmpty(json)?new OriginalUserLocalData(defaults):OriginalUserDataJson.Read(json,defaults);
+            if(string.IsNullOrEmpty(json))
+            {
+                var fresh=new OriginalUserLocalData(defaults);
+                initializeFresh?.Invoke(fresh);
+                Data=fresh;
+            }
+            else Data=OriginalUserDataJson.Read(json,defaults);
         }
         // Source SaveData skips a null user. It replaces LevelInfo only when
         // a current board exists, then writes the entire user envelope and flushes.
