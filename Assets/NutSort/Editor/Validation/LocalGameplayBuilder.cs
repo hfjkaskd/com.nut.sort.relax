@@ -102,6 +102,7 @@ namespace NutSort.Validation
                 so.FindProperty("exchangeMask").objectReferenceValue=mask;
                 so.FindProperty("exchangeCancelDelay").floatValue=new SerializedObject(original).FindProperty("exchangeCancelDelay").floatValue;
                 so.FindProperty("popTipPrefabPath").stringValue="Prefabs/Tip";
+                so.FindProperty("subroundPrefabPath").stringValue="Prefabs/Panels/LocalSubrounds";
                 bottom.transform.SetAsFirstSibling();mask.transform.SetSiblingIndex(1);backdrop.SetAsLastSibling();
                 so.ApplyModifiedPropertiesWithoutUndo();backdrop.gameObject.SetActive(false);
                 PrefabUtility.SaveAsPrefabAsset(root,"Assets/Resources/prefabs/panels/LocalGameplay.prefab");

@@ -60,6 +60,7 @@ namespace NutSort.Validation
                 {
                     if(!game.IsInitDone||local.SuccessPanel!=null)return;
                     Check(game.PlayerLevel==13&&game.User.TodayPassLevelCount==4&&!game.ModalInputBlocked&&!local.AwaitingNext,"Final Next initializes next subround group without duplicate settlement");
+                    Check(local.SubroundView!=null&&local.SubroundView.DotCount==5&&local.SubroundView.SubRounds.activeSelf,"Next group grows source progress strip from four to five dots");
                     Debug.Log("NUT_LOCAL_SUBROUND_PLAY_PASS actual source boards 9/10/11/12 solved through world rays; intermediate rounds automatically restart without settlement UI, first-transition scene reload preserves flushed progress, last round alone shows native success and real next Button advances once; no reward response/grant fabricated.");Finish(0);return;
                 }
                 if(local.AwaitingNext)
@@ -77,6 +78,7 @@ namespace NutSort.Validation
                 if(!game.IsInitDone||game.ModalInputBlocked||Time.time<nextAction)return;
                 if(board!=game.Level.Board)
                 {
+                    Check(local.SubroundView!=null&&local.SubroundView.DotCount==4&&local.SubroundView.SubRounds.activeSelf,"Actual automatic subround progression refreshes native dot strip");
                     board=game.Level.Board;solution=LocalGameplayPlayValidation.Solve(board);move=0;
                     Check(game.PlayerLevel>=9&&game.PlayerLevel<=12&&startup.MainLevel.Label.text==game.Tables.Text.GetText(2,"en",5),"All four subrounds retain source display level 5");
                     Check(game.User.TodayPassLevelCount==game.PlayerLevel-9,"Resume/automatic rebuild does not settle twice");

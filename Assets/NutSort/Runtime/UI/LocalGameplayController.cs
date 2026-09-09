@@ -78,7 +78,11 @@ namespace NutSort.UI
             BeginCoreInitialization();
             game.SaveUserData();
         }
-        private void RefreshLevel() => startup.MainLevel.Refresh(game.Tables,game.PlayerLevel,language,false,false);
+        private void RefreshLevel()
+        {
+            startup.MainLevel.Refresh(game.Tables,game.PlayerLevel,language,false,false);
+            RefreshSubrounds();
+        }
         private void ClearGuide()
         {
             CloseTeaching();

@@ -4,7 +4,7 @@ The user approved local level advancement on 2026-09-09. OriginalStartupFlow loa
 
 ## Runtime behavior
 
-- The scene raises BoardReady after original reconstruction and nut initialization. Local mode enables input and saves there. Editor and device use the same runtime.
+- The scene raises BoardReady after original reconstruction and nut initialization. Local mode enables input and saves there. It also refreshes the source subround dot strip through the local prefab variant; reward milestones remain skipped (LocalSubroundView.md). Editor and device use the same runtime.
 - Original selection, encrypted level resources, camera ray input, transfer/cap/type effects, completion counters/delays and the four first-level tutorial seeds retain their existing implementations.
 - OriginalSuccessFlow owns tutorial advancement and victory timing. Its external request boundary now advances Level, resets LevelSeed and increments TodayPassLevelCount locally. Intermediate subrounds now automatically call InitLevel(true,false,false), matching the original captured table decision. Only a final subround shows settlement; its native next Button closes the restored success panel before opening the next board, without a second increment. Rank, server login counters and balances remain unchanged.
 - Pending progress is flushed with empty LevelInfo before settlement or tutorial reconstruction. Quitting on settlement reconstructs the next board on entry. Normal board and move-history saves retain the original snapshot/envelope. A live board is flushed on pause; transition checkpoints are already durable.

@@ -20,6 +20,8 @@ LocalAndroidBuild 在构建期间设置 APK 显示名，完成后恢复 Editor �
 
 上一轮背景修复包：Library/local-background-android-build.log 记录 NUT_ANDROID_BUILD_PASS，warnings=0、errors=0。APK 56,233,492 字节，SHA-256 ee20c6b8f5c9a77bba7be8a690df5be73165afeebb4b10cb615dace571917aab。签名、包名、版本及 ARM64 验证通过；产物替换上述上一轮 APK。场景背景恢复源 ASTC 10×10 格式，详情与误差测量见 BackgroundTextureFidelity.md。
 
-最新子回合修复包：Library/local-subround-android-build.log 记录 NUT_ANDROID_BUILD_PASS，warnings=0、errors=0。APK 68,789,388 字节，SHA-256 0e47b80ebfe6573b8f916f5b7d250f299cb4b10cb3e6a4792fc5b54af95d34f0。v1/v2 签名、包名、版本和 ARM64 验证通过；替换前述开发 APK。
+上一轮子回合推进修复包：Library/local-subround-android-build.log 记录 NUT_ANDROID_BUILD_PASS，warnings=0、errors=0。APK 68,789,388 字节，SHA-256 0e47b80ebfe6573b8f916f5b7d250f299cb4b10cb3e6a4792fc5b54af95d34f0。v1/v2 签名、包名、版本和 ARM64 验证通过；替换前述开发 APK。
 
 该次增量 APK 的 ZIP 中央目录有 2,112 项，压缩载荷合计 53,337,845 字节；额外空间主要是未被当前中央目录引用的旧局部 ZIP 记录（大间隙仍以 PK 本地文件头开头）。因此本次开发包增大不能直接当作运行时资源增长；尚未做发布打包体积清理，保留官方构建及签名产物。
+
+最新子回合点阵包：Library/local-subround-dots-android-build.log 记录 NUT_ANDROID_BUILD_PASS，warnings=0、errors=0。APK 68,786,702 字节，SHA-256 a6e13eace9c95797a13c7635d9ae7f2617507f11ed622f153fb8acea1e2bc849。签名、包名、版本及 ARM64 复核通过，替换上一轮开发 APK。点阵接入和验证见 LocalSubroundView.md；增量开发打包与真机验证限制不变。

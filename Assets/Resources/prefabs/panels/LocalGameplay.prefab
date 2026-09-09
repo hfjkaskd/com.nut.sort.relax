@@ -604,6 +604,7 @@ MonoBehaviour:
     SDK rewards are skipped'
   maximumAddedTiles: 12
   failurePrefabPath: Prefabs/Panels/LocalFailure
+  subroundPrefabPath: Prefabs/Panels/LocalSubrounds
   successPrefabPath: Prefabs/Panels/LocalSuccess
   localNextCaption: Next level
   teachingPrefabPath: Prefabs/Panels/NewbieGuidePanel
