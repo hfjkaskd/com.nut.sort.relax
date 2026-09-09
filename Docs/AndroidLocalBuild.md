@@ -18,4 +18,8 @@ LocalAndroidBuild 在构建期间设置 APK 显示名，完成后恢复 Editor �
 
 上一轮更新包包含原版非模态道具提示（见 LocalPopTips.md）。Library/local-pop-tip-android-build.log 记录 NUT_ANDROID_BUILD_PASS，warnings=0、errors=0；APK 56,233,582 字节，SHA-256 50b6b066d0b8defe73d803cf0ccf0802f434635ba678b02b9b9ba7f3b2660344。重新核验 v1/v2 签名、包名、版本与 ARM64 均通过，签名工具的两条 META-INF 提示仍存在。该轮文件已替换上述首次构建产物，尚未完成真机验证。
 
-最新背景修复包：Library/local-background-android-build.log 记录 NUT_ANDROID_BUILD_PASS，warnings=0、errors=0。APK 56,233,492 字节，SHA-256 ee20c6b8f5c9a77bba7be8a690df5be73165afeebb4b10cb615dace571917aab。签名、包名、版本及 ARM64 验证通过；产物替换上述上一轮 APK。场景背景恢复源 ASTC 10×10 格式，详情与误差测量见 BackgroundTextureFidelity.md。
+上一轮背景修复包：Library/local-background-android-build.log 记录 NUT_ANDROID_BUILD_PASS，warnings=0、errors=0。APK 56,233,492 字节，SHA-256 ee20c6b8f5c9a77bba7be8a690df5be73165afeebb4b10cb615dace571917aab。签名、包名、版本及 ARM64 验证通过；产物替换上述上一轮 APK。场景背景恢复源 ASTC 10×10 格式，详情与误差测量见 BackgroundTextureFidelity.md。
+
+最新子回合修复包：Library/local-subround-android-build.log 记录 NUT_ANDROID_BUILD_PASS，warnings=0、errors=0。APK 68,789,388 字节，SHA-256 0e47b80ebfe6573b8f916f5b7d250f299cb4b10cb3e6a4792fc5b54af95d34f0。v1/v2 签名、包名、版本和 ARM64 验证通过；替换前述开发 APK。
+
+该次增量 APK 的 ZIP 中央目录有 2,112 项，压缩载荷合计 53,337,845 字节；额外空间主要是未被当前中央目录引用的旧局部 ZIP 记录（大间隙仍以 PK 本地文件头开头）。因此本次开发包增大不能直接当作运行时资源增长；尚未做发布打包体积清理，保留官方构建及签名产物。

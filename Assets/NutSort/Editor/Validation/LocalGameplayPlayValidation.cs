@@ -203,7 +203,7 @@ namespace NutSort.Validation
         }
         // Bounded offline search chooses input only. It never mutates runtime
         // boards, completes animations, binds callbacks or grants inventory.
-        private static List<Vector2Int> Solve(OriginalBoardState value)
+        internal static List<Vector2Int> Solve(OriginalBoardState value)
         {
             var stacks=new List<int>[value.Screws.Length];var capacity=new int[stacks.Length];
             for(int i=0;i<stacks.Length;i++)

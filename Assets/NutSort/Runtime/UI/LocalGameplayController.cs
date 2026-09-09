@@ -59,7 +59,7 @@ namespace NutSort.UI
             game.BindSuccess(()=>game.NewLevelMode,SaveTutorialTransition,()=>{},()=>{},transform.parent,
                 captured=>
                 {
-                    if (game.Level.Board==board && game.IsSucceed && !game.IsRestarting) CompleteLocalLevel();
+                    if (game.Level.Board==board && game.IsSucceed && !game.IsRestarting) CompleteLocalLevel(captured);
                 });
         }
 
@@ -97,13 +97,20 @@ namespace NutSort.UI
             game.User.LevelInfo=string.Empty;
             audio.UserState.Store.SaveData(false,null);
         }
-        private void CompleteLocalLevel()
+        private void CompleteLocalLevel(OriginalLevelInfo completedLevel)
         {
             if (awaitingNext) return;
             game.User.Level=checked(game.User.Level+1);
             game.User.LevelSeed=0;
             game.User.TodayPassLevelCount=checked(game.User.TodayPassLevelCount+1);
             PersistPendingBoard();
+            // Success response 0xA00684 skips settlement presentation for an
+            // intermediate subround and calls InitLevel(true,false,false).
+            if (completedLevel.SubTotalRound>completedLevel.SubRound)
+            {
+                game.InitLevel(true,false,false);
+                return;
+            }
             awaitingNext=true;
             game.IsInitDone=false;
             game.ModalInputBlocked=true;

@@ -19,3 +19,5 @@ Unity 2022.3.62f3 验证：
 - `Library/local-native-success-content-validation.log`：164 个 PASS 标记与 NUT_CONTENT_VALIDATION_PASS，包含原 SuccessPanel、SuccessPanelFlow 和教学/奖励流程检查。
 
 原用户存档已恢复；既有退出对象池和编辑模式工具特效诊断未在本轮处理。本轮的场景重载测试不等同于 Android/iOS 系统强杀测试。
+
+后续已接入原 SubTotalRound/SubRound 中间子回合自动续局，仅末子回合进入本面板；普通 TotalRound/Round 不因此跳过结算。见 LocalSubroundProgression.md 的真实关卡及普通回合回归。
