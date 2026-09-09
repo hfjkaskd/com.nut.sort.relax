@@ -1,6 +1,6 @@
 # First withdrawal stage animation timeline
 
-OriginalWithdrawalStageZeroAnimation restores the two source animation entry points on already-configured Transforms. It does not build runtime UI. Its serializable Timing data can be stored by the future source-prefab view. The normal scaled update pump, unscaled delayed-call provider and actual panel hosts must still be connected by that view; this change does not assert an end-to-end production page.
+OriginalWithdrawalStageZeroAnimation restores the two source animation entry points on already-configured Transforms. It does not build runtime UI. Its serializable Timing data can be stored by the future source-prefab view. The actual global scheduling provider is now OriginalUIAnimationDriver.Schedule, verified with this timeline and in Play Mode (UIAnimationSchedulingAudit.md). The owning source-prefab view and actual panel hosts must still be connected; this change does not assert an end-to-end production page.
 
 ## Recovered first phase
 
@@ -24,4 +24,4 @@ The float constants were checked directly in the supplied arm64 ELF: 0x2017858=0
 
 Library/withdrawal-stage-zero-animation-validation.log is the full batch verification for this change: 136 PASS markers, zero C# errors/exceptions and restored preference backup. The timeline fixture uses a synthetic UI hierarchy only inside Editor validation, with source timing values. It checks both phases at intermediate points, OnStart marker differences, a fifth child being collapsed but not scheduled, required unscaled delay arguments, an explicitly held prompt callback, no implicit resume, repeated calls, paused scaled updates, large-delta deferral, missing Done handling and prompt callback survival after target destruction.
 
-This is timing/controller evidence, not original-device pixel equality or an actual stage-page screenshot. Source TXProgress0Panel prefab adaptation, the owning view and global unscaled scheduler, panel 33 and its resume handoff remain unfinished. The source's DOTween dependency is replaced by native Unity data/Transform operations as requested; SDK behavior is unchanged. Full startup/country/AB/lifecycle composition remains incomplete.
+This is timing/controller evidence, not original-device pixel equality or an actual stage-page screenshot. Source TXProgress0Panel prefab adaptation, the owning view, panel 33 and its resume handoff remain unfinished. The global unscaled scheduler is now implemented and verified in UIAnimationSchedulingAudit.md. The source's DOTween dependency is replaced by native Unity data/Transform operations as requested; SDK behavior is unchanged. Full startup/country/AB/lifecycle composition remains incomplete.

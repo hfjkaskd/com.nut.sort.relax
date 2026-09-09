@@ -43,10 +43,15 @@ namespace NutSort.Validation
                 animation.Advance(100);Check(step.Find("1/Content").localScale.y==0,"Large delta cannot consume callback-created content");
                 animation.Advance(2);UnityEngine.Object.DestroyImmediate(step.Find("1/Done").gameObject);
                 animation.PlayFirst();animation.Advance(3);animation.Advance(1.55f);Check(!step.Find("1/Loading").gameObject.activeSelf,"Missing Done still hides Loading in this source callback");
-                int before=hints;UnityEngine.Object.DestroyImmediate(root);pending();Check(hints==before+1,"Global prompt callback remains independent of destroyed panel targets");
+                var driven=new OriginalWithdrawalStageZeroAnimation(step,confirm,SourceTiming(),OriginalUIAnimationDriver.Schedule,()=>hints++);
+                OriginalUIAnimationDriver.Register(confirm.GetComponent<Button>(),driven.Advance);driven.PlayFirst();
+                int before=hints;OriginalUIAnimationDriver.Advance(3,3);Check(hints==before,"Real driver defers newly scheduled timer beyond creation frame");
+                UnityEngine.Object.DestroyImmediate(root);OriginalUIAnimationDriver.Advance(0,1.99f);Check(hints==before,"Unscaled prompt waits while scaled time is paused");
+                OriginalUIAnimationDriver.Advance(0,.02f);Check(hints==before+1,"Real global scheduler survives panel destruction and scaled pause");
+                pending();Check(hints==before+2,"Original held scheduling fixture callback remains independent of destroyed targets");
             }
             finally{if(root!=null)UnityEngine.Object.DestroyImmediate(root);}
-            Debug.Log("NUT_WITHDRAWAL_STAGE_ZERO_ANIMATION_VALIDATION_PASS native two-phase row/content/Sure timing, deferred callback-created tracks, unscaled prompt scheduling contract, repeated calls, extra/missing nodes and distinct third-step marker behavior; scheduler provider and source prefab host remain pending.");
+            Debug.Log("NUT_WITHDRAWAL_STAGE_ZERO_ANIMATION_VALIDATION_PASS native two-phase row/content/Sure timing, deferred callback-created tracks, unscaled prompt scheduling contract, repeated calls, extra/missing nodes and distinct third-step marker behavior; actual global scheduler verified; source prefab host remains pending.");
         }
         private static void Near(float actual,float expected,string text)=>Check(Mathf.Abs(actual-expected)<.002f,text+" actual="+actual);
         private static void Check(bool value,string message){if(!value)throw new InvalidOperationException(message);}
