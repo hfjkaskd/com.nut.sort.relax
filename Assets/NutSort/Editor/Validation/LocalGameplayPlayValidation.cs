@@ -114,7 +114,7 @@ namespace NutSort.Validation
                 }
                 if(phase==9)
                 {
-                    int seed=game.User.LevelSeed;local.RetryButton.onClick.Invoke();local.RetryButton.onClick.Invoke();
+                    int seed=game.User.LevelSeed;var retry=local.RetryButton;retry.onClick.Invoke();retry.onClick.Invoke();
                     Check(game.User.LevelSeed==seed+1&&!game.IsFail&&game.IsRestarting,"Native retry advances seed once and clears failure");phase=10;return;
                 }
                 if(phase==10)

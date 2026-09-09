@@ -28,6 +28,20 @@ namespace NutSort.Validation
             var b=t.gameObject.AddComponent<Button>();b.targetGraphic=img;
             Label("Label",t,font,text,Vector2.zero,new Vector2(300,74),32);return b;
         }
+        private static void BuildLocalFailure()
+        {
+            var source=Resources.Load<GameObject>("Prefabs/Panels/FailPanel");
+            var instance=(GameObject)PrefabUtility.InstantiatePrefab(source);
+            try
+            {
+                // Keep the original geometry, header, Restart Button and audio.
+                // SDK-owned reward value and revive acquisition remain skipped.
+                instance.transform.Find("CoinTip").gameObject.SetActive(false);
+                instance.GetComponent<OriginalFailurePanelView>().Revive.gameObject.SetActive(false);
+                PrefabUtility.SaveAsPrefabAsset(instance,"Assets/Resources/prefabs/panels/LocalFailure.prefab");
+            }
+            finally{UnityEngine.Object.DestroyImmediate(instance);}
+        }
         public static void Run()
         {
             GameObject root=null;
@@ -47,10 +61,10 @@ namespace NutSort.Validation
                 var card=Rect("Card",backdrop,new Vector2(.5f,.5f),Vector2.zero,new Vector2(620,330));
                 card.gameObject.AddComponent<Image>().color=new Color(.10f,.18f,.24f,1);
                 var message=Label("Message",card,font,"Level complete",new Vector2(0,45),new Vector2(560,150),38);
-                var next=Button("Next",card,font,"Next level");var retry=Button("Retry",card,font,"Try again");var dismiss=Button("Dismiss",card,font,"Continue");
+                var next=Button("Next",card,font,"Next level");var dismiss=Button("Dismiss",card,font,"Continue");
                 var so=new SerializedObject(owner);
                 so.FindProperty("modeLabel").objectReferenceValue=mode;so.FindProperty("message").objectReferenceValue=message;
-                so.FindProperty("resultPanel").objectReferenceValue=backdrop.gameObject;so.FindProperty("next").objectReferenceValue=next;so.FindProperty("retry").objectReferenceValue=retry;
+                so.FindProperty("resultPanel").objectReferenceValue=backdrop.gameObject;so.FindProperty("next").objectReferenceValue=next;
                 so.FindProperty("dismiss").objectReferenceValue=dismiss;
                 so.FindProperty("maximumAddedTiles").intValue=12;
                 so.FindProperty("unavailableText").stringValue="Tool unavailable\nSDK rewards are skipped";
@@ -61,7 +75,8 @@ namespace NutSort.Validation
                 so.FindProperty("localFinalTeachingText").stringValue="Complete this level to continue in local mode";
                 so.FindProperty("modeText").stringValue="LOCAL MODE - SDK skipped";
                 so.FindProperty("successText").stringValue="Level complete\nProgress saved locally";
-                so.FindProperty("failureText").stringValue="No moves left\nTry another board";
+                so.FindProperty("failurePrefabPath").stringValue="Prefabs/Panels/LocalFailure";
+                BuildLocalFailure();
                 var bottom=((GameObject)PrefabUtility.InstantiatePrefab(Resources.Load<GameObject>("Prefabs/Panels/MainPanelBottom"),rect)).GetComponent<OriginalMainBottomView>();
                 // Settings remain outside this core-only local composition.
                 bottom.Setting.transform.parent.gameObject.SetActive(false);

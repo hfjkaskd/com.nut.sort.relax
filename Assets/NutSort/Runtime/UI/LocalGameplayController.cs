@@ -14,8 +14,8 @@ namespace NutSort.UI
     {
         [SerializeField] private TMP_Text modeLabel, message;
         [SerializeField] private GameObject resultPanel;
-        [SerializeField] private Button next, retry, dismiss;
-        [SerializeField] private string modeText, successText, failureText, unavailableText;
+        [SerializeField] private Button next, dismiss;
+        [SerializeField] private string modeText, successText, unavailableText;
         [SerializeField] private int maximumAddedTiles;
         private OriginalGameScene game;
         private OriginalAudioPlayer audio;
@@ -23,9 +23,9 @@ namespace NutSort.UI
         private string language;
         private bool awaitingNext, bound;
         public bool AwaitingNext => awaitingNext;
-        public bool ResultVisible => resultPanel.activeSelf;
+        public bool ResultVisible => resultPanel.activeSelf||failurePanel!=null;
         public Button NextButton => next;
-        public Button RetryButton => retry;
+        public Button RetryButton => failurePanel==null?null:failurePanel.Restart;
         public Button DismissButton => dismiss;
         public TMP_Text ModeLabel => modeLabel;
 
@@ -39,7 +39,6 @@ namespace NutSort.UI
             dismiss.onClick.AddListener(Dismiss);
             BindTools();
             BindCoreInitialization();
-            retry.onClick.AddListener(Retry);
             game.BoardReady+=OnBoardReady;
             // The native initialization continuation needs unavailable reward-stage
             // documents. Local mode finishes only once the real world is ready.
@@ -111,7 +110,6 @@ namespace NutSort.UI
             game.ModalInputBlocked=true;
             message.text=successText;
             next.gameObject.SetActive(true);
-            retry.gameObject.SetActive(false);
             dismiss.gameObject.SetActive(false);
             resultPanel.SetActive(true);
         }
@@ -123,16 +121,6 @@ namespace NutSort.UI
             game.ModalInputBlocked=false;
             game.InitLevel(true,true,false);
         }
-        private void ShowFailure()
-        {
-            if (awaitingNext || resultPanel.activeSelf) return;
-            game.ModalInputBlocked=true;
-            message.text=failureText;
-            next.gameObject.SetActive(false);
-            retry.gameObject.SetActive(true);
-            dismiss.gameObject.SetActive(false);
-            resultPanel.SetActive(true);
-        }
         private void ShowUnavailable() => ShowNotice(unavailableText);
         private void ShowNotice(string text)
         {
@@ -140,7 +128,6 @@ namespace NutSort.UI
             game.ModalInputBlocked=true;
             message.text=text;
             next.gameObject.SetActive(false);
-            retry.gameObject.SetActive(false);
             dismiss.gameObject.SetActive(true);
             resultPanel.SetActive(true);
         }
@@ -158,16 +145,6 @@ namespace NutSort.UI
             if (game.IsFail) ShowFailure();
             else game.ModalInputBlocked=startup.Replay.Panel!=null;
         }
-        private void Retry()
-        {
-            if (awaitingNext || !resultPanel.activeSelf) return;
-            game.RestartAfterFailure(()=>
-            {
-                resultPanel.SetActive(false);
-                game.ModalInputBlocked=false;
-                PersistPendingBoard();
-            });
-        }
         private void OnApplicationPause(bool paused)
         {
             if (paused) SaveSession();
@@ -182,7 +159,6 @@ namespace NutSort.UI
             if (game!=null) { game.BoardReady-=OnBoardReady;game.OperationApplied-=RefreshToolsAfterOperation; }
             if(startup!=null&&startup.Replay!=null)startup.Replay.BindModalBlocker(null);
             next.onClick.RemoveListener(Next);
-            retry.onClick.RemoveListener(Retry);
             dismiss.onClick.RemoveListener(Dismiss);
         }
     }
