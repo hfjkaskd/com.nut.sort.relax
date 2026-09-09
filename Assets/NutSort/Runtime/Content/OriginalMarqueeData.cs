@@ -5,9 +5,13 @@ using UnityEngine;
 
 namespace NutSort.Content
 {
+    [Serializable]
     public sealed class OriginalMarqueeItem
     {
-        public float Weight, Minimum, Maximum;
+        public float wt, lw, hh;
+        public float Weight { get=>wt; set=>wt=value; }
+        public float Minimum { get=>lw; set=>lw=value; }
+        public float Maximum { get=>hh; set=>hh=value; }
         public bool IsGold;
         public float SampleValue() => UnityEngine.Random.Range(Minimum,Maximum);
         public float SampleValue(Func<float,float,float> range) => range(Minimum,Maximum);
@@ -15,10 +19,16 @@ namespace NutSort.Content
 
     // Explicit PMDS2CData projection. The caller controls the original success-
     // gated Init; reading an envelope never invents or requests server data.
+    [Serializable]
     public sealed class OriginalMarqueeData
     {
-        public string CashDisplayRange;
-        public List<OriginalMarqueeItem> CashItems, CoinItems, Items;
+        // Native wire field names are serialized by Unity JsonUtility.
+        public string casShowBt;
+        public List<OriginalMarqueeItem> popCas, zsRat, Pmds2CDatas;
+        public string CashDisplayRange { get=>casShowBt; set=>casShowBt=value; }
+        public List<OriginalMarqueeItem> CashItems { get=>popCas; set=>popCas=value; }
+        public List<OriginalMarqueeItem> CoinItems { get=>zsRat; set=>zsRat=value; }
+        public List<OriginalMarqueeItem> Items { get=>Pmds2CDatas; set=>Pmds2CDatas=value; }
         public float CashMinimum { get; private set; }
         public float CashMaximum { get; private set; }
 
