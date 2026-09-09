@@ -40,3 +40,7 @@ MonoBehaviour:
   - Game/Spirte/10
   - Game/Spirte/11
   - Game/Spirte/12
+  MaskDoneScaleDuration: 0.5
+  MaskBreakHideDelay: 1.2000000476837158
+  DontMoveBreakHideDelay: 1.340000033378601
+  MaskBackOvershoot: 1.70158

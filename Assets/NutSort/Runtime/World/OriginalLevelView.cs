@@ -17,6 +17,7 @@ namespace NutSort.World
         private readonly Dictionary<NutState, OriginalNutView> nuts = new Dictionary<NutState, OriginalNutView>();
         private OriginalScrewOperator operation;
         private OriginalDeadlockRules deadlock;
+        private OriginalScrewTypeRefresh typeRefresh;
         private ScrewState selected;
         private bool pendingNuts, lssab;
         private float spawnDelay, spawnTime;
@@ -83,7 +84,19 @@ namespace NutSort.World
             spawnTime = 0f; pendingNuts = true;
         }
 
-        private void Update() { AdvanceInitialization(Time.deltaTime); }
+        private void Update()
+        {
+            AdvanceInitialization(Time.deltaTime);
+            if(screws==null)return;
+            for(int i=0;i<screws.Length;i++)
+                screws[i].TypeView.AdvanceTransitions(Time.deltaTime,Time.unscaledDeltaTime);
+        }
+        public void RefreshScrewTypes(ScrewState completed)
+        {
+            if(typeRefresh==null)typeRefresh=new OriginalScrewTypeRefresh(
+                i=>screws[i].TypeView.PlayMaskBreak(),i=>screws[i].TypeView.PlayDontMoveBreak(),PlayHiddenBreak,ForwardSave);
+            typeRefresh.Run(Board,completed);
+        }
         private void ForwardSelectionSound() { SelectionSoundRequested?.Invoke(); }
         private void ForwardMoveSound(int count) { MoveSoundRequested?.Invoke(count); }
         private void ForwardMoveAttempt() { MoveAttempted?.Invoke(); }

@@ -108,11 +108,13 @@ namespace NutSort.World
         }
         public void Success() => successFlow.Run();
 
+        // Type transitions are owned by the scene; the optional observer runs
+        // after their native animation/save requests, never instead of them.
         public void BindMoveCompletion(Action<ScrewState,bool> doneEvent,Action hideGuide,Action pushHint,
-            Action<ScrewState> refreshTypes,Action<int> showPanel)
+            Action<ScrewState> typesRefreshed,Action<int> showPanel)
         {
             var completion=new OriginalMoveCompletionFlow(User,()=>level.Board.IsSuccess,level.IsCannotMove,
-                ScheduleDelay,doneEvent,hideGuide,pushHint,refreshTypes,()=>Fail(showPanel),
+                ScheduleDelay,doneEvent,hideGuide,pushHint,target=>{level.RefreshScrewTypes(target);typesRefreshed?.Invoke(target);},()=>Fail(showPanel),
                 session.ScrewDoneEventDelay,session.SuccessDoneEventDelay);
             level.BindMoveCompletion(completion.Run);
         }

@@ -21,6 +21,7 @@ namespace NutSort.World
         public float DonePeakScale;
         public float DoneLiftHeight;
         public float HiddenBreakHideDelay;
+        public float MaskDoneScaleDuration, MaskBreakHideDelay, DontMoveBreakHideDelay, MaskBackOvershoot;
         [SerializeField] private string[] maskNutPaths;
         public string MaskNutPath(int color)
         {

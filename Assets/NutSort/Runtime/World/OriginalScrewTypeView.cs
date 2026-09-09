@@ -19,6 +19,12 @@ namespace NutSort.World
         [SerializeField] private GameObject Locked1;
         private readonly Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>(StringComparer.Ordinal);
         private float hiddenBreakDelay, hiddenHideRemaining;
+        private OriginalScrewSettings settings;
+        private struct MaskTrack { public float Elapsed; public Vector3 Start; }
+        private readonly List<MaskTrack> maskTracks=new List<MaskTrack>();
+        private readonly List<float> maskHides=new List<float>(),dontMoveHides=new List<float>();
+        public Vector3 MaskDoneScale=>MaskDone.transform.localScale;
+        public bool IsMaskBreakVisible=>MaskSpine.activeSelf;
         private bool pendingHiddenHide;
         // The three source skeletal effects still require native animation assets.
         // Keep their original targets and clip requests explicit until converted.
@@ -33,6 +39,8 @@ namespace NutSort.World
         public void Configure(ScrewMaskState mask, ScrewState screw, OriginalScrewSettings settings, bool lssab)
         {
             pendingHiddenHide = false;
+            this.settings = settings;
+            maskTracks.Clear();maskHides.Clear();dontMoveHides.Clear();
             hiddenBreakDelay = settings.HiddenBreakHideDelay;
             Mask.SetActive(false); DontMove.SetActive(false); Hidden.SetActive(false);
             Locked.SetActive(screw.IsLocked && lssab);
@@ -83,7 +91,44 @@ namespace NutSort.World
             pendingHiddenHide = true;
         }
 
-        private void Update() { AdvanceHiddenBreak(Time.unscaledDeltaTime); }
+        public void PlayMaskBreak()
+        {
+            maskTracks.Add(new MaskTrack{Start=MaskDone.transform.localScale});
+        }
+        public void PlayDontMoveBreak()
+        {
+            AnimationRequested?.Invoke(DontMoveSpine,"animation2",false);
+            if(DontMove.activeSelf)dontMoveHides.Add(settings.DontMoveBreakHideDelay);
+        }
+        // Host on the level, so disabling an individual rod does not pause its
+        // scaled mask tween or the source's independent-time hide callbacks.
+        public void AdvanceTransitions(float scaledDelta,float unscaledDelta)
+        {
+            if(scaledDelta<0||unscaledDelta<0)throw new ArgumentOutOfRangeException();
+            AdvanceHides(maskHides,Mask,unscaledDelta);
+            AdvanceHides(dontMoveHides,DontMove,unscaledDelta);
+            for(int i=0;i<maskTracks.Count;)
+            {
+                var track=maskTracks[i];track.Elapsed+=scaledDelta;
+                float t=Mathf.Clamp01(track.Elapsed/settings.MaskDoneScaleDuration)-1;
+                float eased=1+t*t*((settings.MaskBackOvershoot+1)*t+settings.MaskBackOvershoot);
+                MaskDone.transform.localScale=Vector3.LerpUnclamped(track.Start,Vector3.one,eased);
+                if(track.Elapsed<settings.MaskDoneScaleDuration){maskTracks[i++]=track;continue;}
+                maskTracks.RemoveAt(i);MaskSpine.SetActive(true);
+                AnimationRequested?.Invoke(MaskSpine,"animation",false);
+                if(Mask.activeSelf)maskHides.Add(settings.MaskBreakHideDelay);
+            }
+            AdvanceHiddenBreak(unscaledDelta);
+        }
+        private static void AdvanceHides(List<float> tracks,GameObject target,float delta)
+        {
+            for(int i=0;i<tracks.Count;)
+            {
+                float remaining=tracks[i]-delta;
+                if(remaining>0){tracks[i++]=remaining;continue;}
+                tracks.RemoveAt(i);target.SetActive(false);
+            }
+        }
         public void AdvanceHiddenBreak(float unscaledDeltaTime)
         {
             if (unscaledDeltaTime < 0f) throw new ArgumentOutOfRangeException(nameof(unscaledDeltaTime));
@@ -94,6 +139,6 @@ namespace NutSort.World
             Hidden.SetActive(false);
         }
 
-        public void Release() { pendingHiddenHide = false; AnimationRequested = null; }
+        public void Release() { pendingHiddenHide = false; maskTracks.Clear();maskHides.Clear();dontMoveHides.Clear();AnimationRequested = null; }
     }
 }
