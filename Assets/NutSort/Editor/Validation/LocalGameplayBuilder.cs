@@ -68,6 +68,7 @@ namespace NutSort.Validation
                 var tag=Rect("LocalMode",rect,new Vector2(.5f,1),new Vector2(0,-175),new Vector2(560,46));
                 var tagBg=tag.gameObject.AddComponent<Image>();tagBg.color=new Color(0,0,0,.5f);tagBg.raycastTarget=false;
                 var mode=Label("Mode",tag,font,"LOCAL MODE - SDK skipped",Vector2.zero,new Vector2(550,44),25);
+                tag.gameObject.SetActive(false); // Diagnostic HUD is not part of the source layout.
                 var backdrop=Rect("Result",rect,new Vector2(.5f,.5f),Vector2.zero,Vector2.zero);
                 backdrop.anchorMin=Vector2.zero;backdrop.anchorMax=Vector2.one;backdrop.offsetMin=backdrop.offsetMax=Vector2.zero;
                 backdrop.gameObject.AddComponent<Image>().color=new Color(0,0,0,.68f);

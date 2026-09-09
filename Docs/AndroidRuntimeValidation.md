@@ -21,4 +21,15 @@ Library/local-android-device-test-build.log 记录 NUT_ANDROID_BUILD_PASS，warn
 
 证据：Library/android-device-restart-evidence.json、android-device-undo-evidence.json、android-device-final-evidence.json；对应三个已观测测试进程的 android-local-runtime-<pid>.log 中没有 Exception/FATAL/Shader error/DllNotFound 标记。日志筛查不能证明所有设备无问题。当前设备截图 android-local-initial-current.png、android-local-teaching2-settled-current.png、android-local-teaching3-current.png、android-local-success-current.png、android-local-level2-current.png 已检查。
 
-剩余：当前教学顶部的本地诊断横条与原教学徽章重叠，是实际设备截图暴露的视觉差异。物理 Android/iOS 设备、后期全部玩法/地区版本、原版逐帧视觉对照以及完整生命周期仍未验证。此轮没有改变 SDK 处理，独立测试包保留在模拟器第二关供继续检查；标准包 com.nut.sort.relax 的 APK 保持上一轮版本与哈希。
+上一轮发现教学顶部的本地诊断横条与原教学徽章重叠；本轮已在 LocalGameplay 预制体默认隐藏 LocalMode，并同步修改编辑器生成器，防止重建时恢复遮挡。教学 Local 徽章、本地推进说明及 SDK 跳过逻辑保持原状。物理 Android/iOS 设备、后期全部玩法/地区版本、原版逐帧视觉对照以及完整生命周期仍未验证。此轮没有改变 SDK 处理，独立测试包保留在模拟器第二关供继续检查。本轮两个 APK 均已更新，见下方记录。
+
+## 教学遮挡修复复测
+
+LocalTeachingViewPlayValidation 四段教学通过，包含源规则文本、世界操作及第二关教学退出；检查本轮 local-teaching-0-current.png 与 local-teaching-3-current.png，顶部徽章无遮挡。该轮使用明确教学种子夹具，测试结束恢复 Editor 存档；没有改写 Android 存档。
+
+两个新构建日志 local-hud-android-build.log、local-hud-device-test-build.log 均 NUT_ANDROID_BUILD_PASS，warnings=0、errors=0；签名验证通过，原有两条 META-INF 提示仍存在。只通过 install -r 更新独立测试包，未安装标准包。更新前后 Level/LevelSeed/LevelInfo/搬移数/过关数/撤销库存逐项一致。Android 当前第二关稳定截图 android-hud-level2-settled-current.png 已检查，横条消失；首次启动截图处于入场阶段，未作为最终画面。PID 12801 日志未发现 Exception/FATAL EXCEPTION/Shader error/DllNotFound 标记。存档和构建摘要见 Library/android-hud-evidence.json。
+
+- NutSortRelax-local.apk：53,708,267 字节，SHA-256 `2eaaa287f336957591ec03e1f6057456e17ccd84ad27bd8aec4a35696e691d91`。
+- NutSortRelax-device-test.apk：53,708,319 字节，SHA-256 `2e625d1907c9b1a87eb4e509ee5f0c1fde5742ac02abbbe523d67bfd521ec919`。
+
+本轮 Android 只复核更新与第二关画面，四段教学视觉回归在 Unity Play 中执行；未宣称重新完成全部 Android 教学或物理真机验证。

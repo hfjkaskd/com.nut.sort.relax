@@ -27,3 +27,5 @@ LocalAndroidBuild 在构建期间设置 APK 显示名，完成后恢复 Editor �
 最新子回合点阵包：Library/local-subround-dots-android-build.log 记录 NUT_ANDROID_BUILD_PASS，warnings=0、errors=0。APK 68,786,702 字节，SHA-256 a6e13eace9c95797a13c7635d9ae7f2617507f11ed622f153fb8acea1e2bc849。签名、包名、版本及 ARM64 复核通过，替换上一轮开发 APK。点阵接入和验证见 LocalSubroundView.md；增量开发打包与真机验证限制不变。
 
 新增 RunDeviceTest 构建独立包 com.nut.sort.relax.localtest，输出 NutSortRelax-device-test.apk，可与原版并存。它已在 Android 15 模拟器完成真实触摸、教学、结算、续局、后台/强制重启和撤销验证，详情及独立 APK 哈希见 AndroidRuntimeValidation.md。标准 NutSortRelax-local.apk 保持上一轮哈希，未因验证而改包名。
+
+教学遮挡修复后，标准包及独立测试包均重新构建并通过签名校验。最新大小和哈希见 AndroidRuntimeValidation.md 的“教学遮挡修复复测”；该记录替换上文历史产物信息。独立包已原位更新并保留第二关存档。
