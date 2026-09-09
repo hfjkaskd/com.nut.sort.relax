@@ -12,6 +12,8 @@
 
 过关现已接入原版标题、入场/关闭动画和按钮预制体变体；关闭完成后才进入下一关。详见 [原版过关表现](LocalNativeSuccess.md)。
 
+Android ARM64 IL2CPP 本地开发 APK 已构建，签名和包元数据校验通过；修复动态后备字体缺失图集，165 项内容回归通过。尚未连接真机验证。详见 [Android 本地构建](AndroidLocalBuild.md)。
+
 详见 [教学接入](LocalGameplayTeaching.md)、[本地推进](LocalGameplayProgression.md)、[核心道具入口](LocalCoreTools.md)、[玩法解锁](LocalGameplayUnlocks.md)。SDK 收益、广告回调、提现与服务器奖励均未模拟；完整奖励引导、外围生命周期、国家/AB GM 和真机视觉对照仍未完成。
 
 下方保留历轮恢复记录；其中早期“尚未接入”等描述反映当轮状态，当前入口以本节和上述最新验证文档为准。
@@ -52,7 +54,7 @@
 
 - 已接入 `Assets/Scenes/LuoSiSortGame.unity` 原生运行入口，并配置为构建首场景。恢复原三台相机/堆叠关系、灯光、世界背景、光照数据和反射立方体；鼠标/单指释放使用统一运行时逻辑通过相机射线操作游戏杆体。当前从显式配置加载第一关，尚未连接原存档/服务器/地区初始化。十一组回归及独立 Play 模式验证通过：实际 Start、Update、选中/搬移和完成门控正常。
 - GPU 实测发现旧 Unlit/Texture 背景没有桌面 URP 深度预通道，产生黑底及未覆盖旧像素。背景静态材质已迁移到 Unity 官方 URP Unlit，保留原纹理、UV 和无光照取色语义；修复后的最新 Play 画面已检查，原紫蓝背景及完成后的空杆正常。URP 自动完成 9→11 资产版本迁移；原 HDR 关闭、MSAA 1、renderScale 1、阴影关闭等配置保留。完整原版逐帧画面对照仍未完成。
-- 真机方向配置已按原 PlayerSettings 恢复为 Portrait（序列化值 0），不再沿用新工程 AutoRotation 默认值。尚未构建并验证 Android/iOS 包。
+- 真机方向配置已按原 PlayerSettings 恢复为 Portrait（序列化值 0），不再沿用新工程 AutoRotation 默认值。Android ARM64 IL2CPP 本地包已构建并校验；Android 真机运行和 iOS 包仍未验证。
 
 - 已从原场景恢复加载界面、三个 Canvas 根结构、原 Logo/背景/进度条/标记图、TMP 字体回退链和描边材质。组件映射到官方 UGUI/TMP，补齐官方 TMP Essential Resources。加载动画保持每秒 0.5、上限 0.9、结束信号后 0.5 秒 OutQuad 到 1、再停留 0.2 秒关闭；标记按 750 单位行程，百分比保留 F0 取整语义并缓存字符串避免逐帧分配。
 - 启动顺序改为先显示加载界面，发送完成信号后下一帧激活 GameScene，在加载界面完全关闭前阻止棋盘输入。当前本地初始化没有服务器/SDK 等待，未添加虚假等待或奖励结果。十二组回归通过，并在真实竖屏 Play 模式抓取当前完整加载画面，随后自动完成首关。首次加载和重复周期验证通过；重入并发关闭请求的原多 Tween 行为仍需随后续全生命周期调用链核对。

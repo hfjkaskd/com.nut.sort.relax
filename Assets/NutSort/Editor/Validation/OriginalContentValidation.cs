@@ -120,6 +120,7 @@ namespace NutSort.Validation
                 OriginalCurrencyRewardFlightValidation.Validate();
                 OriginalEffectsValidation.Validate();
                 OriginalAudioValidation.Validate();
+                OriginalDynamicFontAtlasBuilder.Validate();
                 OriginalUserValidation.Validate();
                 OriginalBoardSnapshotValidation.Validate(repository);
                 OriginalLockedScrewValidation.Validate(repository);
